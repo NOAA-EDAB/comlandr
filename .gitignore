@@ -1,2 +1,9 @@
 .Rproj.user
 inst/doc
+.Rhistory
+
+
+# Files and Folders
+*.Rproj
+other
+output
