@@ -31,7 +31,7 @@ to communicate with the database engine. (see \code{\link{connect_to_database}})
 
 \item{reftime}{Numeric Vector. (Length 2). Specifies the year and month if adjusting for inflation. Default = c(2016,1)}
 
-\item{out.dir}{path to directory where final output will be saved}
+\item{out.dir}{Character string. Path to directory where final output will be saved or where data is to be read from}
 }
 \description{
 #Grab commercial landings data from US and Foreign countries (NAFO)

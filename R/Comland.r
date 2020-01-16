@@ -48,7 +48,7 @@ refmonth <- reftime[2]
 ## Pull data from databases
 if(use.existing == 'n'){
   comland <- get_comland_data(channel,landed,endyear,out.dir)
-} elseif(use.existing == 'y'){ # or read from directory
+} else if(use.existing == 'y'){ # or read from directory
   if(landed == 'n') load(file = file.path(out.dir, "comland_raw_US.RData"))
   if(landed == 'y') load(file = file.path(out.dir, "comland_raw_US_meatwt.RData"))
 }

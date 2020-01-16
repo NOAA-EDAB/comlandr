@@ -1,14 +1,10 @@
 Package: comland
-Title: What the Package Does (One Line, Title Case)
+Title: Pulls and processes commercial fishing data
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+Author: c(person("Sean", "Lucey", email = "sean.lucey@noaa.gov", role = c("aut","cre")),
+    person("Andy", "Beet", email = "andrew.beet@noaa.gov", role = c("aut", "cre")))
+Description: Pulls and processes commercial fishing data.
+License: file LICENSE -  Strictly for NOAA employees and contractors with database privilages
 Encoding: UTF-8
 LazyData: true
 Suggests: 
