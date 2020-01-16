@@ -4,7 +4,10 @@
 \alias{comland_skates_hakes}
 \title{#Comcatch_skates_hakes.r}
 \usage{
-comland_skates_hakes()
+comland_skates_hakes(EPUS)
+}
+\arguments{
+\item{EPUS}{List. Designates the stat areas that comprise an EPU.}
 }
 \description{
 Determine proportion of little/winter skates and silver hake in landings data 7/13

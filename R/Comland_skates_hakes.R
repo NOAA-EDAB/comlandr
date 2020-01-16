@@ -2,6 +2,7 @@
 #'
 #'Determine proportion of little/winter skates and silver hake in landings data 7/13
 #'SML
+#'@param EPUS List. Designates the stat areas that comprise an EPU.
 #'
 #'
 #'@importFrom data.table ":=" "key"
@@ -9,7 +10,7 @@
 #'
 #'@export
 
-comland_skates_hakes <- function(){
+comland_skates_hakes <- function(EPUS){
 
 #User parameters
 if(Sys.info()['sysname']=="Windows"){
@@ -112,16 +113,12 @@ if(Stand.alone == F) skate.hake.us <- skate.hake
 
 #Foreign Landings--------------------------------------------------------------------
 #NAFO uses divisions
-gom <- c(500, 510, 512:515)
-gb  <- c(521:526, 551, 552, 561, 562)
-mab <- c(537, 539, 600, 612:616, 621, 622, 625, 626, 631, 632)
-ss  <- c(463:467, 511)
 
 catch.stat[, EPU := factor(NA, levels = c('GOM', 'GB', 'MAB', 'SS'))]
-catch.stat[AREA %in% gom, EPU := 'GOM']
-catch.stat[AREA %in% gb,  EPU := 'GB']
-catch.stat[AREA %in% mab, EPU := 'MAB']
-catch.stat[AREA %in% ss,  EPU := 'SS']
+catch.stat[AREA %in% EPUS$gom, EPU := 'GOM']
+catch.stat[AREA %in% EPUS$gb,  EPU := 'GB']
+catch.stat[AREA %in% EPUS$mab, EPU := 'MAB']
+catch.stat[AREA %in% EPUS$ss,  EPU := 'SS']
 
 data.table::setkey(catch.stat,
        YEAR,
