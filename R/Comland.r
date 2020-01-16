@@ -4,13 +4,24 @@
 #'Need to fix menhaden data
 #'SML
 #'
-#'@param uid username for Oracle connection
-#'@param out.dir path to directory where final output will be saved
-#'@param use.existing String. Pull from database "n" or use existing pull "y"
+#'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+#' to communicate with the database engine. (see \code{\link{connect_to_database}})
+#'@param EPUS List. Designates the stat areas that comprise an EPU. Default = EPUs (lazily loaded data)
+#'@param GEARS List. Designates the NEGEAR codes that comprise a fishing fleet. Default = GEARs (lazily loaded data)
+#'@param use.existing String. Pull from database "n" or use existing pull "y" (saves time) . Default = "y"
+#'@param landed Character String. Use landed weight for scallops and clams instead of live weight. Default = "y"
+#'@param foreign Character String. Mark foreign landings and keep seperate. Default = "y"
+#'@param adjust.ppi Character String. Adjust value for inflation. Default = "y"
+#'@param sum.by Character String. Variable to sum landings by either "EPU" (Default) or "stat.area"
+#'@param endyear Numeric Scalar. Final year of query. Default = 2018
+#'@param reftime Numeric Vector. (Length 2). Specifies the year and month if adjusting for inflation. Default = c(2016,1)
+#'@param out.dir Character string. Path to directory where final output will be saved or where data is to be read from
+#'
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
 #'@export
+#'
 #Make sure to define your fleets below!
 
 #Requires the following files:
@@ -18,104 +29,26 @@
 # data.dir\\Menhaden.csv
 # data.dir.3\\SS_NAFO_21A.csv
 # data.dir.3\\species.txt
-comland <- function(uid="abeet",use.existing="y",out.dir=here::here("output")) {
+comland <- function(channel,GEARS=GEARs,EPUS=EPUs,use.existing="y",landed="y",foreign="y",adjust.ppi="y",sum.by="EPU",endyear=2018,reftime = c(2016,1),out.dir=here::here("output")) {
+
+  if(!(isS4(channel))) {
+    message("Argument \"channel\", is not a valid DBI connection object. Please see dbutils::connect_to_database for details ...")
+    return()
+  }
+
 
 #User parameters
 if(Sys.info()['sysname']=="Windows"){
-  data.dir   <- here::here()
-  data.dir.2 <- here::here("output")
-  data.dir.3 <- here::here("output")
+  data.dir   <- here::here("output")
 }
 
-#uid <-
-#cat("Oracle Password: ")
-#pwd <- scan(stdin(), character(), n = 1)
+refyear <- reftime[1]
+refmonth <- reftime[2]
 
-landed       <- 'y' #use landed weight for scallops and clams instead of live weight
-foreign      <- 'y' #Mark foreign landings and keep seperate
-adjust.ppi   <- 'y' #Adjust value for inflation
-#use.existing <- 'n' #use raw data from a previous run - saves time
-sum.by       <- 'EPU' #Variable to sum landings by [EPU, stat.area]
-
-#Final year of query
-endyear <- 2018
-#If adjusting for inflation
-refyear  <- 2016
-refmonth <- 1
-
-#Fleets
-# fleets <- c('otter.lg', 'otter.sm', 'dredge.sc', 'pot', 'longline', 'seine',
-#             'gillnet', 'midwater', 'dredge.cl', 'dredge.o')
-#
-# otter     <- 50:59
-# dredge.sc <- 131:132
-# pot       <- c(189:190, 200:219, 300, 301)
-# longline  <- c(10, 40)
-# seine     <- c(70:79, 120:129, 360)
-# gillnet   <- c(100:119, 500, 510, 520)
-# midwater  <- c(170, 370)
-# dredge.o  <- c(281, 282, 380:400)
-
-#-------------------------------------------------------------------------------
-#Required packages
-#library(RODBC); library(data.table); library(rgdal)
-
-#-------------------------------------------------------------------------------
-#Connect to database
-#channel <- odbcConnect('sole', uid, pwd)
-channel <- dbutils::connect_to_database("sole",uid)
-
+## Pull data from databases
 if(use.existing == 'n'){
-
-
-  #Landings
-  tables <- c(paste0('WOLANDS', 64:81),
-              paste0('WODETS',  82:93),
-              paste0('CFDETS',  1994:endyear, 'AA'))
-
-  #Generate one table
-  comland <- c()
-  for(i in 1:length(tables)){
-    landings.qry <- paste("select year, month, negear, toncl1, nespp3, nespp4, area,
-                           spplivlb, spplndlb, sppvalue, utilcd
-                           from", tables[i])
-
-    comland.yr <- as.data.table(DBI::dbGetQuery(channel, landings.qry))
-
-    data.table::setkey(comland.yr,
-           YEAR,
-           MONTH,
-           NEGEAR,
-           TONCL1,
-           NESPP3,
-           NESPP4,
-           AREA,
-           UTILCD)
-
-    if(landed == 'y') comland.yr[NESPP3 %in% 743:800, SPPLIVLB := SPPLNDLB]
-
-    #Sum landings and value
-    #landings
-    comland.yr[, V1 := sum(SPPLIVLB), by = key(comland.yr)]
-    #value
-    #Fix null values
-    comland.yr[is.na(SPPVALUE), SPPVALUE := 0]
-    comland.yr[, V2 := sum(SPPVALUE), by = key(comland.yr)]
-
-    #Remove extra rows/columns
-    comland.yr <- unique(comland.yr, by = key(comland.yr))
-    comland.yr[, c('SPPLIVLB', 'SPPLNDLB', 'SPPVALUE') := NULL]
-
-    #Rename summed columns
-    data.table::setnames(comland.yr, c('V1', 'V2'), c('SPPLIVLB', 'SPPVALUE'))
-
-    comland <- data.table::rbindlist(list(comland, comland.yr))
-  }
-
-  if(landed == 'n') save(comland, file = file.path(out.dir, "comland_raw_US.RData"))
-  if(landed == 'y') save(comland, file = file.path(out.dir, "comland_raw_US_meatwt.RData"))
-}
-if(use.existing == 'y'){
+  comland <- get_comland_data(channel,landed,endyear,out.dir)
+} elseif(use.existing == 'y'){ # or read from directory
   if(landed == 'n') load(file = file.path(out.dir, "comland_raw_US.RData"))
   if(landed == 'y') load(file = file.path(out.dir, "comland_raw_US_meatwt.RData"))
 }
@@ -169,9 +102,9 @@ comland[NESPP4 > 999,                MKTCAT := as.numeric(substring(NESPP4, 4, 4
 #drop NESPP4
 comland[, NESPP4 := NULL]
 
-#Deal with Hakes and Skates------------------------------------------------------------------
-#source(file.path(data.dir.2, 'Comland_skates_hakes.R'))
-skates_hakes <- comland_skates_hakes()
+# Deal with Hakes and Skates------------------------------------------------------------------
+
+skates_hakes <- comland_skates_hakes(EPUS)
 skate.hake.us <- skates_hakes$skate.hake.us
 skate.hake.nafo <- skates_hakes$skate.hake.nafo
 #get little skates and winter skates from skates(ns) - use survey in half years
@@ -425,32 +358,15 @@ comland[MONTH %in% 1:6,  HY := 1]
 comland[MONTH %in% 7:12, HY := 2]
 comland[MONTH == 0,      HY := 0]
 
-otter     <- 50:59
-dredge.sc <- 131:132
-pot       <- c(180:190, 200:219, 300, 301)
-longline  <- c(10, 40)
-seine     <- c(70:79, 120:129, 360)
-gillnet   <- c(100:119, 500, 510, 520)
-midwater  <- c(170, 370)
-dredge.o  <- c(281, 282, 380:400)
 
-GEARS <- list(otter=otter,
-              dredge.sc=dredge.sc,
-              pot=pot,
-              longline=longline,
-              seine=seine,
-              gillnet=gillnet,
-              midwater=midwater,
-              dredge.o=dredge.o)
-
-comland[NEGEAR %in% otter,     GEAR := 'otter']
-comland[NEGEAR %in% dredge.sc, GEAR := 'dredge.sc']
-comland[NEGEAR %in% pot,       GEAR := 'pot']
-comland[NEGEAR %in% longline,  GEAR := 'longline']
-comland[NEGEAR %in% seine,     GEAR := 'seine']
-comland[NEGEAR %in% gillnet,   GEAR := 'gillnet']
-comland[NEGEAR %in% midwater,  GEAR := 'midwater']
-comland[NEGEAR %in% dredge.o,  GEAR := 'dredge.o']
+comland[NEGEAR %in% GEARS$otter,     GEAR := 'otter']
+comland[NEGEAR %in% GEARS$dredge.sc, GEAR := 'dredge.sc']
+comland[NEGEAR %in% GEARS$pot,       GEAR := 'pot']
+comland[NEGEAR %in% GEARS$longline,  GEAR := 'longline']
+comland[NEGEAR %in% GEARS$seine,     GEAR := 'seine']
+comland[NEGEAR %in% GEARS$gillnet,   GEAR := 'gillnet']
+comland[NEGEAR %in% GEARS$midwater,  GEAR := 'midwater']
+comland[NEGEAR %in% GEARS$dredge.o,  GEAR := 'dredge.o']
 comland[NEGEAR == 0,           GEAR := 'unknown']
 comland[is.na(GEAR),           GEAR := 'other']
 comland[, GEAR := as.factor(GEAR)]
@@ -1802,17 +1718,11 @@ data.table::setnames(comland.agg, c('V1', 'V2'), c('SPPLIVMT', 'SPPVALUE'))
 #-------------------------------------------------------------------------------
 if(sum.by == 'EPU'){
   #Assign EPU based on statarea
-  gom<-c(500, 510, 512:515)
-  gb<-c(521:526, 551, 552, 561, 562)
-  mab<-c(537, 539, 600, 612:616, 621, 622, 625, 626, 631, 632)
-  ss<-c(463:467, 511)
 
-  EPUS <- list(GOM=gom, GB=gb,MAB=mab,SS=ss)
-
-  comland.agg[AREA %in% gom, EPU := 'GOM']
-  comland.agg[AREA %in% gb,  EPU := 'GB']
-  comland.agg[AREA %in% mab, EPU := 'MAB']
-  comland.agg[AREA %in% ss,  EPU := 'SS']
+  comland.agg[AREA %in% EPUS$gom, EPU := 'GOM']
+  comland.agg[AREA %in% EPUS$gb,  EPU := 'GB']
+  comland.agg[AREA %in% EPUS$mab, EPU := 'MAB']
+  comland.agg[AREA %in% EPUS$ss,  EPU := 'SS']
   comland.agg[is.na(EPU),    EPU := 'OTHER']
   comland.agg[, EPU := factor(EPU, levels = c('GOM', 'GB', 'MAB', 'SS', 'OTHER'))]
 
@@ -1891,10 +1801,10 @@ if(sum.by == 'EPU'){
   nafoland[, Divcode := NULL]
 
   ##Fix missing Scotian Shelf data from 21B
-  SS.nafo <- as.data.table(read.csv(file.path(data.dir.3, "SS_NAFO_21A.csv"), skip = 8))
+  SS.nafo <- as.data.table(read.csv(file.path(data.dir, "SS_NAFO_21A.csv"), skip = 8))
 
   #Add NAFOSPP code to SS.nafo
-  nafo.spp <- as.data.table(read.csv(file.path(data.dir.3, 'species.txt')))
+  nafo.spp <- as.data.table(read.csv(file.path(data.dir, 'species.txt')))
   data.table::setnames(nafo.spp, "Abbreviation", "Species_ASFIS")
   nafo.spp <- nafo.spp[, list(Code, Species_ASFIS)]
 
@@ -2043,14 +1953,14 @@ if(sum.by == 'EPU'){
   nafoland[MONTH %in% 10:12, QY := 4]
   nafoland[MONTH == 0,       QY := 1]
 
-  nafoland[NEGEAR %in% otter,     GEAR := 'otter']
-  nafoland[NEGEAR %in% dredge.sc, GEAR := 'dredge.sc']
-  nafoland[NEGEAR %in% pot,       GEAR := 'pot']
-  nafoland[NEGEAR %in% longline,  GEAR := 'longline']
-  nafoland[NEGEAR %in% seine,     GEAR := 'seine']
-  nafoland[NEGEAR %in% gillnet,   GEAR := 'gillnet']
-  nafoland[NEGEAR %in% midwater,  GEAR := 'midwater']
-  nafoland[NEGEAR %in% dredge.o,  GEAR := 'dredge.o']
+  nafoland[NEGEAR %in% GEARS$otter,     GEAR := 'otter']
+  nafoland[NEGEAR %in% GEARS$dredge.sc, GEAR := 'dredge.sc']
+  nafoland[NEGEAR %in% GEARS$pot,       GEAR := 'pot']
+  nafoland[NEGEAR %in% GEARS$longline,  GEAR := 'longline']
+  nafoland[NEGEAR %in% GEARS$seine,     GEAR := 'seine']
+  nafoland[NEGEAR %in% GEARS$gillnet,   GEAR := 'gillnet']
+  nafoland[NEGEAR %in% GEARS$midwater,  GEAR := 'midwater']
+  nafoland[NEGEAR %in% GEARS$dredge.o,  GEAR := 'dredge.o']
   nafoland[NEGEAR == 99,          GEAR := 'unknown']
   nafoland[is.na(GEAR),           GEAR := 'other']
   nafoland[, GEAR := as.factor(GEAR)]
@@ -2089,7 +1999,6 @@ if(sum.by == 'EPU'){
   #Remove Menhaden data
   #save(comland.nafo, file = paste(out.dir, "comland_Menhaden.RData", sep = ''))
   comland <- comland.nafo[NESPP3 != 221, ]
-  saveRDS(EPUS,file=file.path(out.dir,paste0("comland_epus.rds")))
 
 }
 
@@ -2099,10 +2008,9 @@ if(sum.by == 'stat.area') comland <- comland.agg
 if(landed     == 'n') file.landed <- '' else file.landed <- '_meatwt'
 if(adjust.ppi == 'n') file.adjust <- '' else file.adjust <- '_deflated'
 if(sum.by == 'EPU') file.by <- '_EPU' else file.by <- '_stat_areas'
-file.name <- paste0('comland', file.landed, file.adjust, file.by)
+file.name <- paste0('comland', file.landed, file.adjust, file.by,Sys.Date())
 
 save(comland, file = file.path(out.dir, paste0(file.name,".RData")))
 saveRDS(comland, file = file.path(out.dir, paste0(file.name,".Rds")))
-saveRDS(GEARS,file=file.path(out.dir,paste0("comland_gears.rds")))
 
 }

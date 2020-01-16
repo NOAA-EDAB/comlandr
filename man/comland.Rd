@@ -4,13 +4,32 @@
 \alias{comland}
 \title{Comland.r Version now controlled by git - originally part of comcatch.r}
 \usage{
-comland(uid = "abeet", use.existing = "y",
+comland(channel, GEARS = GEARs, EPUS = EPUs, use.existing = "y",
+  landed = "y", foreign = "y", adjust.ppi = "y", sum.by = "EPU",
+  endyear = 2018, reftime = c(2016, 1),
   out.dir = here::here("output"))
 }
 \arguments{
-\item{uid}{username for Oracle connection}
+\item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+to communicate with the database engine. (see \code{\link{connect_to_database}})}
 
-\item{use.existing}{String. Pull from database "n" or use existing pull "y"}
+\item{GEARS}{List. Designates the NEGEAR codes that comprise a fishing fleet. Default = GEARs (lazily loaded data)}
+
+\item{EPUS}{List. Designates the stat areas that comprise an EPU. Default = EPUs (lazily loaded data)}
+
+\item{use.existing}{String. Pull from database "n" or use existing pull "y" (saves time) . Default = "y"}
+
+\item{landed}{Character String. Use landed weight for scallops and clams instead of live weight. Default = "y"}
+
+\item{foreign}{Character String. Mark foreign landings and keep seperate. Default = "y"}
+
+\item{adjust.ppi}{Character String. Adjust value for inflation. Default = "y"}
+
+\item{sum.by}{Character String. Variable to sum landings by either "EPU" (Default) or "stat.area"}
+
+\item{endyear}{Numeric Scalar. Final year of query. Default = 2018}
+
+\item{reftime}{Numeric Vector. (Length 2). Specifies the year and month if adjusting for inflation. Default = c(2016,1)}
 
 \item{out.dir}{path to directory where final output will be saved}
 }
