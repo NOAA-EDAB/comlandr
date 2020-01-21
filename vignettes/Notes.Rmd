@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(comland)
+library(comlandr)
 ```
 
 For details of its use see the [tech-doc](https://noaa-edab.github.io/tech-doc/comdat.html)
@@ -23,6 +23,7 @@ For details of its use see the [tech-doc](https://noaa-edab.github.io/tech-doc/c
 1. Either pulls data from data tables (~15 mins) or reads in from a previous pull
 1. aggregate landings by stat area or EPU (multiple stat areas)
 1. include foreign landings as defined by NAFO
+1. disaggregates skate and hake complexes using survey data
 1. adjusts value of species for inflation
 
 ## output
