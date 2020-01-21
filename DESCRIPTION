@@ -1,4 +1,4 @@
-Package: comland
+Package: comlandr
 Title: Pulls and processes commercial fishing data
 Version: 0.0.0.9000
 Author: c(person("Sean", "Lucey", email = "sean.lucey@noaa.gov", role = c("aut","cre")),

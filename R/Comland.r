@@ -39,7 +39,7 @@ comland <- function(channel,GEARS=GEARs,EPUS=EPUs,use.existing="y",landed="y",fo
 
 #User parameters
 if(Sys.info()['sysname']=="Windows"){
-  data.dir   <- here::here("output")
+  #data.dir   <- system.file("extdata", "2012.csv", package = "testdat")
 }
 
 refyear <- reftime[1]
@@ -1799,12 +1799,11 @@ if(sum.by == 'EPU'){
   nafoland[is.na(EPU),                EPU := 'OTHER']
 
   nafoland[, Divcode := NULL]
-
   ##Fix missing Scotian Shelf data from 21B
-  SS.nafo <- as.data.table(read.csv(file.path(data.dir, "SS_NAFO_21A.csv"), skip = 8))
+  SS.nafo <- as.data.table(read.csv(system.file("extdata","SS_NAFO_21A.csv",package="comlandr"), skip = 8))
 
   #Add NAFOSPP code to SS.nafo
-  nafo.spp <- as.data.table(read.csv(file.path(data.dir, 'species.txt')))
+  nafo.spp <- as.data.table(read.csv(system.file("extdata","species.txt",package="comlandr")))
   data.table::setnames(nafo.spp, "Abbreviation", "Species_ASFIS")
   nafo.spp <- nafo.spp[, list(Code, Species_ASFIS)]
 
