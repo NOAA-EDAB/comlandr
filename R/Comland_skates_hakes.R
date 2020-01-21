@@ -35,7 +35,8 @@ spp.name <- c('Little_Skate', 'Winter_Skate', 'Silver_Hake')
 spp <- c(26, 23, 72)
 
 #Grab survdat.r
-load(file.path(data.dir, "Survdat.RData"))
+pathToSurvdat <- system.file("extdata","Survdat.RData",package="comlandr")
+load(pathToSurvdat)
 
 #Remove length info
 data.table::setkey(survdat,
@@ -51,7 +52,8 @@ catch <- survdat[SVSPP %in% c(22:28, 72, 69), ]
 #Calculate ratios within Stat Areas
 #Post stratify to use Stat Area designations
 #Stat Areas
-Stat.areas <- rgdal::readOGR(gis.dir, 'Statistical_Areas_2010')
+pathToGIS <- system.file("extdata","Statistical_Areas_2010.shp",package="comlandr")
+Stat.areas <- rgdal::readOGR(pathToGIS)
 
 catch.stat <- Survdat::poststrat(catch, stratum = Stat.areas, strata.col = 'Id')
 
