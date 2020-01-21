@@ -3,23 +3,17 @@
 #'Determine proportion of little/winter skates and silver hake in landings data 7/13
 #'SML
 #'@param EPUS List. Designates the stat areas that comprise an EPU.
-#'
+#'@param out.dir Character string. Path to directory where skate data will be written
+#'@param Stand.alone Boolean. Flag to determine whether to save Skate and hake data to file. defualt = F (Both a US catch file and a NAFO catch file will be saved)
+
 #'
 #'@importFrom data.table ":=" "key"
 #'
 #'
 #'@export
 
-comland_skates_hakes <- function(EPUS){
+comland_skates_hakes <- function(EPUS,out.dir,Stand.alone=F){
 
-#User parameters
-if(Sys.info()['sysname']=="Windows"){
-    data.dir <- here::here("output")
-    gis.dir  <- here::here("output")
-    out.dir  <- here::here("output")
-}
-
-Stand.alone <- F
 
 #-------------------------------------------------------------------------------
 #Required packages

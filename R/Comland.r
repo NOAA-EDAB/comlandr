@@ -16,7 +16,7 @@
 #'@param endyear Numeric Scalar. Final year of query. Default = 2018
 #'@param reftime Numeric Vector. (Length 2). Specifies the year and month if adjusting for inflation. Default = c(2016,1)
 #'@param out.dir Character string. Path to directory where final output will be saved or where data is to be read from
-#'
+#'@param Stand.alone Boolean. Flag to determine whether to save Skate and hake data to file. defualt = F (Both a US catch file and a NAFO catch file will be saved)
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
@@ -29,7 +29,7 @@
 # data.dir\\Menhaden.csv
 # data.dir.3\\SS_NAFO_21A.csv
 # data.dir.3\\species.txt
-comland <- function(channel,GEARS=GEARs,EPUS=EPUs,use.existing="y",landed="y",foreign="y",adjust.ppi="y",sum.by="EPU",endyear=2018,reftime = c(2016,1),out.dir=here::here("output")) {
+comland <- function(channel,GEARS=GEARs,EPUS=EPUs,use.existing="y",landed="y",foreign="y",adjust.ppi="y",sum.by="EPU",endyear=2018,reftime = c(2016,1),out.dir=here::here("output"),Stand.alone=F) {
 
   if(!(isS4(channel))) {
     message("Argument \"channel\", is not a valid DBI connection object. Please see dbutils::connect_to_database for details ...")
@@ -104,7 +104,7 @@ comland[, NESPP4 := NULL]
 
 # Deal with Hakes and Skates------------------------------------------------------------------
 
-skates_hakes <- comland_skates_hakes(EPUS)
+skates_hakes <- comland_skates_hakes(EPUS,out.dir)
 skate.hake.us <- skates_hakes$skate.hake.us
 skate.hake.nafo <- skates_hakes$skate.hake.nafo
 #get little skates and winter skates from skates(ns) - use survey in half years
