@@ -29,18 +29,12 @@
 # data.dir\\Menhaden.csv
 # data.dir.3\\SS_NAFO_21A.csv
 # data.dir.3\\species.txt
-comland <- function(channel,GEARS=GEARs,EPUS=EPUs,use.existing="y",landed="y",foreign="y",adjust.ppi="y",sum.by="EPU",endyear=2018,reftime = c(2016,1),out.dir=here::here("output"),Stand.alone=F) {
+comland <- function(channel,GEARS=GEARs,EPUS=EPUs,use.existing="y",landed="y",foreign="y",adjust.ppi="y",sum.by="EPU",endyear=2018,reftime = c(2016,1),out.dir=here::here(),Stand.alone=F) {
 
   if(!(isS4(channel))) {
     message("Argument \"channel\", is not a valid DBI connection object. Please see dbutils::connect_to_database for details ...")
     return()
   }
-
-
-#User parameters
-if(Sys.info()['sysname']=="Windows"){
-  #data.dir   <- system.file("extdata", "2012.csv", package = "testdat")
-}
 
 refyear <- reftime[1]
 refmonth <- reftime[2]
@@ -104,7 +98,7 @@ comland[, NESPP4 := NULL]
 
 # Deal with Hakes and Skates------------------------------------------------------------------
 
-skates_hakes <- comland_skates_hakes(EPUS,out.dir)
+skates_hakes <- comland_skates_hakes(EPUS,out.dir,Stand.alone)
 skate.hake.us <- skates_hakes$skate.hake.us
 skate.hake.nafo <- skates_hakes$skate.hake.nafo
 #get little skates and winter skates from skates(ns) - use survey in half years
@@ -1719,10 +1713,10 @@ data.table::setnames(comland.agg, c('V1', 'V2'), c('SPPLIVMT', 'SPPVALUE'))
 if(sum.by == 'EPU'){
   #Assign EPU based on statarea
 
-  comland.agg[AREA %in% EPUS$gom, EPU := 'GOM']
-  comland.agg[AREA %in% EPUS$gb,  EPU := 'GB']
-  comland.agg[AREA %in% EPUS$mab, EPU := 'MAB']
-  comland.agg[AREA %in% EPUS$ss,  EPU := 'SS']
+  comland.agg[AREA %in% EPUS$GOM, EPU := 'GOM']
+  comland.agg[AREA %in% EPUS$GB,  EPU := 'GB']
+  comland.agg[AREA %in% EPUS$MAB, EPU := 'MAB']
+  comland.agg[AREA %in% EPUS$SS,  EPU := 'SS']
   comland.agg[is.na(EPU),    EPU := 'OTHER']
   comland.agg[, EPU := factor(EPU, levels = c('GOM', 'GB', 'MAB', 'SS', 'OTHER'))]
 

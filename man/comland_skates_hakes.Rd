@@ -4,10 +4,14 @@
 \alias{comland_skates_hakes}
 \title{#Comcatch_skates_hakes.r}
 \usage{
-comland_skates_hakes(EPUS)
+comland_skates_hakes(EPUS, out.dir, Stand.alone = F)
 }
 \arguments{
 \item{EPUS}{List. Designates the stat areas that comprise an EPU.}
+
+\item{out.dir}{Character string. Path to directory where skate data will be written}
+
+\item{Stand.alone}{Boolean. Flag to determine whether to save Skate and hake data to file. defualt = F (Both a US catch file and a NAFO catch file will be saved)}
 }
 \description{
 Determine proportion of little/winter skates and silver hake in landings data 7/13

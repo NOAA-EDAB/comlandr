@@ -6,8 +6,8 @@
 \usage{
 comland(channel, GEARS = GEARs, EPUS = EPUs, use.existing = "y",
   landed = "y", foreign = "y", adjust.ppi = "y", sum.by = "EPU",
-  endyear = 2018, reftime = c(2016, 1),
-  out.dir = here::here("output"))
+  endyear = 2018, reftime = c(2016, 1), out.dir = here::here(),
+  Stand.alone = F)
 }
 \arguments{
 \item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
@@ -32,6 +32,8 @@ to communicate with the database engine. (see \code{\link{connect_to_database}})
 \item{reftime}{Numeric Vector. (Length 2). Specifies the year and month if adjusting for inflation. Default = c(2016,1)}
 
 \item{out.dir}{Character string. Path to directory where final output will be saved or where data is to be read from}
+
+\item{Stand.alone}{Boolean. Flag to determine whether to save Skate and hake data to file. defualt = F (Both a US catch file and a NAFO catch file will be saved)}
 }
 \description{
 #Grab commercial landings data from US and Foreign countries (NAFO)

@@ -111,10 +111,10 @@ if(Stand.alone == F) skate.hake.us <- skate.hake
 #NAFO uses divisions
 
 catch.stat[, EPU := factor(NA, levels = c('GOM', 'GB', 'MAB', 'SS'))]
-catch.stat[AREA %in% EPUS$gom, EPU := 'GOM']
-catch.stat[AREA %in% EPUS$gb,  EPU := 'GB']
-catch.stat[AREA %in% EPUS$mab, EPU := 'MAB']
-catch.stat[AREA %in% EPUS$ss,  EPU := 'SS']
+catch.stat[AREA %in% EPUS$GOM, EPU := 'GOM']
+catch.stat[AREA %in% EPUS$GB,  EPU := 'GB']
+catch.stat[AREA %in% EPUS$MAB, EPU := 'MAB']
+catch.stat[AREA %in% EPUS$SS,  EPU := 'SS']
 
 data.table::setkey(catch.stat,
        YEAR,
