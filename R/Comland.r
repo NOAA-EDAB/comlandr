@@ -39,12 +39,24 @@ comland <- function(channel,GEARS=GEARs,EPUS=EPUs,use.existing="y",landed="y",fo
 refyear <- reftime[1]
 refmonth <- reftime[2]
 
-## Pull data from databases
+## Pull data from databases or read existing
 if(use.existing == 'n'){
   comland <- get_comland_data(channel,landed,endyear,out.dir)
+
 } else if(use.existing == 'y'){ # or read from directory
-  if(landed == 'n') load(file = file.path(out.dir, "comland_raw_US.RData"))
-  if(landed == 'y') load(file = file.path(out.dir, "comland_raw_US_meatwt.RData"))
+  if(landed == 'n') {
+    comlandFile <- file.path(out.dir, "comland_raw_US.RData")
+  } else if (landed == "y") {
+    comlandFile <- file.path(out.dir, "comland_raw_US_meatwt.RData")
+  } else {
+    stop(paste0("landed = ",landed," is not a valid entry. Please see help for valid argument values"))
+  }
+  if (!file.exists(comlandFile)) {
+      message(paste0("The file, ",comlandFile," doesnt exist. If this is the first time you are running comland.R then you will need to use the argument \"use.existing=\"n\" and pull an initial data set. Fishing data are not provided with this package. Otherwise check to make sure your out.dir path is correct "))
+    return()
+  } else {
+    load(file = comlandFile)
+  }
 }
 
 #-------------------------------------------------------------------------------
