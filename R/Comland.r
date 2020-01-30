@@ -1725,10 +1725,10 @@ data.table::setnames(comland.agg, c('V1', 'V2'), c('SPPLIVMT', 'SPPVALUE'))
 if(sum.by == 'EPU'){
   #Assign EPU based on statarea
 
-  comland.agg[AREA %in% EPUS$GOM, EPU := 'GOM']
-  comland.agg[AREA %in% EPUS$GB,  EPU := 'GB']
-  comland.agg[AREA %in% EPUS$MAB, EPU := 'MAB']
-  comland.agg[AREA %in% EPUS$SS,  EPU := 'SS']
+  comland.agg[AREA %in% EPUS$GOM$statAreas, EPU := 'GOM']
+  comland.agg[AREA %in% EPUS$GB$statAreas,  EPU := 'GB']
+  comland.agg[AREA %in% EPUS$MAB$statAreas, EPU := 'MAB']
+  comland.agg[AREA %in% EPUS$SS$statAreas,  EPU := 'SS']
   comland.agg[is.na(EPU),    EPU := 'OTHER']
   comland.agg[, EPU := factor(EPU, levels = c('GOM', 'GB', 'MAB', 'SS', 'OTHER'))]
 
