@@ -1,6 +1,6 @@
 #' Comland.r Version now controlled by git - originally part of comcatch.r
 #'
-#'#Grab commercial landings data from US and Foreign countries (NAFO)
+#'Grab commercial landings data from US and Foreign countries (NAFO)
 #'Need to fix menhaden data
 #'SML
 #'
@@ -9,14 +9,23 @@
 #'@param EPUS List. Designates the stat areas that comprise an EPU. Default = EPUs (lazily loaded data)
 #'@param GEARS List. Designates the NEGEAR codes that comprise a fishing fleet. Default = GEARs (lazily loaded data)
 #'@param use.existing String. Pull from database "n" or use existing pull "y" (saves time) . Default = "y"
-#'@param landed Character String. Use landed weight for scallops and clams instead of live weight. Default = "y"
+#'@param landed Character String. Use landed weight for scallops and clams or live weight. Default = "y" (meatwt), "n" (livewt)
 #'@param foreign Character String. Mark foreign landings and keep seperate. Default = "y"
-#'@param adjust.ppi Character String. Adjust value for inflation. Default = "y"
+#'@param adjust.ppi Character String. Adjust value for inflation. Default = "y" (deflated) vs "n" (notdeflated)
 #'@param sum.by Character String. Variable to sum landings by either "EPU" (Default) or "stat.area"
 #'@param endyear Numeric Scalar. Final year of query. Default = 2018
 #'@param reftime Numeric Vector. (Length 2). Specifies the year and month if adjusting for inflation. Default = c(2016,1)
 #'@param out.dir Character string. Path to directory where final output will be saved or where data is to be read from
 #'@param Stand.alone Boolean. Flag to determine whether to save Skate and hake data to file. defualt = F (Both a US catch file and a NAFO catch file will be saved)
+#'
+#'
+#'@return An RDS file is created
+#'
+#'
+#'A file will be written to your hard drive in the directory specified by \code{out.dir}. The name of the file will be named depending on user input. For example:
+#'
+#'Filename = 'comland_meatwt_deflated_stat_areas.RDS'
+#' arises from user: landed = "y", adjust.ppi = "y", sum.by = "stat.area"
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
@@ -29,7 +38,7 @@
 # data.dir\\Menhaden.csv
 # data.dir.3\\SS_NAFO_21A.csv
 # data.dir.3\\species.txt
-comland <- function(channel,GEARS=GEARs,EPUS=EPUs,use.existing="y",landed="y",foreign="y",adjust.ppi="y",sum.by="EPU",endyear=2018,reftime = c(2016,1),out.dir=here::here(),Stand.alone=F) {
+comland <- function(channel,GEARS=comlandr::GEARs,EPUS=comlandr::EPUs,use.existing="y",landed="y",foreign="y",adjust.ppi="y",sum.by="EPU",endyear=2018,reftime = c(2016,1),out.dir=here::here(),Stand.alone=F) {
 
   if(!(isS4(channel))) {
     message("Argument \"channel\", is not a valid DBI connection object. Please see dbutils::connect_to_database for details ...")
@@ -2010,10 +2019,10 @@ if(sum.by == 'EPU'){
 if(sum.by == 'stat.area') comland <- comland.agg
 
 #Output file
-if(landed     == 'n') file.landed <- '' else file.landed <- '_meatwt'
+if(landed     == 'n') file.landed <- '_livewt' else file.landed <- '_meatwt'
 if(adjust.ppi == 'n') file.adjust <- '' else file.adjust <- '_deflated'
 if(sum.by == 'EPU') file.by <- '_EPU' else file.by <- '_stat_areas'
-file.name <- paste0('comland', file.landed, file.adjust, file.by,Sys.Date())
+file.name <- paste0('comland', file.landed, file.adjust, file.by)
 
 save(comland, file = file.path(out.dir, paste0(file.name,".RData")))
 saveRDS(comland, file = file.path(out.dir, paste0(file.name,".Rds")))

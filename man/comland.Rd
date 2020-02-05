@@ -4,10 +4,10 @@
 \alias{comland}
 \title{Comland.r Version now controlled by git - originally part of comcatch.r}
 \usage{
-comland(channel, GEARS = GEARs, EPUS = EPUs, use.existing = "y",
-  landed = "y", foreign = "y", adjust.ppi = "y", sum.by = "EPU",
-  endyear = 2018, reftime = c(2016, 1), out.dir = here::here(),
-  Stand.alone = F)
+comland(channel, GEARS = comlandr::GEARs, EPUS = comlandr::EPUs,
+  use.existing = "y", landed = "y", foreign = "y",
+  adjust.ppi = "y", sum.by = "EPU", endyear = 2018,
+  reftime = c(2016, 1), out.dir = here::here(), Stand.alone = F)
 }
 \arguments{
 \item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
@@ -19,11 +19,11 @@ to communicate with the database engine. (see \code{\link{connect_to_database}})
 
 \item{use.existing}{String. Pull from database "n" or use existing pull "y" (saves time) . Default = "y"}
 
-\item{landed}{Character String. Use landed weight for scallops and clams instead of live weight. Default = "y"}
+\item{landed}{Character String. Use landed weight for scallops and clams or live weight. Default = "y" (meatwt), "n" (livewt)}
 
 \item{foreign}{Character String. Mark foreign landings and keep seperate. Default = "y"}
 
-\item{adjust.ppi}{Character String. Adjust value for inflation. Default = "y"}
+\item{adjust.ppi}{Character String. Adjust value for inflation. Default = "y" (deflated) vs "n" (notdeflated)}
 
 \item{sum.by}{Character String. Variable to sum landings by either "EPU" (Default) or "stat.area"}
 
@@ -40,3 +40,12 @@ to communicate with the database engine. (see \code{\link{connect_to_database}})
 Need to fix menhaden data
 SML
 }
+\section{Output}{
+
+
+A file will be written to your hard drive in the directory specified by \code{out.dir}. the name of the file will be named depending on user input. For example:
+
+Filename = 'comland_meatwt_deflated_stat_areas.RDS'
+arises from user: landed = "y", adjust.ppi = "y", sum.by = "stat.area"
+}
+
