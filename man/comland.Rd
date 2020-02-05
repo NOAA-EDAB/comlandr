@@ -35,17 +35,17 @@ to communicate with the database engine. (see \code{\link{connect_to_database}})
 
 \item{Stand.alone}{Boolean. Flag to determine whether to save Skate and hake data to file. defualt = F (Both a US catch file and a NAFO catch file will be saved)}
 }
-\description{
-#Grab commercial landings data from US and Foreign countries (NAFO)
-Need to fix menhaden data
-SML
-}
-\section{Output}{
+\value{
+An RDS file is created
 
 
-A file will be written to your hard drive in the directory specified by \code{out.dir}. the name of the file will be named depending on user input. For example:
+A file will be written to your hard drive in the directory specified by \code{out.dir}. The name of the file will be named depending on user input. For example:
 
 Filename = 'comland_meatwt_deflated_stat_areas.RDS'
 arises from user: landed = "y", adjust.ppi = "y", sum.by = "stat.area"
 }
-
+\description{
+Grab commercial landings data from US and Foreign countries (NAFO)
+Need to fix menhaden data
+SML
+}
