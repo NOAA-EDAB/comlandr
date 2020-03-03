@@ -45,11 +45,18 @@ comland <- function(channel,GEARS=comlandr::GEARs,EPUS=comlandr::EPUs,use.existi
     return()
   }
 
-refyear <- reftime[1]
-refmonth <- reftime[2]
+  #Output file
+  if(landed     == 'n') file.landed <- '_livewt' else file.landed <- '_meatwt'
+  if(adjust.ppi == 'n') file.adjust <- '' else file.adjust <- '_deflated'
+  if(sum.by == 'EPU') file.by <- '_EPU' else file.by <- '_stat_areas'
+  file.name <- paste0('comland', file.landed, file.adjust, file.by)
+
+  refyear <- reftime[1]
+  refmonth <- reftime[2]
 
 ## Pull data from databases or read existing
 if(use.existing == 'n'){
+
   comland <- get_comland_data(channel,landed,endyear,out.dir)
 
 } else if(use.existing == 'y'){ # or read from directory
@@ -60,6 +67,7 @@ if(use.existing == 'n'){
   } else {
     stop(paste0("landed = ",landed," is not a valid entry. Please see help for valid argument values"))
   }
+  print(comlandFile)
   if (!file.exists(comlandFile)) {
       message(paste0("The file, ",comlandFile," doesnt exist. If this is the first time you are running comland.R then you will need to use the argument \"use.existing=\"n\" and pull an initial data set. Fishing data are not provided with this package. Otherwise check to make sure your out.dir path is correct "))
     return()
@@ -80,27 +88,8 @@ comland[YEAR < 100, YEAR := YEAR + 1900L]
 #comland$YEAR <- as.character(comland$YEAR)
 
 if(adjust.ppi == 'y'){
-    #Adjust SPPVALUE for inflation
-    temp <- tempfile()
-    download.file("http://download.bls.gov/pub/time.series/wp/wp.data.3.ProcessedFoods", temp)
-    inflate <- data.table::as.data.table(read.delim(temp))
-    unlink(temp)
-
-    inflate[, series_id := gsub(" ", "", inflate[, series_id])]
-    deflate <- inflate[series_id == "WPU0223", ]
-    deflate[, MONTH := as.numeric(substr(period, 2, 3))]
-    data.table::setnames(deflate, c('year', 'value'), c('YEAR', 'PPI'))
-    deflate <- deflate[, list(YEAR, MONTH, PPI)]
-
-    #Set yearly deflator to 0 instead of 13 to match unknown month designation
-    deflate[MONTH == 13, MONTH := 0]
-    deflate.base <- deflate[YEAR == refyear & MONTH == refmonth, PPI]
-
-    comland <- merge(comland, deflate, by = c('YEAR', 'MONTH'), all.x = T)
-    comland[, SPPVALUE := round((SPPVALUE * deflate.base) / PPI)]
-
-    #Remove extra column
-    comland[, PPI := NULL]
+  # Adjust SPPVALUE for inflation
+  comland <- adjust_inflation(comland,refyear,refmonth)
 }
 #Remove market categories of parts
 comland <- comland[!NESPP4 %in% c(119, 123, 125, 127, 812, 819, 828, 829, 1731, 2351,
@@ -2018,11 +2007,7 @@ if(sum.by == 'EPU'){
 
 if(sum.by == 'stat.area') comland <- comland.agg
 
-#Output file
-if(landed     == 'n') file.landed <- '_livewt' else file.landed <- '_meatwt'
-if(adjust.ppi == 'n') file.adjust <- '' else file.adjust <- '_deflated'
-if(sum.by == 'EPU') file.by <- '_EPU' else file.by <- '_stat_areas'
-file.name <- paste0('comland', file.landed, file.adjust, file.by)
+
 
 save(comland, file = file.path(out.dir, paste0(file.name,".RData")))
 saveRDS(comland, file = file.path(out.dir, paste0(file.name,".Rds")))
