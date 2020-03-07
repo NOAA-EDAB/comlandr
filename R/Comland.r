@@ -1850,7 +1850,7 @@ if(sum.by == 'stat.area') comland <- comland.agg
 
 
 
-save(comland, file = file.path(out.dir, paste0(file.name,".RData")))
-saveRDS(comland, file = file.path(out.dir, paste0(file.name,".Rds")))
+save(comland, file = file.path(out.dir, paste0(file.name,Sys.Date(),".RData")))
+saveRDS(comland, file = file.path(out.dir, paste0(file.name,Sys.Date(),".Rds")))
 
 }
