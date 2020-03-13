@@ -104,8 +104,12 @@ skate.hake[SEASON == 'SPRING', Half := 1]
 skate.hake[SEASON == 'FALL',   Half := 2]
 skate.hake[, SEASON := NULL]
 
-if(Stand.alone == T) save(skate.hake, file = paste(out.dir, "skates_hakes.RData", sep =''))
-if(Stand.alone == F) skate.hake.us <- skate.hake
+if(Stand.alone == T) save(skate.hake, file = file.path(out.dir, "skates_hakes.RData", sep =''))
+#if(Stand.alone == F) skate.hake.us <- skate.hake
+skate.hake.us <- skate.hake
+
+
+
 
 #Foreign Landings--------------------------------------------------------------------
 #NAFO uses divisions
@@ -116,10 +120,14 @@ catch.stat[AREA %in% EPUS$GB$statAreas,  EPU := 'GB']
 catch.stat[AREA %in% EPUS$MAB$statAreas, EPU := 'MAB']
 catch.stat[AREA %in% EPUS$SS$statAreas,  EPU := 'SS']
 
+
+
 data.table::setkey(catch.stat,
        YEAR,
        SEASON,
        EPU)
+
+
 
 #Figure out proportion of skates
 skates <- catch.stat[SVSPP %in% 22:28, sum(BIOMASS), by = key(catch.stat)]
@@ -165,7 +173,8 @@ skate.hake[, SEASON := NULL]
 skate.hake <- skate.hake[!is.na(EPU), ]
 
 if(Stand.alone == T) save(skate.hake, file = file.path(out.dir, "skates_hakes_nafo.RData"))
-if(Stand.alone == F) skate.hake.nafo <- skate.hake
+#if(Stand.alone == F) skate.hake.nafo <- skate.hake
+skate.hake.nafo <- skate.hake
 
 return(list(skate.hake.us=skate.hake.us,skate.hake.nafo=skate.hake.nafo))
 

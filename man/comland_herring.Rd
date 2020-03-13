@@ -12,7 +12,7 @@ comland_herring(channel, comland)
 \item{comland}{Data frame. master data frame containing species landings}
 }
 \value{
-Processed Herring data
+Processed Herring data added to comland
 }
 \description{
 Herring Data comes from the state of Maine.
