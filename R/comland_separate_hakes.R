@@ -8,7 +8,7 @@
 #'
 #'@export
 
-comland_separate_skates <- function(comland,skate.hake.us) {
+comland_separate_hakes <- function(comland,skate.hake.us) {
         #get silver hake from mixed hakes - use survey in half years
         #Generate Half year variable in comland
         comland.hakes <- comland[NESPP3 == 507, ]
