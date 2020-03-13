@@ -374,5 +374,4 @@ assign_catch_size <- function(comland.agg){
 
   return(comland.agg)
 
-  return(comland.agg)
 }
