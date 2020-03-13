@@ -5,7 +5,7 @@
 #'@param channel DBI object. connection object for database access
 #'@param comland Data frame. master data frame containing species landings
 #'
-#'@return Processed Herring data
+#'@return Processed Herring data added to comland
 #'
 #'
 
@@ -14,14 +14,18 @@ comland_herring <- function(channel,comland) {
   herr.qry <- "select year, month, stock_area, negear, gearname, keptmt, discmt
              from maine_herring_catch"
 
-  herr.catch <- as.data.table(DBI::dbGetQuery(channel, herr.qry))
+  herr.catch <- data.table::as.data.table(DBI::dbGetQuery(channel, herr.qry))
   data.table::setkey(herr.catch, YEAR, MONTH, STOCK_AREA, NEGEAR)
 
-  herring <- herr.catch[, list(sum(KEPTMT), sum(DISCMT)), by = key(herr.catch)]
+  herring <- herr.catch[, list(sum(KEPTMT), sum(DISCMT)), by = eval(data.table::key(herr.catch))]
   data.table::setnames(herring, c('STOCK_AREA', 'V1', 'V2'),
                        c('AREA', 'SPPLIVMT', 'DISCMT'))
+
   herring$YEAR <- as.integer(herring$YEAR)
-  herring$MONTH <- as.double(herring$MONTH)
+  herring$MONTH <- as.integer(herring$MONTH)
+#  herring$STOCK_AREA <- as.integer(herring$STOCK_AREA)
+  herring$NEGEAR <- as.integer(herring$NEGEAR)
+  herring$MONTH <- as.integer(herring$MONTH)
 
   #Using averages from comland to fill in categories
   herring[, MKTCAT := 5]
@@ -71,6 +75,11 @@ comland_herring <- function(channel,comland) {
   herring[, c('Total', 'Prop', 'cum.prop', 'price', 'DISCMT') := NULL]
   herring[, NESPP3 := 168]
 
-  return(herring)
+  data.table::setcolorder(herring, names(comland))
+  #remove herring from data pull and add in Maine numbers
+  comland <- data.table::rbindlist(list(comland[NESPP3 != 168, ], herring))
+
+
+  return(comland)
 
 }
