@@ -81,8 +81,8 @@ get_comland_data <- function(channel,landed,endyear,out.dir) {
   }
 
   # Save file.
-  if(landed == 'n') save(comland, file = file.path(out.dir, paste0("comland_raw_US_",Sys.Date(),".RData")))
-  if(landed == 'y') save(comland, file = file.path(out.dir, paste0("comland_raw_US_meatwt_",Sys.Date(),".RData")))
+  if(landed == 'n') saveRDS(comland, file = file.path(out.dir, paste0("comland_raw_US_livewt.RDS")))
+  if(landed == 'y') saveRDS(comland, file = file.path(out.dir, paste0("comland_raw_US_meatwt.RDS")))
 
   return(comland)
 
