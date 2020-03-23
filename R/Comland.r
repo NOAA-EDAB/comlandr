@@ -63,18 +63,18 @@ if(use.existing == 'n'){
 
 } else if(use.existing == 'y'){ # or read from directory
   if(landed == 'n') {
-    comlandFile <- file.path(out.dir, "comland_raw_US.RData")
+    comlandFile <- file.path(out.dir, "comland_raw_US_livewt.RDS")
   } else if (landed == "y") {
-    comlandFile <- file.path(out.dir, "comland_raw_US_meatwt.RData")
+    comlandFile <- file.path(out.dir, "comland_raw_US_meatwt.RDS")
   } else {
     stop(paste0("landed = ",landed," is not a valid entry. Please see help for valid argument values"))
   }
-  print(comlandFile)
+
   if (!file.exists(comlandFile)) {
       message(paste0("The file, ",comlandFile," doesnt exist. If this is the first time you are running comland.R then you will need to use the argument \"use.existing=\"n\" and pull an initial data set. Fishing data are not provided with this package. Otherwise check to make sure your out.dir path is correct "))
     return()
   } else {
-    load(file = comlandFile)
+    comland <- readRDS(comlandFile)
   }
 }
 
@@ -159,7 +159,7 @@ comland.agg <- assign_catch_area(comland.agg)
 
 
 # NAFO data processed -----------------------------------------------------
-  nafoland.agg <- comland_nafo(channel,skate.hake.nafo,GEARS)
+nafoland.agg <- comland_nafo(channel,skate.hake.nafo,GEARS)
 
 # aggregate by EPU  --------------------------------------------------------
 if(sum.by == 'EPU'){
@@ -175,7 +175,7 @@ if(sum.by == 'EPU'){
 
 
 #save(comland, file = file.path(out.dir, paste0(file.name,Sys.Date(),".RData")))
-saveRDS(comland, file = file.path(out.dir, paste0(file.name,Sys.Date(),".Rds")))
+saveRDS(comland, file = file.path(out.dir, paste0(file.name,".Rds")))
 
 return(comland)
 
