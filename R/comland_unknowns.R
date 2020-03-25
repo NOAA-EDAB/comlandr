@@ -12,8 +12,8 @@ comland_unknowns <- function(comland){
 
   comland[NEGEAR == 999,  NEGEAR := 0]
   comland[is.na(TONCL1),  TONCL1 := 0]
-  comland[is.na(AREA),    AREA   := as.factor(0)]
-  comland[AREA == 999,    AREA   := as.factor(0)]
+  comland[is.na(AREA),    AREA   := 0]
+  comland[AREA == 999,    AREA   := 0]
   comland[is.na(MKTCAT),  MKTCAT := 0]
   comland[is.na(UTILCD),  UTILCD := 0]
 

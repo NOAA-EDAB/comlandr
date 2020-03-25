@@ -10,6 +10,7 @@
 #'
 
 comland_aggregate <- function(comland,GEARS){
+
   comland[MONTH %in% 1:3,   QY := 1]
   comland[MONTH %in% 4:6,   QY := 2]
   comland[MONTH %in% 7:9,   QY := 3]
@@ -37,6 +38,7 @@ comland_aggregate <- function(comland,GEARS){
   comland[TONCL1 > 3,      SIZE := 'large']
   comland[TONCL1 == 0,     SIZE := 'unknown']
   comland[, SIZE := as.factor(SIZE)]
+
 
   data.table::setkey(comland,
                      YEAR,

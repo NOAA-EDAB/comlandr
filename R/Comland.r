@@ -28,6 +28,7 @@
 #' arises from user: landed = "y", adjust.ppi = "y", sum.by = "stat.area"
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
+#'@importFrom magrittr "%>%"
 #'
 #'@export
 #'
@@ -65,7 +66,7 @@ if(use.existing == 'n'){
   if(landed == 'n') {
     comlandFile <- file.path(out.dir, "comland_raw_US_livewt.RDS")
   } else if (landed == "y") {
-    comlandFile <- file.path(out.dir, "comland_raw_US_meatwt.RDS")
+    comlandFile <- file.path(out.dir, "comland_raw_US_meatwt1.RData")
   } else {
     stop(paste0("landed = ",landed," is not a valid entry. Please see help for valid argument values"))
   }
@@ -74,18 +75,23 @@ if(use.existing == 'n'){
       message(paste0("The file, ",comlandFile," doesnt exist. If this is the first time you are running comland.R then you will need to use the argument \"use.existing=\"n\" and pull an initial data set. Fishing data are not provided with this package. Otherwise check to make sure your out.dir path is correct "))
     return()
   } else {
-    comland <- readRDS(comlandFile)
+    #comland <- readRDS(comlandFile)
+    load(comlandFile)
+
+    comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%
+      dplyr::mutate(AREA = dplyr::case_when(AREA=="0" ~ "000",AREA=="2" ~ "002",TRUE ~ AREA)) %>%
+      dplyr::filter(!grepl("^[A-Z]",AREA)) %>%
+      dplyr::mutate(AREA=as.integer(AREA))
+    comland <- as.data.table(comland)
   }
 }
+
 
 # Convert from lbs to metric tons ----------------------------------------
 
 comland[, SPPLIVMT := SPPLIVLB * 0.00045359237]
 comland[, SPPLIVLB := NULL]
 #fix years
-comland$MONTH <- as.integer(comland$MONTH)
-comland$YEAR <- as.integer(comland$YEAR)
-comland$AREA <- as.integer(comland$AREA)
 comland[YEAR < 100, YEAR := YEAR + 1900L]
 #comland$YEAR <- as.character(comland$YEAR)
 
@@ -111,7 +117,6 @@ comland[NESPP4 > 999,                MKTCAT := as.numeric(substring(NESPP4, 4, 4
 comland[, NESPP4 := NULL]
 
 # Deal with Hakes and Skates------------------------------------------------------------------
-
 skates_hakes <- comland_skates_hakes(EPUS,out.dir,Stand.alone)
 skate.hake.us <- skates_hakes$skate.hake.us
 skate.hake.nafo <- skates_hakes$skate.hake.nafo
@@ -119,17 +124,14 @@ skate.hake.nafo <- skates_hakes$skate.hake.nafo
 
 # winter & little skates --------------------------------------------------
 
-comland.skates <- comland_winter_little(comland,skate.hake.us)
-
+#comland.skates <- comland_winter_little(comland,skate.hake.us)
+comland <- comland_winter_little(comland,skate.hake.us)
 
 # comland_separate_skates -------------------------------------------------
-
 comland <- comland_separate_hakes(comland,skate.hake.us)
-
 
 # Herring --------------------------------------------------------------
 #Herring data is housed by the state of Maine.
-
 comland <- comland_herring(channel,comland)
 
 # Menhaden -------------------------------------------------------------
@@ -156,7 +158,6 @@ comland.agg <- assign_catch_gear(comland.agg)
 
 #3.D AREA------------------------------------------------------------------------------
 comland.agg <- assign_catch_area(comland.agg)
-
 
 # NAFO data processed -----------------------------------------------------
 nafoland.agg <- comland_nafo(channel,skate.hake.nafo,GEARS)

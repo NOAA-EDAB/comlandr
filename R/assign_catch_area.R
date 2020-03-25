@@ -68,6 +68,7 @@ assign_catch_area <- function(comland.agg){
   years <- unique(no.match.5[, YEAR], by = key(no.match.5))
   no.match.6 <- c()
   area.all.6 <- c()
+
   for(i in 1:length(years)){
     #3 year window
     k.area.3y <- comland.agg[AREA != 0 & YEAR %in% (years[i] - 1):(years[i] + 1), ]

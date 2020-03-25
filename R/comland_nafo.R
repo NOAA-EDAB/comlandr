@@ -111,7 +111,9 @@ comland_nafo <- function(channel,skate.hake.nafo,GEARS){
                        c('YEAR', 'NAFOGEAR', 'TONCL1', 'NAFOSPP'))
 
   spp <- as.data.table(DBI::dbGetQuery(channel, "select NAFOSPP, NESPP3 from CFSPP"))
-
+  spp$NAFOSPP <- as.integer(spp$NAFOSPP)
+  spp$NESPP3 <- as.integer(spp$NESPP3)
+  #spp <- as.data.table(RODBC::sqlQuery(channel, "select NAFOSPP, NESPP3 from CFSPP"))
   #Fix missing NAFO codes
   missing.spp <- data.table::data.table(NAFOSPP = c(110, 141, 189, 480, 484, 487, 488, 489),
                                         NESPP3  = c(240, 509, 512, 366, 368, 367, 370, 369))
@@ -148,11 +150,13 @@ comland_nafo <- function(channel,skate.hake.nafo,GEARS){
   nafoland <- nafoland[NESPP3 != 168, ]
 
   #Gearcodes
-  gear <- as.data.table(DBI::dbGetQuery(channel, "select NEGEAR, NAFOGEAR from Gear"))
-  gear <- unique(gear, by = 'NAFOGEAR')
-  gear$NAFOGEAR <- as.double(gear$NAFOGEAR)
+  #gear <- as.data.table(RODBC::sqlQuery(channel, "select NEGEAR, NAFOGEAR from Gear"))
 
-  #return(list(nafoland=nafoland,gear=gear))
+  gear <- as.data.table(DBI::dbGetQuery(channel, "select NEGEAR, NAFOGEAR from Gear"))
+  gear$NEGEAR <- as.integer(gear$NEGEAR)
+  gear$NAFOGEAR <- as.integer(gear$NAFOGEAR)
+
+  gear <- unique(gear, by = 'NAFOGEAR')
 
   nafoland <- merge(nafoland, gear, by = 'NAFOGEAR', all.x = T)
 
