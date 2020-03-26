@@ -66,7 +66,7 @@ if(use.existing == 'n'){
   if(landed == 'n') {
     comlandFile <- file.path(out.dir, "comland_raw_US_livewt.RDS")
   } else if (landed == "y") {
-    comlandFile <- file.path(out.dir, "comland_raw_US_meatwt1.RData")
+    comlandFile <- file.path(out.dir, "comland_raw_US_meatwt.RDS")
   } else {
     stop(paste0("landed = ",landed," is not a valid entry. Please see help for valid argument values"))
   }
@@ -75,8 +75,8 @@ if(use.existing == 'n'){
       message(paste0("The file, ",comlandFile," doesnt exist. If this is the first time you are running comland.R then you will need to use the argument \"use.existing=\"n\" and pull an initial data set. Fishing data are not provided with this package. Otherwise check to make sure your out.dir path is correct "))
     return()
   } else {
-    #comland <- readRDS(comlandFile)
-    load(comlandFile)
+    comland <- readRDS(comlandFile)
+    #load(comlandFile)
 
     comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%
       dplyr::mutate(AREA = dplyr::case_when(AREA=="0" ~ "000",AREA=="2" ~ "002",TRUE ~ AREA)) %>%
