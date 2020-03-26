@@ -46,6 +46,8 @@ comland <- function(channel,GEARS=comlandr::GEARs,EPUS=comlandr::EPUs,use.existi
     return()
   }
 
+  # informs user as to what he/she has requested since there a lot of options
+  #input_checks(use.existing,landed,foreign,adjust.ppi,sum.by,endyear,reftime,out.dir)
 
   #Output file
   if(landed     == 'n') file.landed <- '_livewt' else file.landed <- '_meatwt'
@@ -76,16 +78,15 @@ if(use.existing == 'n'){
     return()
   } else {
     comland <- readRDS(comlandFile)
-    #load(comlandFile)
-
-    comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%
-      dplyr::mutate(AREA = dplyr::case_when(AREA=="0" ~ "000",AREA=="2" ~ "002",TRUE ~ AREA)) %>%
-      dplyr::filter(!grepl("^[A-Z]",AREA)) %>%
-      dplyr::mutate(AREA=as.integer(AREA))
-    comland <- as.data.table(comland)
   }
 }
 
+  # fixes needed when data is pulled using RODBC
+  comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%
+    dplyr::mutate(AREA = dplyr::case_when(AREA=="0" ~ "000",AREA=="2" ~ "002",TRUE ~ AREA)) %>%
+    dplyr::filter(!grepl("^[A-Z]",AREA)) %>%
+    dplyr::mutate(AREA=as.integer(AREA)) %>%
+    as.data.table()
 
 # Convert from lbs to metric tons ----------------------------------------
 
