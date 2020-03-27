@@ -23,6 +23,7 @@ theme_comland <- function(...){
 #'
 #'@param data data frame. Output from \code{comland.r}
 #'@param by The variable within \code{data} that you want to plot by
+#'@param type Plot either 'landings' or 'value'.
 #'@param range Range of years to plot.  Default value plots all years.
 #'@param free.y Allow the y-axis to rescale per "By" group.
 #'
