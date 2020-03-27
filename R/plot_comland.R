@@ -32,31 +32,35 @@ theme_comland <- function(...){
 #'@export
 
 
-plot_comland <- function(data, by, range = NA, free.y = T) {
+plot_comland <- function(data, by, type = 'landings', range = NA, free.y = T) {
   
-  #Sum landings and assign "By" category
-  comland.sum <- data[, .(landings = sum(SPPLIVMT)), by = c('YEAR', by, 'EPU')]
+  #Sum landings/value and assign "By" category
+  comland.sum <- data[, .(landings = sum(SPPLIVMT), value = sum(SPPVALUE)), 
+                      by = c('YEAR', by, 'EPU')]
   if(!is.na(range[1])) comland.sum <- comland.sum[YEAR %in% range, ]
-  data.table::setnames(comland.sum, by, 'By')
+  data.table::setnames(comland.sum, c(by, type), c('By', 'yvar'))
   
   #Remove scientific notation from axis
   format.axis <- function(x) x / 10e3
   
-  #Set up plot
+  #Plot
+  if(type == 'landings') ylab <- expression('Landings, metric tons 10'^3)
+  if(type == 'value') ylab <- expression('Value, US dollars 10'^3)
+  
   if(free.y == T){
     g <- ggplot2::ggplot(comland.sum) +
       ggplot2::geom_line(aes(x = YEAR,
-                             y = landings)) +
+                             y = yvar)) +
       ggplot2::facet_grid(By ~ EPU, scale = 'free_y') +
       ggplot2::scale_y_continuous(labels = format.axis) +
-      ggplot2::labs(y = expression('Landings, metric tons 10'^3), x = 'Year') +
+      ggplot2::labs(y = ylab, x = 'Year') +
       theme_comland()
   }
   
   if(free.y == F){
     g <- ggplot2::ggplot(comland.sum) +
       ggplot2::geom_line(aes(x = YEAR,
-                             y = landings)) +
+                             y = yvar)) +
       ggplot2::facet_grid(By ~ EPU) +
       ggplot2::scale_y_continuous(labels = format.axis) +
       ggplot2::labs(y = expression('Landings, metric tons 10'^3), x = 'Year') +
