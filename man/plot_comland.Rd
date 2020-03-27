@@ -2,13 +2,21 @@
 % Please edit documentation in R/plot_comland.R
 \name{plot_comland}
 \alias{plot_comland}
-\title{plots of comlands data}
+\title{Plots comlands data}
 \usage{
-plot_comland(data)
+plot_comland(data, by, type = "landings", range = NA, free.y = T)
 }
 \arguments{
-\item{data}{data frame. Output from \code{comland.r}}
+\item{data}{Data frame. Output from \code{comland.r}}
+
+\item{by}{Character string. The variable within \code{data} that you want to plot by (GEAR, QY, SIZE, US)}
+
+\item{type}{Character string. Plot either 'landings' (default) or 'value'.}
+
+\item{range}{Numeric vector. Range of years to plot.  Default value plots all years.}
+
+\item{free.y}{Boolean. Allow the y-axis to rescale per "By" group (Default = T)}
 }
 \description{
-plots of comlands data
+Comland data landings or the value of landings are plotted for each EPU over time by either \code{GEAR} type, Quarter Year (\code{QY}), vessel \code{SIZE}, or location of landings (\code{US}/nonUS)
 }
