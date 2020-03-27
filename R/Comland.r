@@ -80,13 +80,21 @@ if(use.existing == 'n'){
     comland <- readRDS(comlandFile)
   }
 }
+  comland$YEAR <- as.integer(comland$YEAR)
+  comland$MONTH <- as.integer(comland$MONTH)
+  comland$NEGEAR <- as.integer(comland$NEGEAR)
+  comland$TONCL1 <- as.integer(comland$TONCL1)
+  comland$NESPP3 <- as.integer(comland$NESPP3)
+  comland$NESPP4 <- as.integer(comland$NESPP4)
+  comland$UTILCD <- as.integer(comland$UTILCD)
+  comland$AREA <- as.factor(comland$AREA)
 
-  # fixes needed when data is pulled using RODBC
-  comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%
-    dplyr::mutate(AREA = dplyr::case_when(AREA=="0" ~ "000",AREA=="2" ~ "002",TRUE ~ AREA)) %>%
-    dplyr::filter(!grepl("^[A-Z]",AREA)) %>%
-    dplyr::mutate(AREA=as.integer(AREA)) %>%
-    as.data.table()
+  # # fixes needed when data is pulled using RODBC
+  # comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%
+  #   dplyr::mutate(AREA = dplyr::case_when(AREA=="0" ~ "000",AREA=="2" ~ "002",TRUE ~ AREA)) %>%
+  #   dplyr::filter(!grepl("^[A-Z]",AREA)) %>%
+  #   dplyr::mutate(AREA=as.integer(AREA)) %>%
+  #   as.data.table()
 
 # Convert from lbs to metric tons ----------------------------------------
 

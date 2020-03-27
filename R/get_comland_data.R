@@ -80,6 +80,18 @@ get_comland_data <- function(channel,landed,endyear,out.dir) {
     comland <- data.table::rbindlist(list(comland, comland.yr))
   }
 
+  # save in RODBC format
+  comland$YEAR <- as.integer(comland$YEAR)
+  comland$MONTH <- as.integer(comland$MONTH)
+  comland$NEGEAR <- as.integer(comland$NEGEAR)
+  comland$TONCL1 <- as.integer(comland$TONCL1)
+  comland$NESPP3 <- as.integer(comland$NESPP3)
+  comland$NESPP4 <- as.integer(comland$NESPP4)
+  comland$UTILCD <- as.integer(comland$UTILCD)
+  comland$AREA <- as.factor(comland$AREA)
+
+
+
   # Save file.
   if(landed == 'n') saveRDS(comland, file = file.path(out.dir, paste0("comland_raw_US_livewt.RDS")))
   if(landed == 'y') saveRDS(comland, file = file.path(out.dir, paste0("comland_raw_US_meatwt.RDS")))
