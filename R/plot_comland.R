@@ -1,36 +1,21 @@
-#' Theme template
-#'
-#'@importFrom ggplot2 "element_blank" "element_rect" "element_text"
-#'@noRd
-
-#library(ggplot2); library(data.table)
-
-
-theme_ts <- function(...){
-  ggplot2::theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.background = element_blank(),
-    panel.border = element_rect(colour = "black", fill=NA, size=0.75),
-    legend.key = element_blank(),
-    axis.title = element_text(size = 10)
-  )
-}
-
 #' Theme Template
 #'
 #'#'@importFrom ggplot2 "element_blank" "element_rect" "element_text"
 #'@noRd
 
-theme_facet <- function(...){
+theme_comland <- function(...){
   ggplot2::theme(
     strip.background = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     panel.border = element_rect(colour = "black", fill=NA, size=0.75),
+    panel.spacing.x = unit(10, "points"),
+    panel.spacing.y = unit(10, "points"),
     legend.key = element_blank(),
-    axis.title = element_text(size = 10)
+    axis.title = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.margin = margin(r = 10, l = 10)
   )
 }
 
@@ -65,10 +50,7 @@ plot_comland <- function(data, by, range = NA, free.y = T) {
       ggplot2::facet_grid(By ~ EPU, scale = 'free_y') +
       ggplot2::scale_y_continuous(labels = format.axis) +
       ggplot2::labs(y = expression('Landings, metric tons 10'^3), x = 'Year') +
-      theme_facet() +
-      ggplot2::theme(plot.margin = margin(r = 10, l = 10),
-                     panel.spacing.x = unit(15, "points"),
-                     panel.spacing.y = unit(10, "points"))
+      theme_comland()
   }
   
   if(free.y == F){
@@ -78,10 +60,7 @@ plot_comland <- function(data, by, range = NA, free.y = T) {
       ggplot2::facet_grid(By ~ EPU) +
       ggplot2::scale_y_continuous(labels = format.axis) +
       ggplot2::labs(y = expression('Landings, metric tons 10'^3), x = 'Year') +
-      theme_facet() +
-      ggplot2::theme(plot.margin = margin(r = 10, l = 10),
-                     panel.spacing.x = unit(15, "points"),
-                     panel.spacing.y = unit(10, "points"))
+      theme_comland()
   }
   
   #plot figure
