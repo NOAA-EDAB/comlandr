@@ -37,22 +37,24 @@ theme_facet <- function(...){
 #'plots of comlands data
 #'
 #'@param data data frame. Output from \code{comland.r}
+#'@param by The variable within \code{data} that you want to plot by
 #'
 #'@importFrom ggplot2 "aes" "vars" "margin"
 #'
 #'@export
 
 
-plot_comland <- function(data) {
+plot_comland <- function(data, by) {
   
-  comland.gear <- data[, .(landings = sum(SPPLIVMT)), by = c('YEAR', 'GEAR', 'EPU')]
+  comland.sum <- data[, .(landings = sum(SPPLIVMT)), by = c('YEAR', by, 'EPU')]
+  setnames(comland.sum, by, 'By')
   
   format.axis <- function(x) x / 10e3
   
-  g <- ggplot2::ggplot(comland.gear) +
+  g <- ggplot2::ggplot(comland.sum) +
     ggplot2::geom_line(aes(x = YEAR,
                            y = landings)) +
-    ggplot2::facet_grid(GEAR ~ EPU, scale = 'free_y') +
+    ggplot2::facet_grid(By ~ EPU, scale = 'free_y') +
     ggplot2::scale_y_continuous(labels = format.axis) +
     ggplot2::labs(y = expression('Landings, metric tons 10'^3), x = 'Year') +
     theme_facet() +
