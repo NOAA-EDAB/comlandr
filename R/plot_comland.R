@@ -1,31 +1,3 @@
-#'plots of comlands data
-#'
-#'@param data data frame. Output from \code{comland.r}
-#'
-#'@importFrom ggplot2 "aes" "vars" "margin"
-#'
-#'@export
-
-
-
-plot_comland <- function(data) {
-
-  comland.gear <- data[, .(landings = sum(SPPLIVMT)), by = c('YEAR', 'GEAR')]
-
-
-  g <- ggplot2::ggplot(comland.gear) +
-    ggplot2::geom_line(aes(x = YEAR,
-                           y = landings)) +
-    ggplot2::facet_wrap(vars(GEAR), scales = 'free') +
-    ggplot2::labs(y = 'Landings, metric tons', x = 'Year') +
-    theme_facet() +
-    ggplot2::theme(plot.margin = margin(r = 10, l = 10))
-
-  plot(g)
-}
-
-
-
 #' Theme template
 #'
 #'@importFrom ggplot2 "element_blank" "element_rect" "element_text"
@@ -61,5 +33,34 @@ theme_facet <- function(...){
     axis.title = element_text(size = 10)
   )
 }
+
+#'plots of comlands data
+#'
+#'@param data data frame. Output from \code{comland.r}
+#'
+#'@importFrom ggplot2 "aes" "vars" "margin"
+#'
+#'@export
+
+
+plot_comland <- function(data) {
+  
+  comland.gear <- data[, .(landings = sum(SPPLIVMT)), by = c('YEAR', 'GEAR', 'EPU')]
+  
+  format.axis <- function(x) x / 10e3
+  
+  g <- ggplot2::ggplot(comland.gear) +
+    ggplot2::geom_line(aes(x = YEAR,
+                           y = landings)) +
+    ggplot2::facet_grid(GEAR ~ EPU, scale = 'free_y') +
+    ggplot2::scale_y_continuous(labels = format.axis) +
+    ggplot2::labs(y = expression('Landings, metric tons 10'^3), x = 'Year') +
+    theme_facet() +
+    ggplot2::theme(plot.margin = margin(r = 10, l = 10))
+  
+  plot(g)
+}
+
+
 
 
