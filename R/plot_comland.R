@@ -40,6 +40,7 @@ theme_facet <- function(...){
 #'@param by The variable within \code{data} that you want to plot by
 #'
 #'@importFrom ggplot2 "aes" "vars" "margin"
+#'@importFrom data.table "setnames"
 #'
 #'@export
 
@@ -47,7 +48,7 @@ theme_facet <- function(...){
 plot_comland <- function(data, by) {
   
   comland.sum <- data[, .(landings = sum(SPPLIVMT)), by = c('YEAR', by, 'EPU')]
-  setnames(comland.sum, by, 'By')
+  data.table::setnames(comland.sum, by, 'By')
   
   format.axis <- function(x) x / 10e3
   
