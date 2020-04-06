@@ -20,5 +20,5 @@ Imports:
     odbc,
     magrittr
 Remotes:
-    andybeet/dbutils
+    andybeet/dbutils,
     slucey/RSurvey/Survdat
