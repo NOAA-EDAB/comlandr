@@ -5,10 +5,11 @@
 #'@param comland.agg Data frame. master data frame containing species landings
 #'@param nafoland.agg Data frame. processed NAFO data
 #'@param EPUS List. Designates the stat areas that comprise an EPU. Default = EPUs (lazily loaded data)
-#'@param foreign Character String. Mark foreign landings and keep seperate.
+#'@param foreign Character String. Mark foreign landings and keep seperate. Default = "y"
 #'
 #'@return Aggregated comland data
 #'
+#'@keywords internal
 
 
 aggregate_by_epu <- function(comland.agg,nafoland.agg,EPUS,foreign){

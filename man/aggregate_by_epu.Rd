@@ -13,7 +13,7 @@ aggregate_by_epu(comland.agg, nafoland.agg, EPUS, foreign)
 
 \item{EPUS}{List. Designates the stat areas that comprise an EPU. Default = EPUs (lazily loaded data)}
 
-\item{foreign}{Character String. Mark foreign landings and keep seperate.}
+\item{foreign}{Character String. Mark foreign landings and keep seperate. Default = "y"}
 }
 \value{
 Aggregated comland data
@@ -21,3 +21,4 @@ Aggregated comland data
 \description{
 aggregate by epu
 }
+\keyword{internal}

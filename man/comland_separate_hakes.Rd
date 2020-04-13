@@ -6,6 +6,14 @@
 \usage{
 comland_separate_hakes(comland, skate.hake.us)
 }
+\arguments{
+\item{comland}{Data frame. Master data frame containing species landings}
+
+\item{skate.hake.us}{Data frame. Landings of skates and hakes in USA}
+}
+\value{
+updated comland
+}
 \description{
 Determine proportion of little/winter skates and silver hake in landings data 7/13
 SML

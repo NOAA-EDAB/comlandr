@@ -18,5 +18,5 @@ to communicate with the database engine. (see \code{\link{connect_to_database}})
 Processed NAFO data
 }
 \description{
-Dwonloads and reads in all NAFO data then aggreagtes it
+Downnloads and reads in all NAFO data then aggreagtes it
 }

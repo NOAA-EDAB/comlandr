@@ -1,6 +1,9 @@
 #' Adjust species value for inflation
 #'
-#'Reads in data from ??? website and adjusts species value
+#'Reads in data from Bureau of Labor statistics website and adjusts species value
+#'
+#'What data is fetched?
+#'
 #'
 #'@param comland Data frame. master data frame containing species landings
 #'@param refmonth Integer. Reference month
@@ -8,7 +11,9 @@
 #'
 #'@return comland data frame adjusted for inflation
 #'
+#'@keywords internal
 #'
+
 
 
 adjust_inflation <- function(comland,refyear,refmonth){

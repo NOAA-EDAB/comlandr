@@ -1,6 +1,6 @@
 #' Processes all NAFO data
 #'
-#'Dwonloads and reads in all NAFO data then aggreagtes it
+#'Downnloads and reads in all NAFO data then aggreagtes it
 #'
 #'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
 #' to communicate with the database engine. (see \code{\link{connect_to_database}})

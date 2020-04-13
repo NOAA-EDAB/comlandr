@@ -17,5 +17,9 @@ adjust_inflation(comland, refyear, refmonth)
 comland data frame adjusted for inflation
 }
 \description{
-Reads in data from ??? website and adjusts species value
+Reads in data from Bureau of Labor statistics website and adjusts species value
 }
+\details{
+What data is fetched?
+}
+\keyword{internal}

@@ -2,11 +2,13 @@
 #'
 #' Uses gear. Expand .....
 #'
+#'@param comland Data frame. master data frame containing species landings
 #'
-#'@return updated comland
+#'@return updated comland data frame
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
+#'@family assign catch
 
 assign_catch_gear <- function(comland.agg){
   unk.gear <- comland.agg[GEAR == 'unknown', ]

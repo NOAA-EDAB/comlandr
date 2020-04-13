@@ -2,10 +2,13 @@
 #'
 #' Uses area. Expand .....
 #'
+#'@param comland Data frame. master data frame containing species landings
 #'
-#'@return updated comland
+#'@return updated comland data frame
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
+#'
+#'@family assign catch
 #'
 
 assign_catch_area <- function(comland.agg){

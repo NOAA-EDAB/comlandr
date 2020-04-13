@@ -13,6 +13,12 @@ comland_skates_hakes(EPUS, out.dir, Stand.alone = F)
 
 \item{Stand.alone}{Boolean. Flag to determine whether to save Skate and hake data to file. defualt = F (Both a US catch file and a NAFO catch file will be saved)}
 }
+\value{
+A list
+
+\item{skate.hake.us}{landings of skates and hakes in USA }
+\item{skate.hake.nafo}{landings of skates and hakes outside USA}
+}
 \description{
 Determine proportion of little/winter skates and silver hake in landings data 7/13
 SML

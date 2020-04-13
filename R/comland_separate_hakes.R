@@ -3,6 +3,11 @@
 #'Determine proportion of little/winter skates and silver hake in landings data 7/13
 #'SML
 #'
+#'@param comland Data frame. Master data frame containing species landings
+#'@param skate.hake.us Data frame. Landings of skates and hakes in USA
+#'
+#'@return updated comland
+#'
 #'@importFrom data.table ":=" "key"
 #'
 #'

@@ -6,9 +6,18 @@
 \usage{
 assign_catch_gear(comland.agg)
 }
+\arguments{
+\item{comland}{Data frame. master data frame containing species landings}
+}
 \value{
-updated comland
+updated comland data frame
 }
 \description{
 Uses gear. Expand .....
 }
+\seealso{
+Other assign catch: \code{\link{assign_catch_area}},
+  \code{\link{assign_catch_qy_hy}},
+  \code{\link{assign_catch_size}}
+}
+\concept{assign catch}
