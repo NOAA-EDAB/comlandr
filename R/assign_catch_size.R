@@ -9,6 +9,8 @@
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
 #'@family assign catch
+#'
+#' @noRd
 
 assign_catch_size <- function(comland.agg){
 

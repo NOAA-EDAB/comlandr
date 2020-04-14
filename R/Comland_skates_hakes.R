@@ -15,7 +15,7 @@
 #'
 #'@importFrom data.table ":=" "key"
 #'
-#'@export
+#' @noRd
 
 comland_skates_hakes <- function(EPUS,out.dir,Stand.alone=F){
 

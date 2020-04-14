@@ -9,7 +9,7 @@
 #'
 #'@importFrom data.table ":=" "key"
 #'
-#'
+#' @noRd
 
 comland_herring <- function(channel,comland) {
 

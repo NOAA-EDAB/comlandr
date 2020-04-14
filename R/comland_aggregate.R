@@ -7,8 +7,8 @@
 #'
 #'@return Aggreagted comland data
 #'
+#' @noRd
 #'
-
 comland_aggregate <- function(comland,GEARS){
 
   comland[MONTH %in% 1:3,   QY := 1]

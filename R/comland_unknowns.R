@@ -6,7 +6,7 @@
 #'
 #'@return Processed unknowns in comland
 #'
-#'
+#' @noRd
 
 comland_unknowns <- function(comland){
 

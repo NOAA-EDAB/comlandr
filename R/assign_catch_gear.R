@@ -9,6 +9,8 @@
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
 #'@family assign catch
+#'
+#' @noRd
 
 assign_catch_gear <- function(comland.agg){
   unk.gear <- comland.agg[GEAR == 'unknown', ]

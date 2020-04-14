@@ -9,7 +9,7 @@
 #'
 #'@return Aggregated comland data
 #'
-#'@keywords internal
+#' @noRd
 
 
 aggregate_by_epu <- function(comland.agg,nafoland.agg,EPUS,foreign){

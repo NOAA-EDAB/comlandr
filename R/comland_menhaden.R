@@ -6,7 +6,7 @@
 #'
 #'@return Processed Menhaden data
 #'
-#'
+#' @noRd
 
 comland_menhaden <- function(comland){
   ##fix menhaden records - data from Tom Miller/ Andre Bouchheister

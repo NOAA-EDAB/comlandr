@@ -10,6 +10,8 @@
 #'
 #'@family assign catch
 #'
+#' @noRd
+#'
 
 assign_catch_area <- function(comland.agg){
 

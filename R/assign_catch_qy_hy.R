@@ -9,6 +9,8 @@
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
 #'@family assign catch
+#'
+#' @noRd
 
 assign_catch_qy_hy <- function(comland.agg){
   #3.A QY/HY------------------------------------------------------------------------------

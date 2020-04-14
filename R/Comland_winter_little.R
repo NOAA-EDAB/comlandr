@@ -10,8 +10,7 @@
 #'
 #'@importFrom data.table ":=" "key"
 #'
-#'
-#'@export
+#' @noRd
 
 comland_winter_little <- function(comland,skate.hake.us) {
 

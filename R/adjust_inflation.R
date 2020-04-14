@@ -11,7 +11,7 @@
 #'
 #'@return comland data frame adjusted for inflation
 #'
-#'@keywords internal
+#'@noRd
 #'
 
 

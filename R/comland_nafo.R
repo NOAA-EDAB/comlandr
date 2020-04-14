@@ -11,6 +11,7 @@
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
+#' @noRd
 
 comland_nafo <- function(channel,skate.hake.nafo,GEARS){
   #Note - NAFO landings by division only so not available in sum.by = "stat.area"

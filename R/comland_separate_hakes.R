@@ -10,8 +10,7 @@
 #'
 #'@importFrom data.table ":=" "key"
 #'
-#'
-#'@export
+#' @noRd
 
 comland_separate_hakes <- function(comland,skate.hake.us) {
         #get silver hake from mixed hakes - use survey in half years
