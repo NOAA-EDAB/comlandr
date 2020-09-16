@@ -3,7 +3,6 @@
 \docType{package}
 \name{comlandr}
 \alias{comlandr}
-\alias{comlandr-package}
 \title{comlandr: Pull and process commercial fisheries data}
 \description{
 For use in multispecies projects.

@@ -4,13 +4,15 @@
 \name{EPUs}
 \alias{EPUs}
 \title{EPUs:  Properties of Ecological Production Units (EPUs)}
-\format{A list of lists
+\format{
+A list of lists
 \describe{
     \item{GB}{Georges Bank EPU}
     \item{GOM}{Gulf of Maine EPU}
     \item{MAB}{Mid Atlantic Bight EPU}
     \item{SS}{Scotian Shelf EPU}
-}}
+}
+}
 \usage{
 EPUs
 }

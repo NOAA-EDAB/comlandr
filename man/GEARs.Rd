@@ -4,7 +4,8 @@
 \name{GEARs}
 \alias{GEARs}
 \title{GEARs:  Gear type classifications}
-\format{A list of NEGEAR codes assigned to "fleets"
+\format{
+A list of NEGEAR codes assigned to "fleets"
 \describe{
     \item{otter}{Otter Trawls: Bottom, Bottom paired, Bottom Twin, Hadock Separator}
     \item{dredge.sc}{Scallop Dredges}
@@ -14,7 +15,8 @@
     \item{gillnet}{Fixed, Anchored, Sea bass, salmon, crab, floating, run around, other Gillnets}
     \item{midwater}{Midwater paired and unpaired otter trawls}
     \item{dredge.o}{Oyster, scrapes, Clam, Crab, conch, mussel, urchin, Quahog, hydraulic dredges}
-}}
+}
+}
 \usage{
 GEARs
 }

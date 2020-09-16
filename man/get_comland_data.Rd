@@ -8,7 +8,7 @@ get_comland_data(channel, landed, endyear, out.dir)
 }
 \arguments{
 \item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-to communicate with the database engine. (see \code{\link{connect_to_database}})}
+to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{landed}{Character String. Use landed weight for scallops and clams instead of live weight.}
 

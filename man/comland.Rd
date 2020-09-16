@@ -4,10 +4,20 @@
 \alias{comland}
 \title{Comland.r Version now controlled by git - originally part of comcatch.r}
 \usage{
-comland(channel, GEARS = comlandr::GEARs, EPUS = comlandr::EPUs,
-  use.existing = "y", landed = "y", foreign = "y",
-  adjust.ppi = "y", sum.by = "EPU", endyear = 2018,
-  reftime = c(2016, 1), out.dir = here::here(), Stand.alone = F)
+comland(
+  channel,
+  GEARS = comlandr::GEARs,
+  EPUS = comlandr::EPUs,
+  use.existing = "y",
+  landed = "y",
+  foreign = "y",
+  adjust.ppi = "y",
+  sum.by = "EPU",
+  endyear = 2018,
+  reftime = c(2016, 1),
+  out.dir = here::here(),
+  Stand.alone = F
+)
 }
 \arguments{
 \item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
