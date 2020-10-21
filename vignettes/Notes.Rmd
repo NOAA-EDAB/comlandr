@@ -1,5 +1,5 @@
 ---
-title: "Notes about comlandR.r"
+title: "Notes about comlandr"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Notes}
@@ -28,7 +28,7 @@ For details of its use see the [tech-doc](https://noaa-edab.github.io/tech-doc/c
 
 ## output
 
-``` {r eval = T, echo = T}
+``` {r eval = F, echo = T}
 #comland <- readRDS(here::here("output","comland_meatwt_deflated_EPU.Rds"))
 load(here::here("output","comland_meatwt_deflated_EPU.RData"))
 head(comland)

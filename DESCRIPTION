@@ -1,7 +1,7 @@
 Package: comlandr
 Title: Pulls and processes commercial fishing data
 Version: 0.0.0.9000
-Author: c(person("Sean", "Lucey", email = "sean.lucey@noaa.gov", role = c("aut","cre")),
+Authors@R: c(person("Sean", "Lucey", email = "sean.lucey@noaa.gov", role = c("aut","cre")),
     person("Andy", "Beet", email = "andrew.beet@noaa.gov", role = c("aut", "cre")))
 Description: Pulls and processes commercial fishing data (US and NAFO)
 License: File LICENSE -  Strictly for NOAA employees and contractors with database privilages
