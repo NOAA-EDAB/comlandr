@@ -12,7 +12,7 @@ To use this package you will need:
 
 ### Installation
 
-`remotes::install_github("NOAA-EDAB/comlandr",build_vignettes = TRUE)`
+```remotes::install_github("NOAA-EDAB/comlandr",build_vignettes = TRUE)```
 
 
 
