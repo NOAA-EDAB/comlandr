@@ -2,7 +2,7 @@ Package: comlandr
 Title: Pulls and processes commercial fishing data
 Version: 0.0.0.9000
 Authors@R: c(person("Sean", "Lucey", email = "sean.lucey@noaa.gov", role = c("aut","cre")),
-    person("Andy", "Beet", email = "andrew.beet@noaa.gov", role = c("aut", "cre")))
+    person("Andy", "Beet", email = "andrew.beet@noaa.gov", role = c("aut")))
 Description: Pulls and processes commercial fishing data (US and NAFO)
 License: File LICENSE -  Strictly for NOAA employees and contractors with database privilages
 Encoding: UTF-8
@@ -21,4 +21,4 @@ Imports:
     magrittr
 Remotes:
     andybeet/dbutils,
-    slucey/RSurvey/Survdat
+    NOAA-EDAB/survdat
