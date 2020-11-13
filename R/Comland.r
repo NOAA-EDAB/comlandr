@@ -87,7 +87,12 @@ if(use.existing == 'n'){
   comland$NESPP3 <- as.integer(comland$NESPP3)
   comland$NESPP4 <- as.integer(comland$NESPP4)
   comland$UTILCD <- as.integer(comland$UTILCD)
-  comland$AREA <- as.factor(comland$AREA)
+
+  comland$AREA <- levels(comland$AREA)[comland$AREA]
+  ind <- comland$AREA %in% c("OFF","OFR")
+  comland <- comland[!ind,]
+  comland$AREA <- as.integer(comland$AREA)
+  #comland$AREA <- as.factor(comland$AREA)
 
   # # fixes needed when data is pulled using RODBC
   # comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%

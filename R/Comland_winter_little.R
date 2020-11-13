@@ -25,7 +25,7 @@ comland_winter_little <- function(comland,skate.hake.us) {
                            Half,
                            AREA)
         #beet
-        comland.skates$AREA <- as.integer(comland.skates$AREA)
+        #comland.skates$AREA <- as.integer(comland.skates$AREA)
 
 
         comland.skates <- merge(comland.skates, skate.hake.us, by = data.table::key(skate.hake.us), all.x = T)

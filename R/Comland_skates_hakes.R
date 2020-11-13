@@ -54,7 +54,8 @@ catch <- survdat[SVSPP %in% c(22:28, 72, 69), ]
 pathToGIS <- system.file("extdata","Statistical_Areas_2010.shp",package="comlandr")
 Stat.areas <- rgdal::readOGR(pathToGIS)
 
-catch.stat <- Survdat::poststrat(catch, stratum = Stat.areas, strata.col = 'Id')
+catch.stat <- survdat::poststrat(catch, stratum = Stat.areas, strata.col = 'Id')
+
 
 data.table::setnames(catch.stat,
         c("STRATUM",   "newstrata"),
@@ -181,6 +182,9 @@ if(Stand.alone == T) save(skate.hake, file = file.path(out.dir, "skates_hakes_na
 #if(Stand.alone == F) skate.hake.nafo <- skate.hake
 skate.hake.nafo <- skate.hake
 
-return(list(skate.hake.us=skate.hake.us,skate.hake.nafo=skate.hake.nafo))
+# skate.hake.nafo$AREA <- as.factor(skate.hake.nafo$AREA)
+# skate.hake.us$AREA <- as.factor(skate.hake.us$AREA)
+
+return(list(skate.hake.us=skate.hake.us, skate.hake.nafo=skate.hake.nafo))
 
 }

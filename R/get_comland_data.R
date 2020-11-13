@@ -32,7 +32,7 @@
 get_comland_data <- function(channel,landed,endyear,out.dir) {
 
 
-  message("Pulling landings data from database. This could take a while (15 minutes) ... ")
+  message("Pulling landings data from database. This could take a while (> 1 hour) ... ")
   #Landings
   tables <- c(paste0('WOLANDS', 64:81),
               paste0('WODETS',  82:93),
