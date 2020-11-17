@@ -3,5 +3,9 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   Notes: Notes.html
-last_built: 2020-11-17T21:07Z
+  comlandr: comlandr.html
+last_built: 2020-11-17T21:19Z
+urls:
+  reference: https://noaa-edab.github.io/comlandr//reference
+  article: https://noaa-edab.github.io/comlandr//articles
 

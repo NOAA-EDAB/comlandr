@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//index.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/EPUs.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/GEARs.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/comland.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/comlandr.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_comland_data.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/plot_comland.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//articles/Notes.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//articles/comlandr.html</loc>
+  </url>
+</urlset>
