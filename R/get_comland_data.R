@@ -5,7 +5,7 @@
 #'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
 #' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
 #'@param endyear Numeric Scalar. Final year of query.
-#'@param landed Character String. Use landed weight for scallops and clams instead of live weight.
+#'@param landed Character String. Use landed weight ("y" - meatwt) for scallops and clams instead of live weight ("n" - livewt).
 #'@param out.dir path to directory where final output will be saved
 #'
 #'

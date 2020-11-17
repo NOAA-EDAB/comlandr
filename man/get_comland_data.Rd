@@ -10,7 +10,7 @@ get_comland_data(channel, landed, endyear, out.dir)
 \item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
-\item{landed}{Character String. Use landed weight for scallops and clams instead of live weight.}
+\item{landed}{Character String. Use landed weight ("y" - meatwt) for scallops and clams instead of live weight ("n" - livewt).}
 
 \item{endyear}{Numeric Scalar. Final year of query.}
 
