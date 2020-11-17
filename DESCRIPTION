@@ -18,7 +18,8 @@ Imports:
     rgdal,
     DBI,
     odbc,
-    magrittr
+    magrittr,
+    ggplot2
 Remotes:
     andybeet/dbutils,
     NOAA-EDAB/survdat
