@@ -1,0 +1,24 @@
+url: https://noaa-edab.github.io/comlandr/
+
+reference:
+- title: "Commercial fishing data"
+  desc: "Standardizes commercial fishing data"
+- contents:
+  - comland
+  - comlandr
+- title: "Data"
+  desc: "Lazy loaded data"
+- contents:
+  - EPUs
+  - GEARs
+- title: "Get Data"
+  desc: "Functions that pull data from the ADIOS/CFDBS database"
+- contents:
+  - get_comland_data
+- title: "Plotting"
+  desc: "Basic plotting functions to visualize data"
+- contents:
+  - plot_comland
+
+
+

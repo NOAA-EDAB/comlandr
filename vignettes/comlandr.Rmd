@@ -1,0 +1,56 @@
+---
+title: "comlandr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{comlandr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(comlandr)
+```
+
+## Connect to the database
+
+Once you are granted permission to access the database and have Oracle's instant Client installed you can make a connection as follows:
+
+```channel <- dbutils::connect_to_database(server="sole",uid="yourUsername")```
+
+`channel` is an object inherited from the DBIConnection-class. This object is passed as an argument to functions in `comnlandr`
+
+## Pull Raw Data
+
+Pulling the raw data takes up to 15 minutes to complete. see `get_comland_data` for details. To pull the commercial data with shellfish represented as meat weight (landed = "y")
+
+```
+data <- get_comland_data(channel,landed="y",endyear=2019,out.dir=here::here())
+```
+
+`data` is a data frame (see `?get_comland_data`) for more details
+
+This data is considered the raw data and does not contain any corrections that stock assessment scientists may do. For example,  market categories representing parts of a fish are not removed.
+
+## Corrected Raw Data
+
+The raw data is processed to in several ways
+
+* Fish parts are removed
+* Separate little and winter skate aggregate based on survey proportions
+* Separate silver hake and offshore hake based on survey proportions
+* Herring data are pulled from Maine database
+* catch with missing fields (AREA, Size, Gear) are assigned based on trips with similar characteristics (Palmer ????)
+* Additional Foreign landings are added from NAFO*
+
+To calculate the processed Raw data with default arguments:
+
+``` comland(channel) ```
+
+
