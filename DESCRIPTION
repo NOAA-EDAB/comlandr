@@ -15,7 +15,7 @@ VignetteBuilder: knitr
 RoxygenNote: 7.1.0
 Imports: 
     data.table,
-    rgdal,
+    sf,
     DBI,
     odbc,
     magrittr,
