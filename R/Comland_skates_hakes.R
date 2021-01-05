@@ -51,15 +51,17 @@ catch <- survdat[SVSPP %in% c(22:28, 72, 69), ]
 #Calculate ratios within Stat Areas
 #Post stratify to use Stat Area designations
 #Stat Areas
+
+
 pathToGIS <- system.file("extdata","Statistical_Areas_2010.shp",package="comlandr")
-Stat.areas <- rgdal::readOGR(pathToGIS)
 
-catch.stat <- survdat::poststrat(catch, stratum = Stat.areas, strata.col = 'Id')
-
+Stat.areas <- sf::st_read(dsn=pathToGIS)
+catch.stat <- survdat::post_strat(catch, areaPolygon = Stat.areas, areaDescription = 'Id')
 
 data.table::setnames(catch.stat,
-        c("STRATUM",   "newstrata"),
-        c("SVSTRATUM", "AREA"))
+                     c("STRATUM",   "Id"),
+                     c("SVSTRATUM", "AREA"))
+
 
 data.table::setkey(catch.stat,
        YEAR,

@@ -39,7 +39,18 @@
 # data.dir\\Menhaden.csv
 # data.dir.3\\SS_NAFO_21A.csv
 # data.dir.3\\species.txt
-comland <- function(channel,GEARS=comlandr::GEARs,EPUS=comlandr::EPUs,use.existing="y",landed="y",foreign="y",adjust.ppi="y",sum.by="EPU",endyear=2018,reftime = c(2016,1),out.dir=here::here(),Stand.alone=F) {
+comland <- function(channel,
+                    GEARS=comlandr::GEARs,
+                    EPUS=comlandr::EPUs,
+                    use.existing="y",
+                    landed="y",
+                    foreign="y",
+                    adjust.ppi="y",
+                    sum.by="EPU",
+                    endyear=2018,
+                    reftime = c(2016,1),
+                    out.dir=here::here(),
+                    Stand.alone=F) {
 
   if(!(isS4(channel))) {
     message("Argument \"channel\", is not a valid DBI connection object. Please see dbutils::connect_to_database for details ...")
@@ -132,6 +143,8 @@ comland[, NESPP4 := NULL]
 
 # Deal with Hakes and Skates------------------------------------------------------------------
 skates_hakes <- comland_skates_hakes(EPUS,out.dir,Stand.alone)
+
+
 skate.hake.us <- skates_hakes$skate.hake.us
 skate.hake.nafo <- skates_hakes$skate.hake.nafo
 
@@ -186,7 +199,6 @@ if(sum.by == 'EPU'){
 } else {
   stop(paste0("sum.by = ",sum.by," has not been coded for. Select either EPU or stat.area"))
 }
-
 
 
 #save(comland, file = file.path(out.dir, paste0(file.name,Sys.Date(),".RData")))
