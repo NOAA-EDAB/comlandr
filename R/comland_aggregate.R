@@ -21,18 +21,23 @@ comland_aggregate <- function(comland,GEARS){
   comland[MONTH %in% 7:12, HY := 2]
   comland[MONTH == 0,      HY := 0]
 
-
-  comland[NEGEAR %in% GEARS$otter,     GEAR := 'otter']
-  comland[NEGEAR %in% GEARS$dredge.sc, GEAR := 'dredge.sc']
-  comland[NEGEAR %in% GEARS$pot,       GEAR := 'pot']
-  comland[NEGEAR %in% GEARS$longline,  GEAR := 'longline']
-  comland[NEGEAR %in% GEARS$seine,     GEAR := 'seine']
-  comland[NEGEAR %in% GEARS$gillnet,   GEAR := 'gillnet']
-  comland[NEGEAR %in% GEARS$midwater,  GEAR := 'midwater']
-  comland[NEGEAR %in% GEARS$dredge.o,  GEAR := 'dredge.o']
-  comland[NEGEAR == 0,           GEAR := 'unknown']
-  comland[is.na(GEAR),           GEAR := 'other']
-  comland[, GEAR := as.factor(GEAR)]
+  #if (is.list(GEARS)) {
+    # aggregate the NEGEAR2 names based on user input
+    comland[NEGEAR %in% GEARS$otter,     GEAR := 'otter']
+    comland[NEGEAR %in% GEARS$dredge.sc, GEAR := 'dredge.sc']
+    comland[NEGEAR %in% GEARS$pot,       GEAR := 'pot']
+    comland[NEGEAR %in% GEARS$longline,  GEAR := 'longline']
+    comland[NEGEAR %in% GEARS$seine,     GEAR := 'seine']
+    comland[NEGEAR %in% GEARS$gillnet,   GEAR := 'gillnet']
+    comland[NEGEAR %in% GEARS$midwater,  GEAR := 'midwater']
+    comland[NEGEAR %in% GEARS$dredge.o,  GEAR := 'dredge.o']
+    comland[NEGEAR == 0,           GEAR := 'unknown']
+    comland[is.na(GEAR),           GEAR := 'other']
+    comland[, GEAR := as.factor(GEAR)]
+  #} else {
+  #  # dont aggregate but rename column
+  #  setnames(comland,"NEGEAR","GEAR")
+  #}
 
   comland[TONCL1 %in% 1:3, SIZE := 'small']
   comland[TONCL1 > 3,      SIZE := 'large']
