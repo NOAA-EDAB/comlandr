@@ -31,8 +31,6 @@
 
 get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T, 
                                  removeParts = T){
-
-  call <- capture_function_call()
   
   message("Pulling landings data from database. This could take a while (> 1 hour) ... ")
   
@@ -63,12 +61,12 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
     
     # Remove fish parts so live weight is not double counted
     if(removeParts){
-      comland <- comland[!NESPP4 %in% c(119, 123, 125, 127, 812, 819, 828, 829, 1731, 
-                                        2351, 2690, 2699, 3472, 
-                                        as.numeric(paste0(348:359, 8)), 3868, 
-                                        as.numeric(paste0(469:471, 4)),
-                                        as.numeric(paste0(480:499, 8)), 5018, 5039,
-                                        5261, 5265), ]
+      comland.yr <- comland.yr[!NESPP4 %in% c(119, 123, 125, 127, 812, 819, 828, 
+                                              829, 1731, 2351, 2690, 2699, 3472,
+                                              as.numeric(paste0(348:359, 8)), 3868, 
+                                              as.numeric(paste0(469:471, 4)),
+                                              as.numeric(paste0(480:499, 8)), 5018, 
+                                              5039, 5261, 5265), ]
     }
     
     #Sum landings and value
@@ -111,9 +109,7 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
   comland[YEAR < 100, YEAR := YEAR + 1900L]
 
   
-  return(list(comland      = comland[], 
-              sql          = sql,
-              pullDate     = date(),
-              functionCall = call))
+  return(list(comland = comland[], 
+              sql     = sql))
 }
 
