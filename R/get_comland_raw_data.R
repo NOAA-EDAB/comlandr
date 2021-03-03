@@ -97,8 +97,7 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
     }
 
   #Convert number fields from chr to num
-  numberCols <- c('YEAR', 'MONTH', 'NEGEAR', 'TONCL1', 'NESPP3', 'NESPP4', 'UTILCD',
-                  'AREA')
+  numberCols <- c('YEAR', 'MONTH', 'NEGEAR', 'TONCL1', 'NESPP3', 'UTILCD', 'AREA')
   comland[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols][]
   
   #Adjust pounds to metric tons
