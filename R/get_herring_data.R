@@ -13,8 +13,6 @@
 
 get_herring_data <- function(channel, comland, filterByYear) {
   
-  call <- c(comland$call, capture_function_call())
-  
   #Pulling data
   message("Pulling Atlantic herring data from maine_herring_catch ...")
   
@@ -115,9 +113,7 @@ get_herring_data <- function(channel, comland, filterByYear) {
   comland <- data.table::rbindlist(list(comland[NESPP3 != 168, ], herring))
 
 
-  return(list(comland      = comland[], 
-              sql          = sql,
-              pullDate     = date(),
-              functionCall = call))
+  return(list(comland = comland[], 
+              sql     = sql))
 
 }
