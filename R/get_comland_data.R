@@ -50,6 +50,8 @@ get_comland_data <- function(channel, filterByYear = NA, useLanded = T,
   #Apply correction for inflation
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
   
+  comland$call <- call
+    
   return(comland)
 
 }
