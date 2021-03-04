@@ -61,12 +61,13 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
     
     # Remove fish parts so live weight is not double counted
     if(removeParts){
-      comland.yr <- comland.yr[!NESPP4 %in% c(119, 123, 125, 127, 812, 819, 828, 
-                                              829, 1731, 2351, 2690, 2699, 3472,
-                                              as.numeric(paste0(348:359, 8)), 3868, 
-                                              as.numeric(paste0(469:471, 4)),
-                                              as.numeric(paste0(480:499, 8)), 5018, 
-                                              5039, 5261, 5265), ]
+      comland.yr <- comland.yr[!NESPP4 %in% c('0119', '0123', '0125', '0127', 
+                                              '0812', '0819', '0828', '0829', 
+                                              '1731', '2351', '2690', '2699', 
+                                              '3472', paste0(348:359, 8), 
+                                              '3868', paste0(469:471, 4),
+                                              paste0(480:499, 8), '5018', 
+                                              '5039', '5261', '5265'), ]
     }
     
     #Sum landings and value
@@ -82,7 +83,10 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
     comland.yr[, V1 := sum(SPPLIVLB, na.rm = T), by = key(comland.yr)]
     #value
     comland.yr[, V2 := sum(SPPVALUE, na.rm = T), by = key(comland.yr)]
-
+    
+    #Create market category
+    comland.yr[, MKTCAT := substr(NESPP4, 4, 4)]
+    
     #Remove extra rows/columns
     comland.yr <- unique(comland.yr, by = key(comland.yr))
     comland.yr[, c('SPPLIVLB', 'SPPLNDLB', 'SPPVALUE', 'NESPP4') := NULL]
@@ -97,7 +101,8 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
     }
 
   #Convert number fields from chr to num
-  numberCols <- c('YEAR', 'MONTH', 'NEGEAR', 'TONCL1', 'NESPP3', 'UTILCD', 'AREA')
+  numberCols <- c('YEAR', 'MONTH', 'NEGEAR', 'TONCL1', 'NESPP3', 'UTILCD', 'AREA',
+                  'MKTCAT')
   comland[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols][]
   
   #Adjust pounds to metric tons
