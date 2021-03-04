@@ -10,6 +10,7 @@
 #'@importFrom data.table ":=" "key"
 #'
 #' @noRd
+#' @export
 
 get_herring_data <- function(channel, comland, filterByYear) {
   
