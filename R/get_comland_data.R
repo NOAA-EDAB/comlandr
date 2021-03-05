@@ -32,7 +32,8 @@
 
 get_comland_data <- function(channel, filterByYear = NA, useLanded = T, 
                              removeParts = T, useHerringMaine = T, useForeign = T,
-                             refYear = NA, refMonth = NA) {
+                             refYear = NA, refMonth = NA, disaggSkates = T,
+                             disaggHakes = T) {
   
   call <- dbutils::capture_function_call()
   
@@ -49,6 +50,13 @@ get_comland_data <- function(channel, filterByYear = NA, useLanded = T,
   
   #Apply correction for inflation
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
+  
+  #Disaggregate skates and hakes
+  if(disaggSkates) comland <- comlandr::disaggregate_skates(comland, channel, 
+                                                            filterByYear)
+  if(disaggHakes) comland <- comlandr::disaggregate_hakes(comland, channel, 
+                                                          filterByYear)
+  
   
   comland$call <- call
     
