@@ -2,6 +2,7 @@
 
 export(comland)
 export(disaggregate_skates)
+export(disaggregate_skates_hakes)
 export(get_comland_data)
 export(get_comland_raw_data)
 export(get_herring_data)
