@@ -56,7 +56,8 @@ get_comland_data <- function(channel, filterByYear = NA, useLanded = T,
   
   
   comland$call <- call
-    
+  
+  message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")  
   return(comland)
 
 }
