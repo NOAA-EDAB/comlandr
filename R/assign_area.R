@@ -33,7 +33,7 @@ assign_area <- function(comland, userAreas, areaDescription, propDescription){
   new.area.land[, newsppvalue := SPPVALUE * prop]
   
   #Drop extra columns
-  new.area.land[, c('AREA', 'SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
+  new.area.land[, c('SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
   
   #Rename columns
   data.table::setnames(new.area.land, c('newarea', 'newspplivmt', 'newsppvalue'), 
