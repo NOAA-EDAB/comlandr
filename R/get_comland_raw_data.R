@@ -60,7 +60,7 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
       if(filterByYear[itab] > 1993){
         trip.table <- paste0('CFDETT',  filterByYear[itab], 'AA')
       } 
-      if(filterByYear[itab] > 81 & filterByYear[itab] <= 93){
+      if(filterByYear[itab] > 1981 & filterByYear[itab] <= 1993){
         trip.table <- paste0('WODETT',  substr(filterByYear[itab], 3, 4))
       }
       landings.qry <- paste("select a.year, a.month, a.negear, a.toncl1, a.nespp3, 
