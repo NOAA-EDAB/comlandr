@@ -75,7 +75,8 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
     #Identify small/large mesh fisheries
     comland.yr[MESH <= 3, MESHCAT := 'SM']
     comland.yr[MESH >  3, MESHCAT := 'LG']
-
+    comland.yr[, MESH := NULL]
+    
     # Use landed weight instead of live weight for shellfish
     if(useLanded) {comland.yr[NESPP3 %in% 743:800, SPPLIVLB := SPPLNDLB]}
     

@@ -81,22 +81,22 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear) {
         #Little (366), winter (367), skates(ns) (365)
         #put skates in comland format to merge back
         little <- comland.skates[, list(YEAR, AREA, MONTH, NEGEAR,
-                                        TONCL1, NESPP3, UTILCD, MKTCAT, little,
-                                        little.value)]
+                                        TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
+                                        little, little.value)]
         little[, NESPP3 := 366]
         data.table::setnames(little, c('little', 'little.value'), c('SPPLIVMT', 'SPPVALUE'))
         little <- little[SPPLIVMT > 0, ]
 
         winter <- comland.skates[, list(YEAR, AREA, MONTH, NEGEAR,
-                                        TONCL1, NESPP3, UTILCD, MKTCAT, winter,
-                                        winter.value)]
+                                        TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
+                                        winter, winter.value)]
         winter[, NESPP3 := 367]
         data.table::setnames(winter, c('winter', 'winter.value'), c('SPPLIVMT', 'SPPVALUE'))
         winter <- winter[SPPLIVMT > 0, ]
 
         other <- comland.skates[, list(YEAR, AREA, MONTH, NEGEAR,
-                                       TONCL1, NESPP3, UTILCD, MKTCAT, other.skate,
-                                       other.skate.value)]
+                                       TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
+                                       other.skate, other.skate.value)]
         other[, NESPP3 := 365]
         data.table::setnames(other, c('other.skate', 'other.skate.value'), c('SPPLIVMT', 'SPPVALUE'))
         other <- other[SPPLIVMT > 0, ]
@@ -163,22 +163,22 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear) {
         #Silver (509), offshore (508), whiting (507)
         #put hakes in comland format to merge back
         silver <- comland.hakes[, list(YEAR, AREA, MONTH, NEGEAR,
-                                       TONCL1, NESPP3, UTILCD, MKTCAT, silver,
-                                       silver.value)]
+                                       TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
+                                       silver, silver.value)]
         silver[, NESPP3 := 509]
         data.table::setnames(silver, c('silver', 'silver.value'), c('SPPLIVMT', 'SPPVALUE'))
         silver <- silver[SPPLIVMT > 0, ]
         
         offshore <- comland.hakes[, list(YEAR, AREA, MONTH, NEGEAR,
-                                         TONCL1, NESPP3, UTILCD, MKTCAT, offshore,
-                                         offshore.value)]
+                                         TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
+                                         offshore, offshore.value)]
         offshore[, NESPP3 := 508]
         data.table::setnames(offshore, c('offshore', 'offshore.value'), c('SPPLIVMT', 'SPPVALUE'))
         offshore <- offshore[SPPLIVMT > 0, ]
         
         other <- comland.hakes[, list(YEAR, AREA, MONTH, NEGEAR,
-                                      TONCL1, NESPP3, UTILCD, MKTCAT, other.hakes,
-                                      other.hakes.value)]
+                                      TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
+                                      other.hakes, other.hakes.value)]
         other[, NESPP3 := 507]
         data.table::setnames(other, c('other.hakes', 'other.hakes.value'), c('SPPLIVMT', 'SPPVALUE'))
         other <- other[SPPLIVMT > 0, ]

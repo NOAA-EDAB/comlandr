@@ -53,6 +53,8 @@ get_herring_data <- function(channel, comland, filterByYear) {
   herring[, TONCL1 := 3]
 
   herring[, UTILCD := 0]
+  
+  herring[, MESHCAT := 'LG']
 
   #compute price/utilization from CF tables
   herring.comland <- comland[NESPP3 == 168, ]
