@@ -49,12 +49,32 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
   
   for(itab in 1:length(tables)){
     #Data query
-    landings.qry <- paste("select year, month, negear, toncl1, nespp3, nespp4, area,
+    #Need to add mesh data post 1981
+    if(substr(tables[itab], 1, 3) == 'WOL'){
+      landings.qry <- paste("select year, month, negear, toncl1, nespp3, nespp4, area,
                            spplivlb, spplndlb, sppvalue, utilcd
                            from", tables[itab])
+      comland.yr <- data.table::as.data.table(DBI::dbGetQuery(channel, landings.qry))
+      comland.yr[, MESH := 5] #Identify all as large mesh
+    } else {
+      if(filterByYear[itab] > 1993){
+        trip.table <- paste0('CFDETT',  filterByYear[itab], 'AA')
+      } 
+      if(filterByYear[itab] > 81 & filterByYear[itab] <= 93){
+        trip.table <- paste0('WODETT',  substr(filterByYear[itab], 3, 4))
+      }
+      landings.qry <- paste("select a.year, a.month, a.negear, a.toncl1, a.nespp3, 
+                           a.nespp4, a.area, a.spplivlb, a.spplndlb, a.sppvalue, 
+                           a.utilcd, b.mesh
+                           from", tables[itab], "a,", trip.table, "b
+                           where a.link = b.link")
+      comland.yr <- data.table::as.data.table(DBI::dbGetQuery(channel, landings.qry))
+    }
     sql <- c(sql, landings.qry)
 
-    comland.yr <- data.table::as.data.table(DBI::dbGetQuery(channel, landings.qry))
+    #Identify small/large mesh fisheries
+    comland.yr[MESH <= 3, MESHCAT := 'SM']
+    comland.yr[MESH >  3, MESHCAT := 'LG']
 
     # Use landed weight instead of live weight for shellfish
     if(useLanded) {comland.yr[NESPP3 %in% 743:800, SPPLIVLB := SPPLNDLB]}
@@ -75,6 +95,7 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
                        YEAR,
                        MONTH,
                        NEGEAR,
+                       MESHCAT,
                        TONCL1,
                        NESPP3,
                        AREA,
