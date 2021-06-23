@@ -15,6 +15,13 @@ reference:
   desc: "Functions that pull data from the ADIOS/CFDBS database"
 - contents:
   - get_comland_data
+  - get_species
+  - get_species_itis
+  - get_areas
+  - get_gears
+  - get_locations
+  - get_ports
+  - get_vessels
 - title: "Plotting"
   desc: "Basic plotting functions to visualize data"
 - contents:
