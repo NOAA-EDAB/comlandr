@@ -16,7 +16,28 @@
     <loc>https://noaa-edab.github.io/comlandr//reference/comlandr.html</loc>
   </url>
   <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_areas.html</loc>
+  </url>
+  <url>
     <loc>https://noaa-edab.github.io/comlandr//reference/get_comland_data.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_gears.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_locations.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_ports.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_species.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_species_itis.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_vessels.html</loc>
   </url>
   <url>
     <loc>https://noaa-edab.github.io/comlandr//reference/plot_comland.html</loc>

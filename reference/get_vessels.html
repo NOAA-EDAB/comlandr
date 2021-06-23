@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extracts commercial data from Database — get_comland_data • comlandr</title>
+<title>Extract VESSEL information from CFDBS — get_vessels • comlandr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Extracts commercial data from Database — get_comland_data" />
-<meta property="og:description" content="Connects to cfdbs and pulls fields from WOLANDS, WODETS, CFDETS" />
+<meta property="og:title" content="Extract VESSEL information from CFDBS — get_vessels" />
+<meta property="og:description" content="Extract a list of vessell ID's, tonnage, crew size, home port, etc from the NEFSC &quot;Mstrvess&quot; supporting table" />
 
 
 
@@ -126,61 +126,85 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extracts commercial data from Database</h1>
-    <small class="dont-index">Source: <a href='https://github.com/NOAA-EDAB/comlandr/blob/master/R/get_comland_data.R'><code>R/get_comland_data.R</code></a></small>
-    <div class="hidden name"><code>get_comland_data.Rd</code></div>
+    <h1>Extract VESSEL information from CFDBS</h1>
+    <small class="dont-index">Source: <a href='https://github.com/NOAA-EDAB/comlandr/blob/master/R/get_vessels.R'><code>R/get_vessels.R</code></a></small>
+    <div class="hidden name"><code>get_vessels.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Connects to cfdbs and pulls fields from WOLANDS, WODETS, CFDETS</p>
+    <p>Extract a list of vessell ID's, tonnage, crew size, home port, etc from the NEFSC "Mstrvess" supporting table</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_comland_data</span><span class='op'>(</span><span class='va'>channel</span>, <span class='va'>landed</span>, <span class='va'>endyear</span>, <span class='va'>out.dir</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_vessels</span><span class='op'>(</span>
+  <span class='va'>channel</span>,
+  sqlStatement <span class='op'>=</span> <span class='st'>"select * from cfdbs.mstrvess"</span>,
+  where <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>channel</th>
-      <td><p>an Object inherited from <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection-class</a>. This object is used to connect
+      <td><p>DBI Object. Inherited from <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection-class</a>. This object is used to connect
 to communicate with the database engine. (see <code>connect_to_database</code>)</p></td>
     </tr>
     <tr>
-      <th>landed</th>
-      <td><p>Character String. Use landed weight ("y" - meatwt) for scallops and clams instead of live weight ("n" - livewt).</p></td>
+      <th>sqlStatement</th>
+      <td><p>an sql statement (optional)</p></td>
     </tr>
     <tr>
-      <th>endyear</th>
-      <td><p>Numeric Scalar. Final year of query.</p></td>
-    </tr>
-    <tr>
-      <th>out.dir</th>
-      <td><p>path to directory where final output will be saved</p></td>
+      <th>where</th>
+      <td><p>text string appending where clause to sql</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Data frame (data.table) (n x 10)
-Each row of the data.table represents a species record for a given tow/trip</p>
-<dt>YEAR</dt><dd><p>Year of trip/tow</p></dd>
-<dt>MONTH</dt><dd><p>Month of trip/tow</p></dd>
-<dt>NEGEAR</dt><dd><p>Fishing gear used on trip/tow</p></dd>
-<dt>TONCL1</dt><dd><p>Tonnage class of the fishing vessel</p></dd>
-<dt>NESPP3</dt><dd><p>Species code (3 charachters)</p></dd>
-<dt>NESPP4</dt><dd><p>Species code and market code (4 characters)</p></dd>
-<dt>AREA</dt><dd><p>Statistical area in which species was reportly caught</p></dd>
-<dt>UTILCD</dt><dd><p>Utilization code</p></dd>
-<dt>SPPLIVLB</dt><dd><p>live weight (landed = "n") or landed weight (landed="y") in lbs</p></dd>
-<dt>SPPVALUE</dt><dd><p>The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.</p></dd>
+    <p>A list is returned:</p>
+<p></p>
+<dt>data</dt><dd><p>containing the result of the executed <code>sqlStatement</code></p></dd>
 
-    <h2 class="hasAnchor" id="file-creation"><a class="anchor" href="#file-creation"></a>File Creation</h2>
+  <dt>sql</dt><dd><p>containing the <code>sqlStatement</code> itself</p></dd>
+
+ <dt>colNames</dt><dd><p>a vector of the table's column names</p></dd>
+
+If no sqlStatement is provided the default sql statement "select * from cfdbs.mstrvess" is used
+
+    <h2 class="hasAnchor" id="reference"><a class="anchor" href="#reference"></a>Reference</h2>
 
     
 
+<p>Use the data dictionary for field name explanations</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-<p>A file containing the data.table above will also be saved to the users machine in the directory provided</p>
+    <div class='dont-index'><p><code>connect_to_database</code></p>
+<p>Other get functions: 
+<code><a href='get_areas.html'>get_areas</a>()</code>,
+<code><a href='get_gears.html'>get_gears</a>()</code>,
+<code><a href='get_locations.html'>get_locations</a>()</code>,
+<code><a href='get_ports.html'>get_ports</a>()</code>,
+<code><a href='get_species_itis.html'>get_species_itis</a>()</code>,
+<code><a href='get_species.html'>get_species</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># extracts complete vessel table based on custom sql statement</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='fu'>get_vessels</span><span class='op'>(</span><span class='va'>channel</span><span class='op'>)</span>
+
+<span class='co'># extracts vessel ID, crew size, and home port on custom sql statement</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='va'>sqlStatement</span> <span class='op'>&lt;-</span> <span class='st'>"select vessel, crew, homeport from cfdbs.mstrvess;"</span>
+<span class='fu'>get_vessels</span><span class='op'>(</span><span class='va'>channel</span>,<span class='va'>sqlStatement</span><span class='op'>)</span>
+
+<span class='co'># extracts all vessel info for vessels lengths &lt; 50ft based on custom sql statement</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='va'>sqlStatement</span> <span class='op'>&lt;-</span> <span class='st'>"select * from cfdbs.mstrvess where vesslen &lt;29;"</span>
+<span class='fu'>get_vessels</span><span class='op'>(</span><span class='va'>channel</span>,<span class='va'>sqlStatement</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

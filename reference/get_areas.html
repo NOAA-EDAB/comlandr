@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extracts commercial data from Database — get_comland_data • comlandr</title>
+<title>Extract AREA information from CFDBS — get_areas • comlandr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Extracts commercial data from Database — get_comland_data" />
-<meta property="og:description" content="Connects to cfdbs and pulls fields from WOLANDS, WODETS, CFDETS" />
+<meta property="og:title" content="Extract AREA information from CFDBS — get_areas" />
+<meta property="og:description" content="Extract a list of statistical areas, region, NAFO codes, etc from the NEFSC &quot;Area&quot; supporting table" />
 
 
 
@@ -126,16 +126,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extracts commercial data from Database</h1>
-    <small class="dont-index">Source: <a href='https://github.com/NOAA-EDAB/comlandr/blob/master/R/get_comland_data.R'><code>R/get_comland_data.R</code></a></small>
-    <div class="hidden name"><code>get_comland_data.Rd</code></div>
+    <h1>Extract AREA information from CFDBS</h1>
+    <small class="dont-index">Source: <a href='https://github.com/NOAA-EDAB/comlandr/blob/master/R/get_areas.R'><code>R/get_areas.R</code></a></small>
+    <div class="hidden name"><code>get_areas.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Connects to cfdbs and pulls fields from WOLANDS, WODETS, CFDETS</p>
+    <p>Extract a list of statistical areas, region, NAFO codes, etc from the NEFSC "Area" supporting table</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_comland_data</span><span class='op'>(</span><span class='va'>channel</span>, <span class='va'>landed</span>, <span class='va'>endyear</span>, <span class='va'>out.dir</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_areas</span><span class='op'>(</span><span class='va'>channel</span>, areas <span class='op'>=</span> <span class='st'>"all"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,41 +146,61 @@
 to communicate with the database engine. (see <code>connect_to_database</code>)</p></td>
     </tr>
     <tr>
-      <th>landed</th>
-      <td><p>Character String. Use landed weight ("y" - meatwt) for scallops and clams instead of live weight ("n" - livewt).</p></td>
-    </tr>
-    <tr>
-      <th>endyear</th>
-      <td><p>Numeric Scalar. Final year of query.</p></td>
-    </tr>
-    <tr>
-      <th>out.dir</th>
-      <td><p>path to directory where final output will be saved</p></td>
+      <th>areas</th>
+      <td><p>a specific area code or set of codes. Either numeric or character vector. Defaults to "all" areas
+Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement. Character codes are short character strings to reference the AREANM field.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Data frame (data.table) (n x 10)
-Each row of the data.table represents a species record for a given tow/trip</p>
-<dt>YEAR</dt><dd><p>Year of trip/tow</p></dd>
-<dt>MONTH</dt><dd><p>Month of trip/tow</p></dd>
-<dt>NEGEAR</dt><dd><p>Fishing gear used on trip/tow</p></dd>
-<dt>TONCL1</dt><dd><p>Tonnage class of the fishing vessel</p></dd>
-<dt>NESPP3</dt><dd><p>Species code (3 charachters)</p></dd>
-<dt>NESPP4</dt><dd><p>Species code and market code (4 characters)</p></dd>
-<dt>AREA</dt><dd><p>Statistical area in which species was reportly caught</p></dd>
-<dt>UTILCD</dt><dd><p>Utilization code</p></dd>
-<dt>SPPLIVLB</dt><dd><p>live weight (landed = "n") or landed weight (landed="y") in lbs</p></dd>
-<dt>SPPVALUE</dt><dd><p>The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.</p></dd>
+    <p>A list is returned:</p>
+<p></p>
+<dt>data</dt><dd><p>containing the result of the executed <code>sqlStatement</code></p></dd>
 
-    <h2 class="hasAnchor" id="file-creation"><a class="anchor" href="#file-creation"></a>File Creation</h2>
+   <dt>sql</dt><dd><p>containing the sql call</p></dd>
+
+   <dt>colNames</dt><dd><p>a vector of the table's column names</p></dd>
+
+The default sql statement "select * from cfdbs.area" is used
+
+    <h2 class="hasAnchor" id="reference"><a class="anchor" href="#reference"></a>Reference</h2>
 
     
 
+<p>Use the data dictionary for field name explanations</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-<p>A file containing the data.table above will also be saved to the users machine in the directory provided</p>
+    <div class='dont-index'><p><code>connect_to_database</code></p>
+<p>Other get functions: 
+<code><a href='get_gears.html'>get_gears</a>()</code>,
+<code><a href='get_locations.html'>get_locations</a>()</code>,
+<code><a href='get_ports.html'>get_ports</a>()</code>,
+<code><a href='get_species_itis.html'>get_species_itis</a>()</code>,
+<code><a href='get_species.html'>get_species</a>()</code>,
+<code><a href='get_vessels.html'>get_vessels</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># extracts complete area table based on default sql statement</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='fu'>get_areas</span><span class='op'>(</span><span class='va'>channel</span><span class='op'>)</span>
+
+<span class='co'># extracts a subset of area data based on selected areas 100,500 (numeric)</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='fu'>get_areas</span><span class='op'>(</span><span class='va'>channel</span>,areas<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>100</span>,<span class='fl'>500</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># extracts a subset of area data based on selected areas 100,500 (character)</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='fu'>get_areas</span><span class='op'>(</span><span class='va'>channel</span>,areas<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"100"</span>,<span class='st'>"500"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># extracts a subset of area data based on areanm's containing "GG" (Androscoggin River etc)</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='fu'>get_areas</span><span class='op'>(</span><span class='va'>channel</span>,<span class='st'>"GG"</span><span class='op'>)</span>
+
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

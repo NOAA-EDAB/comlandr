@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>comlandr: Pull and process commercial fisheries data — comlandr • comlandr</title>
+<title>Extract LOCATION information from CFDBS — get_locations • comlandr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="comlandr: Pull and process commercial fisheries data — comlandr" />
-<meta property="og:description" content="For use in multispecies projects." />
+<meta property="og:title" content="Extract LOCATION information from CFDBS — get_locations" />
+<meta property="og:description" content="Extract a list of lat, long, ten minute square, etc from the NEFSC &quot;loc&quot; supporting table" />
 
 
 
@@ -126,42 +126,77 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>comlandr: Pull and process commercial fisheries data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/NOAA-EDAB/comlandr/blob/master/R/comlandr.R'><code>R/comlandr.R</code></a></small>
-    <div class="hidden name"><code>comlandr.Rd</code></div>
+    <h1>Extract LOCATION information from CFDBS</h1>
+    <small class="dont-index">Source: <a href='https://github.com/NOAA-EDAB/comlandr/blob/master/R/get_locations.R'><code>R/get_locations.R</code></a></small>
+    <div class="hidden name"><code>get_locations.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>For use in multispecies projects.</p>
+    <p>Extract a list of lat, long, ten minute square, etc from the NEFSC "loc" supporting table</p>
     </div>
 
+    <pre class="usage"><span class='fu'>get_locations</span><span class='op'>(</span><span class='va'>channel</span>, sqlStatement <span class='op'>=</span> <span class='st'>"select * from cfdbs.loc;"</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>channel</th>
+      <td><p>DBI Object. Inherited from <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection-class</a>. This object is used to connect
+to communicate with the database engine. (see <code>connect_to_database</code>)</p></td>
+    </tr>
+    <tr>
+      <th>sqlStatement</th>
+      <td><p>Character string. An sql statement (optional)</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list is returned:</p>
+<p></p>
+<dt>data</dt><dd><p>containing the result of the executed <code>sqlStatement</code></p></dd>
+
+   <dt>sql</dt><dd><p>containing the <code>sqlStatement</code> itself</p></dd>
+
+   <dt>colNames</dt><dd><p>a vector of the table's column names</p></dd>
+
+If no sqlStatement is provided the default sql statement "select * from cfdbs.loc" is used
+
+    <h2 class="hasAnchor" id="reference"><a class="anchor" href="#reference"></a>Reference</h2>
 
     
-<ul>
-<li><p>pulls data from cfdbs: by area, gear, species, year, month</p></li>
-<li><p>pulls Herring data from state of Maine database</p></li>
-<li><p>defines fleet structure and assigns fleets to gear types</p></li>
-<li><p>define geographic areas and assigns statistical areas to geographic areas</p></li>
-<li><p>assigns catch to unknown gear, area, quarter/half year, size based on similar trips (based on M Palmer, ????)</p></li>
-<li><p>pulls and processes NAFO (Northwest Atlantic Fisheries Organization) data</p></li>
-<li><p>uses survey data to apportion hake complex into species</p></li>
-<li><p>uses survey data to apportion skate complex into species</p></li>
-<li><p>adjusts species value to specified date</p></li>
-<li><p>plots output</p></li>
-</ul>
 
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+<p>Use the data dictionary for field name explanations</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    
+    <div class='dont-index'><p><code>connect_to_database</code></p>
+<p>Other get functions: 
+<code><a href='get_areas.html'>get_areas</a>()</code>,
+<code><a href='get_gears.html'>get_gears</a>()</code>,
+<code><a href='get_ports.html'>get_ports</a>()</code>,
+<code><a href='get_species_itis.html'>get_species_itis</a>()</code>,
+<code><a href='get_species.html'>get_species</a>()</code>,
+<code><a href='get_vessels.html'>get_vessels</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># extracts complete locations table based on default sql statement</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='fu'>get_locations</span><span class='op'>(</span><span class='va'>channel</span><span class='op'>)</span>
 
-<p>Palmer, M (????) Working doc reference and title</p>
-<p>NAFO website: <a href='https://www.nafo.int'>https://www.nafo.int</a></p>
-<p>#'To learn more about using <code>comlandr</code>, start with the vignette: <code><a href='https://rdrr.io/r/utils/browseVignettes.html'>browseVignettes(package="comlandr")</a></code> or click the index below</p>
+<span class='co'># extracts subset of location information. Statistical area, and 10 minute square based on custom sql statement</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='va'>sqlStatement</span> <span class='op'>&lt;-</span> <span class='st'>"select area TENMSQ from cfdbs.loc;"</span>
+<span class='fu'>get_locations</span><span class='op'>(</span><span class='va'>channel</span>,<span class='va'>sqlStatement</span><span class='op'>)</span>
 
+<span class='co'># extracts 10 minute square info for an area on geaorges bank (511) based on custom sql statement</span>
+<span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span>
+<span class='va'>sqlStatement</span> <span class='op'>&lt;-</span> <span class='st'>"select area, tenmsq  from cfdbs.loc where area=511;"</span>
+<span class='fu'>get_locations</span><span class='op'>(</span><span class='va'>channel</span>,<span class='va'>sqlStatement</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
