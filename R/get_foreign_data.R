@@ -88,6 +88,7 @@ get_foreign_data <- function(channel){
 
   #Get nafo code in a similar format to comland
   nafoland <- nafo[, list(Year, GearCode, Tonnage, Divcode, Code, Catches)]
+  # unknown monthly catch resides in "Catches" field. Assign as Month = 0
   nafoland[, MONTH := 0]
   data.table::setnames(nafoland, 'Catches', 'SPPLIVMT')
 
@@ -107,7 +108,7 @@ get_foreign_data <- function(channel){
   nafoland[MONTH %in% 4:6,   QY := 2]
   nafoland[MONTH %in% 7:9,   QY := 3]
   nafoland[MONTH %in% 10:12, QY := 4]
-  nafoland[MONTH == 0,       QY := 1]
+  nafoland[MONTH == 0,       QY := 1] # Catches for Unknown MONTH
 
 
   ## Add NESPP3 codes
