@@ -1,0 +1,123 @@
+---
+title: "Foreign Catch Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Foreign Catch Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+```
+
+```{r setup, echo = F}
+library(magrittr)
+```
+
+## Northwest Atlantic Fisheries Organization (NAFO)
+
+Data stored on the [NAFO](https://www.nafo.int/Data/Catch-Statistics)'s site is stored in the STATLANT 21 database and is served to the user in one of two formats
+
+
+### [21A](https://www.nafo.int/Data/STATLANT) Database
+
+Less detailed but more complete. Most years have near 100% submission
+
+Contains information on ANNUAL catches (metric tons) by species, subareas/division, country, and year. A Data extraction tool is provided to select subsets of the data. The tool allows for the output (export) of data in Microsoft Excel, PDF, and comma-separated values formats.
+
+Catches are not broken down my month and there is no effort data or fishing gear data.
+
+Example data:
+
+```{r nafo21a, eval=T, echo=F, message=F}
+options(warn = -1)
+filepath <- system.file("extdata","SS_NAFO_21A.csv",package="comlandr")
+nafo21a <- readr::read_csv(filepath, skip = 8,n_max=10)
+
+  nafo21a %>% 
+    dplyr::select(-X7) %>% 
+    kableExtra::kbl() %>%
+    kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width=F)
+```
+
+
+
+### [21B](https://www.nafo.int/Data/Catch-Statistics) Database
+
+Not all countries submit. Especially the USA. Some countries provide catch but not effort.
+
+Contains MONTHLY catch and effort information by year, country, fishing gear, vessel tonnage, main species, division, and year. As this database large, the Secretariat makes it available on the web as a number of comma-delimited text files containing ONE decade each.
+
+Example data (Decade 1960-1969):
+```{r nafo21b, eval=T, echo=F, message=F}
+temp <- tempfile()
+  download.file("https://www.nafo.int/Portals/0/Stats/nafo-21b-60-69.zip",temp,quiet=T)
+  nafo21b <- readr::read_csv(unz(temp, "NAFO21B-60-69.txt"))
+  nafo21b <- nafo21b %>% 
+    dplyr::filter(Year == 1961) %>%
+    dplyr::arrange(Country) %>% 
+    dplyr::slice_head(n=10)
+  nafo21b %>% 
+    kableExtra::kbl() %>%
+    kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width=F,font_size=7)
+```
+
+The `mainSpecies` field is the reported target species, however the actual species caught are specified in the `speciesEffort` or `Code` field.
+
+Some of the column names have changed over the decades:
+
+* `Code` is renamed as `SpeciesEffort` from 2000 onward
+* `GearCode` is renamed as `Gear` from 2000 onward
+* `DivCode` is renamed as `AreaCode` from 2000 onward
+* `Catches` is renamed as `Month_NK` from 2000 onward
+
+The Country, Gear, Tonnage, MainSpecies, AreaCode fields contain coded values. The description of these codes can be found in supporting files (these are exported with the data)
+
+* `Gear` -> gear.txt
+* `AreaCode` -> divisions.txt
+* `Tonnage` -> tonnage.txt
+* `Country` -> country.txt
+* `MainSpecies` -> main species.txt
+* `SpeciesEffort` -> species.txt
+
+#### Effort
+
+The `Effort` field should be ignored. Values of "0 means no effort data are available while 1 and 9 both mean that there is data (with no explanation of the difference) but in practice these values seem to have been used differently during different time periods". This is somewhat redundant since the effort data are recorded by month. The field `SpeciesEffort` help determine the effort levels.
+
+For example:
+
+`SpeciesEffort`
+* = 1 - Hours Fished, the total number of hours spent fishing while in NAFO regulatory area
+* = 2 - Days Fished, the number of days fishing took place.
+* = 3 - Days on ground, the number of days a vessel was in the NAFO regulatory area whether fishing or not
+* = Anything else (Species codes listed in species.txt).
+
+In the data shown above the 3 ton vessel from Canada Maritimes & Quebec (Country = 2), using Bottom otter trawl (GearCode = 10), targeted American plaice (mainSpecies = 10), in division 32, fished for 74 hours in June over a period of 10 days (~7.4 hours per day) and caught 38 tons of Atlantic cod (Code = 101) and 114 tons of American plaice (Code = 112)
+
+So a vessel that reported 67 hours of fishing over 8 days ~ 8.375 hours per day.
+
+## Use of NAFO data in `comlandr`
+
+The data from database `21B` is used in `comlandr`.
+
+Effort is not considered.
+
+For each species, catch is aggregated over all countries (USA omitted) for each year.
+`DivCode`/`AreaCode` is mapped to the Northeast United States (NEUS) Ecological Production Units (EPU's).
+`Gear` codes are mapped to Northeast Fisheries Science Center (NEFSC) gear codes.
+
+The resulting data are then merged with the NEFSC landings data.
+
+
+
+
+
+
+
+
+
