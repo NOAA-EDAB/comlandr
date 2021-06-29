@@ -4,17 +4,21 @@
 #'
 #'@return Data frame: NAFO data
 #'
-#'\item{}{}
-#'\item{}{}
-#'\item{}{}
-#'\item{}{}
-#'\item{}{}
+#'\item{Year}{Year of catch}
+#'\item{MONTH}{Month of catch}
+#'\item{QY}{Quatere year of catch. Jan-Mar = 1, ..., Oct-Dec = 4}
+#'\item{GearCode}{NAFO gear code}
+#'\item{Tonnage}{Size class of vessel}
+#'\item{DivCode}{Division code in which vessel reported catch}
+#'\item{NAFOCode}{NAFO species code of landed fish}
+#'\item{SPPLIVMT}{cacth in Metric tons}
+#'\item{NESPP3}{NEFSC species code}
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
-#' @noRd
+#' @export
 
-comland_nafo <- function(channel){
+get_foreign_data <- function(channel){
   #Note - NAFO landings by division only so not available in sum.by = "stat.area"
   #Add NAFO foreign landings - Data from http://www.nafo.int/data/frames/data.html
 
@@ -107,7 +111,7 @@ comland_nafo <- function(channel){
 
 
   ## Add NESPP3 codes
-  speciesInfo <- data.table::as.data.table(comlandr::get_species(channel)$data )
+  speciesInfo <- data.table::as.data.table(get_species(channel)$data )
   speciesInfo <- speciesInfo[,list(NESPP3,NAFOSPP)]
   speciesInfo[, NESPP3:= as.integer(NESPP3) ]
   speciesInfo[, NAFOSPP:= as.integer(NAFOSPP)]
