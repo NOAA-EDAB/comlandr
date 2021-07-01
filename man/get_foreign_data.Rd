@@ -4,16 +4,21 @@
 \alias{get_foreign_data}
 \title{Downloads all NAFO data}
 \usage{
-get_foreign_data(channel)
+get_foreign_data()
 }
 \value{
 Data frame: NAFO data
 
-\item{}{}
-\item{}{}
-\item{}{}
-\item{}{}
-\item{}{}
+\item{Year}{Year of catch}
+\item{MONTH}{Month of catch}
+\item{QY}{Quatere year of catch. Jan-Mar = 1, ..., Oct-Dec = 4}
+\item{GearCode}{NAFO gear code}
+\item{Tonnage}{Size class of vessel}
+\item{DivCode}{Division code in which vessel reported catch}
+\item{NAFOCode}{NAFO species code of landed fish}
+\item{SPPLIVMT}{catch in Metric tons}
+\item{Country}{Reporting country}
+\item{NESPP3}{NEFSC species code}
 }
 \description{
 Downloads and reads in all NAFO data then aggregates it

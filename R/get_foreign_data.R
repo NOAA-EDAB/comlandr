@@ -11,14 +11,15 @@
 #'\item{Tonnage}{Size class of vessel}
 #'\item{DivCode}{Division code in which vessel reported catch}
 #'\item{NAFOCode}{NAFO species code of landed fish}
-#'\item{SPPLIVMT}{cacth in Metric tons}
+#'\item{SPPLIVMT}{catch in Metric tons}
+#'\item{Country}{Reporting country}
 #'\item{NESPP3}{NEFSC species code}
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
 #' @export
 
-get_foreign_data <- function(channel){
+get_foreign_data <- function(){
   #Note - NAFO landings by division only so not available in sum.by = "stat.area"
   #Add NAFO foreign landings - Data from http://www.nafo.int/data/frames/data.html
 
@@ -87,17 +88,17 @@ get_foreign_data <- function(channel){
   #Deal with unknown monthly catch????? The Catches column represent catch that couldn't be assigned to a month
 
   #Get nafo code in a similar format to comland
-  nafoland <- nafo[, list(Year, GearCode, Tonnage, Divcode, Code, Catches)]
+  nafoland <- nafo[, list(Year, GearCode, Tonnage, Divcode, Country,Code, Catches)]
   # unknown monthly catch resides in "Catches" field. Assign as Month = 0
   nafoland[, MONTH := 0]
   data.table::setnames(nafoland, 'Catches', 'SPPLIVMT')
 
   month <- c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
   for(i in 1:12){
-    nafoland.month <- nafo[, list(Year, GearCode, Tonnage, Divcode, Code, get(month[i]))]
+    nafoland.month <- nafo[, list(Year, GearCode, Tonnage, Divcode, Country, Code, get(month[i]))]
     nafoland.month[, MONTH := i]
     data.table::setnames(nafoland.month,
-                         names(nafoland.month)[6],
+                         names(nafoland.month)[7],
                          'SPPLIVMT')
     nafoland <- data.table::rbindlist(list(nafoland, nafoland.month))
   }
@@ -110,19 +111,6 @@ get_foreign_data <- function(channel){
   nafoland[MONTH %in% 10:12, QY := 4]
   nafoland[MONTH == 0,       QY := 1] # Catches for Unknown MONTH
 
-
-  ## Add NESPP3 codes
-  speciesInfo <- data.table::as.data.table(get_species(channel)$data )
-  speciesInfo <- speciesInfo[,list(NESPP3,NAFOSPP)]
-  speciesInfo[, NESPP3:= as.integer(NESPP3) ]
-  speciesInfo[, NAFOSPP:= as.integer(NAFOSPP)]
-  speciesInfo <- speciesInfo %>% dplyr::distinct()
-
-  ###########################################################################
-  # caution many to one relationship NESPP3 -> NAFO. Duplicated catch data
-  # Fix this
-  #############################################################################
-  nafoland <- dplyr::left_join(nafoland, speciesInfo, by = c("Code"="NAFOSPP"))
 
   # change name of NAFO species field
   data.table::setnames(nafoland,"Code", "NAFOCode")
