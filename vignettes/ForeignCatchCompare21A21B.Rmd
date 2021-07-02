@@ -1,0 +1,338 @@
+---
+title: "Compare NAFO 21A & 21B databases"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Compare NAFO 21A & 21B databases}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+```
+
+```{r setup, echo = F, eval = T, message=F}
+library(magrittr)
+library(patchwork)
+NEUSDivs <- c(47, 51:56, 61:63)
+############################################################################
+## Read in supporting tables
+############################################################################
+# Should really use latest decade for ALL supporting files, but the format is inconsistent!
+# species.txt is now bundled with the package since it contains additional species
+temp <- tempfile()
+download.file("https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-16.zip",destfile=temp,quiet=TRUE)
+
+# division codes. supporting table
+divCodes <- readr::read_csv(unz(temp,"nafo-21b-2010-16/divisions.txt"),col_names = F) %>%
+  magrittr::set_colnames(c("Divcode","Division"))
+
+# country codes. supporting table
+#countryCodes <- readr::read_csv(unz(temp, "nafo-21b-2010-16/country.txt")) %>%
+countryCodes <- readr::read_delim(unz(temp, "nafo-21b-2010-16/country.txt"),delim = "\t") %>%
+  dplyr::rename(Country = Description) %>%
+  dplyr::mutate(dplyr::across(where(is.character), stringr::str_trim)) %>%
+  dplyr::mutate(CountryName = paste0(toupper(Country)," - ",toupper(Abbreviation))) %>%
+  dplyr::mutate(CountryCode = as.integer(Code))
+
+# species codes - supporting table
+speciesCodes <- readr::read_csv(system.file("extdata","species2010_2016.txt",package="comlandr")) %>%
+  dplyr::slice(-(1:3)) %>%
+  dplyr::mutate(Speciesname = paste0(Longname," - ",Abbreviation)) %>%
+  dplyr::select(Code,Speciesname)
+
+```
+
+## Northwest Atlantic Fisheries Organization (NAFO)
+
+Data stored on the [NAFO](https://www.nafo.int/Data/Catch-Statistics)'s site is stored in the STATLANT 21 database and is served to the user in one of two formats
+
+The differences are explained in [`comlandr`](https://noaa-edab.github.io/comlandr/articles/ForeignCatch.html) package.
+
+## Spatial Domain
+
+The NAFO spatial domain "covers a large portion of the Atlantic Ocean, including the 200-mile zones of Coastal States — Canada, Greenland, St. Pierre et Miquelon and USA.". The R package [`comlandr`](https://noaa-edab.github.io/comlandr) focuses on the Northeast United States (NEUS) shown by the fisheries statistcal areas as defined by the Greater Atlantic Regional Fisheries Office ([GARFO](https://www.fisheries.noaa.gov/about/greater-atlantic-regional-fisheries-office)). The NAFO divisions that map to the NEUS domain are shown in the second panel.
+
+```{r plotspatial, echo=F, eval=T, message=F}
+################################################################################
+########################## plot spatial domain ################################
+################################################################################
+options(warn=-1)
+## plot divisions overstay stat areas
+# read in statareas from package
+statAreas <- sf::st_read(system.file("extdata",package="comlandr"),layer="Statistical_Areas_2010",quiet=T)
+sf::st_crs(statAreas) <- 4269
+
+GB <- statAreas %>% dplyr::filter(Id %in% c(521, 522, 523, 524, 525, 526, 551, 552, 561, 562))
+GOM <- statAreas %>% dplyr::filter(Id %in% c(500, 510, 512, 513, 514, 515))
+MAB <- statAreas %>% dplyr::filter(Id %in% c(537, 539, 600, 612, 613, 614, 615, 616, 621, 622, 625, 626, 631, 632))
+SS <- statAreas %>% dplyr::filter(Id %in% c(463, 464,465, 466, 467, 511))
+NEUS <- rbind(GB,SS,GOM,MAB)
+
+divShapefile <- "https://www.nafo.int/Portals/0/GIS/Divisions.zip"
+temp1 <- tempfile()
+temp2 <- tempfile()
+download.file(divShapefile,destfile=temp1,quiet=TRUE)
+unzip(zipfile=temp1,exdir=temp2)
+
+divisions <- sf::st_read(paste0(temp2,"\\Divisions\\Divisions.shp"),quiet=T) %>%
+  dplyr::mutate(ZONE = toupper(ZONE)) %>%
+  dplyr::filter(!is.na(ZONE)) %>% # newfoundland
+  dplyr::left_join(.,divCodes,by =c("ZONE"="Division")) %>%
+  sf::st_set_crs(.,4269)
+unlink(temp1)
+unlink(temp2)
+
+centroids <-  sf::st_coordinates(sf::st_centroid(divisions))
+
+divisions <- cbind(divisions,centroids)
+
+p1 <- ggplot2::ggplot(data = divisions) +
+  ggplot2::geom_sf(mapping=ggplot2::aes(fill=Divcode),fill="white",color="grey") +
+  ggplot2::geom_text(data=divisions,ggplot2::aes(x=X,y=Y,label=Divcode),size=2) +
+  ggplot2::ggtitle("NAFO Area Code + stat areas") +
+  ggplot2::geom_sf(data=NEUS,mapping=ggplot2::aes(fill=Id),fill="salmon",alpha=.2)
+
+
+p2 <- ggplot2::ggplot(data = divisions) +
+  ggplot2::geom_sf(mapping=ggplot2::aes(fill=Divcode),fill="white",color="grey") +
+  ggplot2::geom_text(data=divisions,ggplot2::aes(x=X,y=Y,label=ZONE),size=2) +
+  ggplot2::ggtitle("Corresponding Divisions") +
+  ggplot2::xlab("") + 
+  ggplot2::ylab("") + 
+  ggplot2::geom_sf(data=divisions %>% dplyr::filter(Divcode %in% NEUSDivs),mapping=ggplot2::aes(fill=Divcode),fill="salmon",alpha=.2)
+
+p1 + p2
+```
+
+The remainder of this document and all following figures will be based on this smaller area.
+
+## Catch by Division {.tabset}
+
+Catch by the USA is reported and stored in the NEFSC databases. Prior to NAFO database comparisons all catch by the USA is removed. Catch from divisions 4X, 5Y, 5Z, 6A, 6B, 6C (NEUS equivalent) area used. 
+Aggregated over Country and Species
+
+
+```{r readdata, echo = F, eval = T, message= F}
+################################################################################
+###################################### 21A data ################################
+################################################################################
+
+# joins with species data to get species codes
+# joins with division codes to filter out NEUS zones
+# removes USA landings
+
+# read in 21a data
+db21a <- readr::read_csv(system.file("extdata","21A.csv",package="comlandr")) %>%
+  dplyr::rename(Speciesname = `Species Name`) %>%
+  dplyr::rename(MetricTonnes = `Metric Tonnes`) %>%
+  dplyr::left_join(.,speciesCodes, by = "Speciesname") %>%
+  dplyr::left_join(.,divCodes,by = "Division") %>%
+  dplyr::filter(Divcode %in% NEUSDivs) %>%
+  dplyr::select(-Divcode) %>%
+  dplyr::mutate(Division = as.factor(Division)) %>%
+  dplyr::filter(!grepl("USA",Country))
+
+################################################################################
+###################################### 21B data ################################
+################################################################################
+
+# pull data from comlandr.
+# This already removes USA data and aggregates multi decadal data files
+# joins with country codes to get Name similar to 21A
+# joins with division codes to filter out NEUS area divisions
+# joins with species codes to match names similar to 21A
+# renames fields to match 21A#
+
+# read in 21b data
+db21b <- comlandr::get_foreign_data(removeUSA =T) %>%
+  tibble::as_tibble()
+
+db21b <- db21b %>%
+  dplyr::left_join(.,countryCodes,by = c("Country"="CountryCode")) %>%
+  dplyr::select(-Country, -Abbreviation,-Code) %>%
+  dplyr::rename(Code = NAFOCode) %>%
+  dplyr::group_by(Year,CountryName,Divcode,Code) %>%
+  dplyr::summarise(MetricTonnes = sum(SPPLIVMT),.groups = "drop") %>%
+  dplyr::left_join(.,divCodes,by = "Divcode") %>%
+  dplyr::filter(Divcode %in% NEUSDivs) %>%
+  dplyr::select(-Divcode) %>%
+  dplyr::left_join(.,speciesCodes,by = "Code") %>%
+  dplyr::rename(Country = CountryName) %>%
+  dplyr::select(Year,Country,Division,Speciesname,MetricTonnes,Code) %>%
+  dplyr::mutate(Division = as.factor(Division))
+
+
+```
+
+### 21A
+
+
+```{r plot21adiv, echo = F, eval = T, message = F}
+
+
+## By Division
+## aggregate over Division
+db21a %>%
+  dplyr::group_by(Year,Division) %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000)) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::facet_wrap(ggplot2::vars(Division),scales = "free") +
+  ggplot2::ylab("Metric Tons (1000's)")
+```
+
+### 21B
+
+```{r plot21bdiv, echo = F, eval = T, message = F}
+### 21B
+
+db21b %>%
+  dplyr::group_by(Year,Division) %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000)) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::facet_wrap(ggplot2::vars(Division),scales = "free") +
+  ggplot2::ylab("Metric Tons (1000's)")
+```
+
+
+## Catch by Country
+
+Aggregated over species and division
+
+### 21A
+```{r plot21acountry, echo = F, eval = T, message = F}
+## By Division
+## aggregate over Division
+db21a %>%
+  dplyr::mutate(Country = dplyr::case_when(grepl("CANADA",Country) ~ "CANADA",
+                                           !grepl("CANADA",Country) ~ Country)) %>%
+  dplyr::group_by(Year,Country) %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000)) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::facet_wrap(ggplot2::vars(Country),scales = "free") +
+  ggplot2::ylab("Metric Tons (1000's)")
+```
+
+### 21B
+
+```{r plot21bcountry, echo = F, eval = T, message = F}
+### 21B
+
+db21b %>%
+  dplyr::mutate(Country = dplyr::case_when(grepl("CANADA",Country) ~ "CANADA",
+                                           !grepl("CANADA",Country) ~ Country)) %>%
+  dplyr::group_by(Year,Country) %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000)) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::facet_wrap(ggplot2::vars(Country),scales = "free") +
+  ggplot2::ylab("Metric Tons (1000's)")
+```
+
+
+## Catch by Species
+
+Aggregate over division, country
+
+### 21A
+
+There are `r length(unique(db21a$Speciesname))` species represented.
+
+Species in 21A not in 21B:
+
+```{r missing21a, echo = F, eval = T}
+sp <- setdiff(unique(db21a$Speciesname),unique(db21b$Speciesname))
+sp %>%
+    kableExtra::kbl() %>%
+    kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width=F)
+```
+
+```{r plot21aspecies, echo = F, eval = T, message = F}
+for (ipage in 1:ceiling(length(unique(db21a$Speciesname))/25)) {
+  p <- db21a %>%
+    dplyr::group_by(Year,Speciesname) %>%
+    dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+    ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000)) +
+    ggplot2::geom_line() +
+    ggplot2::geom_point() +
+    ggforce::facet_wrap_paginate(ggplot2::vars(Speciesname),nrow=5,ncol=5,page=ipage,scales = "free") +
+    ggplot2::ylab("Metric Tons (1000's)")
+  print(p)
+}
+```
+
+### 21B
+
+There are `r length(unique(db21b$Speciesname))` species represented
+
+Species in 21B not in 21A
+```{r missing21b, echo = F, eval = T}
+sp <- setdiff(unique(db21b$Speciesname),unique(db21a$Speciesname))
+sp %>%
+    kableExtra::kbl() %>%
+    kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width=F)
+```
+
+```{r plot21bspecies, echo = F, eval = T, message = F}
+### 21B
+for (ipage in 1:ceiling(length(unique(db21a$Speciesname))/25)) {
+  p <- db21b %>%
+    dplyr::group_by(Year,Speciesname) %>%
+    dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+    ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000)) +
+    ggplot2::geom_line() +
+    ggplot2::geom_point() +
+    ggforce::facet_wrap_paginate(ggplot2::vars(Speciesname),nrow=5,ncol=5,scales = "free") +
+    ggplot2::ylab("Metric Tons (1000's)")
+  plot(p)
+}
+```
+
+
+## Catch over Time
+
+Aggregated catch over division, country, and species
+
+### 21A
+
+Years with missing data: `r setdiff(min(db21a$Year):max(db21a$Year), unique(db21a$Year))`
+
+```{r plot21atime, echo = F, eval = T, message = F}
+db21a %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000)) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::ylab("Metric Tons (1000's)")
+
+```
+
+
+### 21B
+
+Years with missing data: `r setdiff(min(db21b$Year):max(db21b$Year), unique(db21b$Year))`
+
+
+```{r plot21btime, echo = F, eval = T, message = F}
+### 21B
+db21b %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000)) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::ylab("Metric Tons (1000's)")
+
+```
