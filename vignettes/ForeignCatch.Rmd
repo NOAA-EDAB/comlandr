@@ -21,7 +21,7 @@ library(magrittr)
 
 ## Northwest Atlantic Fisheries Organization (NAFO)
 
-Data stored on the [NAFO](https://www.nafo.int/Data/Catch-Statistics)'s site is stored in the STATLANT 21 database and is served to the user in one of two formats
+Data stored on the [NAFO](https://www.nafo.int/Data/Catch-Statistics)'s site is stored in the STATLANT 21 database and is served to the user in one of two formats. Visit [here](https://noaa-edab.github.io/comlandr/articles/ForeignCatchCompare21A21B.html) for a comparison of the data
 
 
 ### [21A](https://www.nafo.int/Data/STATLANT) Database
