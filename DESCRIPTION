@@ -13,7 +13,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    markdown
+    markdown,
+    patchwork
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Imports: 
