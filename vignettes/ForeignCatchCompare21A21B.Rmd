@@ -51,7 +51,7 @@ speciesCodes <- readr::read_csv(system.file("extdata","species2010_2016.txt",pac
 
 Data stored on the [NAFO](https://www.nafo.int/Data/Catch-Statistics)'s site is stored in the STATLANT 21 database and is served to the user in one of two formats
 
-The differences are explained in [`comlandr`](https://noaa-edab.github.io/comlandr/articles/ForeignCatch.html) package.
+The differences are explained [here](https://noaa-edab.github.io/comlandr/articles/ForeignCatch.html) package.
 
 ## Spatial Domain
 
@@ -149,7 +149,7 @@ db21a <- readr::read_csv(system.file("extdata","21A.csv",package="comlandr")) %>
 # renames fields to match 21A#
 
 # read in 21b data
-db21b <- comlandr::get_foreign_data(removeUSA =T) %>%
+db21b <- comlandr::get_foreign_data(removeUSA = T, aggregateCountry = F) %>%
   tibble::as_tibble()
 
 db21b <- db21b %>%
