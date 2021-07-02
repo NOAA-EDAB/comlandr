@@ -7,6 +7,9 @@
 clean_foreign_data(channel, nafoland)
 }
 \arguments{
+\item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+
 \item{nafoland}{Data frame. output from \code{\url{get_foreign_data}}}
 }
 \value{

@@ -2,7 +2,8 @@
 #'
 #'Downloads and reads in all NAFO data then aggregates it
 #'
-#'@param channel
+#'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+#' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
 #'@param nafoland Data frame. output from \code{\url{get_foreign_data}}
 #'
 #'@return Data frame: NAFO data
@@ -13,7 +14,7 @@
 #'
 #'@export
 
-clean_foreign_data <- function(channel,nafoland){
+clean_foreign_data <- function(channel, nafoland){
 
   ## pull NESPP3 codes and add to nafo landings
   speciesInfo <- data.table::as.data.table(get_species(channel)$data )
