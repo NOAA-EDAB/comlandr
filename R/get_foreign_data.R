@@ -1,6 +1,9 @@
 #' Downloads all NAFO data
 #'
-#'Downloads and reads in all NAFO data then aggregates it
+#'Downloads, imports, aggregates NAFO data
+#'
+#'@param removeUSA Boolean. Should USA landings be removed from data set (Default = T, remove)
+#'@param aggregateCountry Boolean. Should all catch be aggregated over country codes? (Default = T)
 #'
 #'@return Data frame: NAFO data
 #'
@@ -12,14 +15,14 @@
 #'\item{DivCode}{Division code in which vessel reported catch}
 #'\item{NAFOCode}{NAFO species code of landed fish}
 #'\item{SPPLIVMT}{catch in Metric tons}
-#'\item{Country}{Reporting country}
+#'\item{Country}{Reporting country - only if \code{aggregateCounty = F}}
 #'\item{NESPP3}{NEFSC species code}
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
 #' @export
 
-get_foreign_data <- function(){
+get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
   #Note - NAFO landings by division only so not available in sum.by = "stat.area"
   #Add NAFO foreign landings - Data from http://www.nafo.int/data/frames/data.html
 
@@ -82,13 +85,19 @@ get_foreign_data <- function(){
 
   }
 
-  #Remove US landings (Country code 22) and effort codes (1:3)
-  nafo <- nafo[Country != 22 & Code > 3, ]
+  # should we keep USA landings from 5Zc (Georges bank East of Hague line)
+  # Remove US landings (Country code 22)
+  if (removeUSA) {
+    nafo <- nafo[Country != 22, ]
+  }
+
+  #Remove effort codes (1:3)
+  nafo <- nafo[Code > 3, ]
 
   #Deal with unknown monthly catch????? The Catches column represent catch that couldn't be assigned to a month
 
   #Get nafo code in a similar format to comland
-  nafoland <- nafo[, list(Year, GearCode, Tonnage, Divcode, Country,Code, Catches)]
+  nafoland <- nafo[, list(Year, GearCode, Tonnage, Divcode, Country, Code, Catches)]
   # unknown monthly catch resides in "Catches" field. Assign as Month = 0
   nafoland[, MONTH := 0]
   data.table::setnames(nafoland, 'Catches', 'SPPLIVMT')
@@ -115,6 +124,17 @@ get_foreign_data <- function(){
   # change name of NAFO species field
   data.table::setnames(nafoland,"Code", "NAFOCode")
 
+
+  # aggregate over country
+  if (aggregateCountry) {
+    nafoland <- nafoland %>%
+      dplyr::group_by(Year,GearCode,Tonnage,Divcode,NAFOCode,MONTH,QY) %>%
+      dplyr::summarise(SPPLIVMT=sum(SPPLIVMT),.groups="drop") %>%
+      data.table::as.data.table(.)
+  }
+
+  # set NA's in monthly catch to zero
+  nafoland[is.na(SPPLIVMT), SPPLIVMT := 0]
 
 
   return(nafoland)

@@ -4,7 +4,12 @@
 \alias{get_foreign_data}
 \title{Downloads all NAFO data}
 \usage{
-get_foreign_data()
+get_foreign_data(removeUSA = T, aggregateCountry = T)
+}
+\arguments{
+\item{removeUSA}{Boolean. Should USA landings be removed from data set (Default = T, remove)}
+
+\item{aggregateCountry}{Boolean. Should all catch be aggregated over country codes? (Default = T)}
 }
 \value{
 Data frame: NAFO data
@@ -17,9 +22,9 @@ Data frame: NAFO data
 \item{DivCode}{Division code in which vessel reported catch}
 \item{NAFOCode}{NAFO species code of landed fish}
 \item{SPPLIVMT}{catch in Metric tons}
-\item{Country}{Reporting country}
+\item{Country}{Reporting country - only if \code{aggregateCounty = F}}
 \item{NESPP3}{NEFSC species code}
 }
 \description{
-Downloads and reads in all NAFO data then aggregates it
+Downloads, imports, aggregates NAFO data
 }
