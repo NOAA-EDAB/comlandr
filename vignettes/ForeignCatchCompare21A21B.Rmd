@@ -49,9 +49,7 @@ speciesCodes <- readr::read_csv(system.file("extdata","species2010_2016.txt",pac
 
 ## Northwest Atlantic Fisheries Organization (NAFO)
 
-Data stored on the [NAFO](https://www.nafo.int/Data/Catch-Statistics)'s site is stored in the STATLANT 21 database and is served to the user in one of two formats
-
-The differences are explained [here](https://noaa-edab.github.io/comlandr/articles/ForeignCatch.html) package.
+Data stored on the [NAFO](https://www.nafo.int/Data/Catch-Statistics)'s site is stored in the STATLANT 21 database and is served to the user in one of two formats. The differences are explained [here](https://noaa-edab.github.io/comlandr/articles/ForeignCatch.html) package.
 
 ## Spatial Domain
 
@@ -91,20 +89,24 @@ centroids <-  sf::st_coordinates(sf::st_centroid(divisions))
 
 divisions <- cbind(divisions,centroids)
 
-p1 <- ggplot2::ggplot(data = divisions) +
+data <-  sf::st_crop(divisions,xmin = -80, xmax = -60, ymin = 30, ymax = 46 )
+
+p1 <- ggplot2::ggplot(data = data) +
   ggplot2::geom_sf(mapping=ggplot2::aes(fill=Divcode),fill="white",color="grey") +
-  ggplot2::geom_text(data=divisions,ggplot2::aes(x=X,y=Y,label=Divcode),size=2) +
+  ggplot2::geom_text(data=data,ggplot2::aes(x=X,y=Y,label=Divcode),size=2) +
   ggplot2::ggtitle("NAFO Area Code + stat areas") +
+  ggplot2::xlab("") +
+  ggplot2::ylab("") +
   ggplot2::geom_sf(data=NEUS,mapping=ggplot2::aes(fill=Id),fill="salmon",alpha=.2)
 
 
-p2 <- ggplot2::ggplot(data = divisions) +
+p2 <- ggplot2::ggplot(data = data) +
   ggplot2::geom_sf(mapping=ggplot2::aes(fill=Divcode),fill="white",color="grey") +
-  ggplot2::geom_text(data=divisions,ggplot2::aes(x=X,y=Y,label=ZONE),size=2) +
+  ggplot2::geom_text(data=data,ggplot2::aes(x=X,y=Y,label=ZONE),size=2) +
   ggplot2::ggtitle("Corresponding Divisions") +
-  ggplot2::xlab("") + 
-  ggplot2::ylab("") + 
-  ggplot2::geom_sf(data=divisions %>% dplyr::filter(Divcode %in% NEUSDivs),mapping=ggplot2::aes(fill=Divcode),fill="salmon",alpha=.2)
+  ggplot2::xlab("") +
+  ggplot2::ylab("") +
+  ggplot2::geom_sf(data=data %>% dplyr::filter(Divcode %in% NEUSDivs),mapping=ggplot2::aes(fill=Divcode),fill="salmon",alpha=.2)
 
 p1 + p2
 ```
