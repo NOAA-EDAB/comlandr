@@ -17,7 +17,8 @@ Suggests:
     patchwork,
     readr,
     kableExtra,
-    tidyr
+    tidyr,
+    ggforce
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Imports: 
