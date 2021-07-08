@@ -2,19 +2,22 @@
 % Please edit documentation in R/clean_foreign_data.R
 \name{clean_foreign_data}
 \alias{clean_foreign_data}
-\title{Downloads all NAFO data}
+\title{Processes NAFO data for comlandr use}
 \usage{
-clean_foreign_data(channel, nafoland)
+clean_foreign_data(channel, nafoland, EPUs = NULL)
 }
 \arguments{
 \item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{nafoland}{Data frame. output from \code{\url{get_foreign_data}}}
+
+\item{EPUs}{Data frame.}
 }
 \value{
 Data frame: NAFO data
 }
 \description{
-Downloads and reads in all NAFO data then aggregates it
+Adds cfdbs NESPP3, NEGEAR, TONCL1 codes to data.
+Adds EPUs
 }

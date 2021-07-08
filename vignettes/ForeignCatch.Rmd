@@ -1,5 +1,5 @@
 ---
-title: "Foreign Catch Data"
+title: "Foreign Catch Data (NAFO)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Foreign Catch Data}
