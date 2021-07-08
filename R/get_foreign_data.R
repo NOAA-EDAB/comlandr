@@ -37,7 +37,8 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
                                    "NAFO21B-80-89.txt",
                                    "NAFO21B-90-99.txt",
                                    "NAFO21B-2000-09.txt",
-                                   "nafo-21b-2010-16/NAFO-21B-2010-16.txt"))
+                                   "nafo-21b-2010-16/NAFO-21B-2010-16.txt"),
+                      stringsAsFactors = FALSE)
 
 
   # get file, catch error for missing file
@@ -47,26 +48,28 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
       {
         stringParts <- stringr::str_split(files$url[ifile],"/")
         message("Reading file: ",tail(unlist(stringParts),1))
-        temp <- tempfile()
-        download.file(files$url[ifile],destfile=temp,quiet=TRUE)
+        temp <- base::tempfile()
+        download.file(url=files$url[ifile],destfile=temp, quiet=TRUE)
         res <- TRUE
       },
       error = function(e){
-        message(paste0("No data for ",ay))
+        message(e)
         return(FALSE)
       } ,
-      warning = function(w) return(FALSE)
+      warning = function(w){
+        return(FALSE)
+      }
     )
 
     if (!result) { # failed to download file
-      message(paste0("File ",files$filename[ifile], "can not be found. Please check the link @ https://www.nafo.int/Data/Catch-Statistics"))
-      unlink(temp)
+      message(paste0("File ",files$url[ifile], " can not be downloaded. Please check the link @ https://www.nafo.int/Data/Catch-Statistics"))
+      base::unlink(temp)
       next
     }
 
     # Read data
     dataPart <- data.table::as.data.table(read.csv(unz(temp, files$filename[ifile])))
-    unlink(temp)
+    base::unlink(temp)
 
     # make all coumn names consistent over all years data
     # 2010 + data have different column headers.
@@ -85,7 +88,7 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
 
   }
 
-  # should we keep USA landings from 5Zc (Georges bank East of Hague line)
+
   # Remove US landings (Country code 22)
   if (removeUSA) {
     nafo <- nafo[Country != 22, ]
