@@ -17,7 +17,7 @@
 #'
 #'@export
 
-clean_foreign_data <- function(channel, nafoland, EPUs = NULL){
+process_foreign_data <- function(channel, nafoland, EPUs = NULL){
 
   #Rectify NAFO codes with US codes
   #Species
