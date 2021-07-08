@@ -15,7 +15,9 @@ Suggests:
     testthat,
     markdown,
     patchwork,
-    readr
+    readr,
+    kableExtra,
+    tidyr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Imports: 
