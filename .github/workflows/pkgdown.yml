@@ -21,7 +21,8 @@ jobs:
       - name: Install GDAL
         run: |
             brew install gdal
-
+            brew install proj
+            
       - name: Query dependencies
         run: |
           install.packages('remotes')
