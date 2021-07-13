@@ -86,6 +86,9 @@ process_foreign_data <- function(channel, nafoland, EPUs = NULL){
   ###############################################################
   ###############################################################
 
+  ## current format of nafoland.agg
+  ## YEAR QY     GEAR  SIZE EPU NESPP3 SPPLIVMT SPPVALUE UTILCD
+
 
   return(nafoland)
 }
