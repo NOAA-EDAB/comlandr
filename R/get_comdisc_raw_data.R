@@ -26,6 +26,12 @@
 
 get_comdisc_raw_data <- function(channel, filterByYear){
   
+  message("Pulling observer data from database. This could take a while (> 1 hour) ... ")
+  
+  #output objects
+  comdisc <- c()
+  sql <- c()
+  
   #Create year vector
   if(is.na(filterByYear[1])){
     years <- ">= 1989"
@@ -48,6 +54,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
           and year ", years)
   
   ob <- data.table::as.data.table(DBI::dbGetQuery(channel, ob.qry))
+  sql <- c(sql, ob.qry)
   
   #Add protected species here
   mammal.qry <- paste0("select distinct a.year, a.month, b.area, b.negear, a.nespp4, 
@@ -65,6 +72,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
                and a.year ", years)
   
   mammal <- data.table::as.data.table(DBI::dbGetQuery(channel, mammal.qry))
+  sql <- c(sql, mammal.qry)
   
   ob <- data.table::rbindlist(list(ob, mammal))
   
@@ -73,6 +81,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
              from OBOTGH
              where year ", years)
   mesh <- data.table::as.data.table(DBI::dbGetQuery(channel, mesh.qry))
+  sql <- c(sql, mesh.qry)
   
   #Convert mesh size from mm to inches
   mesh[, CODMSIZE := CODMSIZE * 0.0393701]
@@ -106,6 +115,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   convert.qry <- "select nespp4_obs, catdisp_code, drflag_code, cf_lndlb_livlb, cf_rptqty_lndlb  
                 from obspecconv"
   convert <- data.table::as.data.table(DBI::dbGetQuery(channel, convert.qry))
+  sql <- c(sql, convert.qry)
   
   setnames(convert,
            c('NESPP4_OBS', 'CATDISP_CODE', 'DRFLAG_CODE'),
@@ -129,26 +139,30 @@ get_comdisc_raw_data <- function(channel, filterByYear){
                 from obspec"
   
   prflag <- data.table::as.data.table(DBI::dbGetQuery(channel, prflag.qry))
+  sql <- c(sql, prflag.qry)
+  
   prflag[CETACEAN == 1 | TURTLE == 1 | PINNIPED == 1, PR := 1]
   prflag[is.na(PR), PR := 0]
   prflag[, c('CETACEAN', 'TURTLE', 'PINNIPED') := NULL]
   
-  ob.code <- merge(ob.code, prflag, by = 'NESPP4', all.x = T)
+  comdisc <- merge(ob.code, prflag, by = 'NESPP4', all.x = T)
   
   #Convert to metric tons to align with commercial landings data
-  ob.code[PR == 0, SPPLIVMT := C.HAILWT * 0.00045359237]
+  comdisc[PR == 0, SPPLIVMT := C.HAILWT * 0.00045359237]
   
   #Change to NESPP3 to combine market categories
-  ob.code[PR == 0, NESPP3 := substring(NESPP4, 1, 3)]
+  comdisc[PR == 0, NESPP3 := substring(NESPP4, 1, 3)]
   #Birds, mammals, etc don't have unique NESPP3 codes
-  ob.code[is.na(NESPP3), NESPP3 := NESPP4] 
+  comdisc[is.na(NESPP3), NESPP3 := NESPP4] 
   
-  ob.code[PR == 0, MKTCAT := as.numeric(substring(NESPP4, 4, 4))]
-  ob.code[is.na(MKTCAT), MKTCAT := 0]
+  comdisc[PR == 0, MKTCAT := as.numeric(substring(NESPP4, 4, 4))]
+  comdisc[is.na(MKTCAT), MKTCAT := 0]
   
   #drop extra columns NESPP4
-  ob.code[, c('DRFLAG', 'CF_LNDLB_LIVLB', 'CF_RPTQTY_LNDLB', 'HAILWT', 'C.HAILWT',
+  comdisc[, c('DRFLAG', 'CF_LNDLB_LIVLB', 'CF_RPTQTY_LNDLB', 'HAILWT', 'C.HAILWT',
               'NESPP4') := NULL]
   
+  return(list(comdisc = comdisc[], 
+              sql     = sql))
 }
 
