@@ -18,6 +18,14 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: Install GDAL
+        run: |
+          sudo add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
+          sudo apt-get install gdal-bin
+          sudo apt-get install libgdal-dev
+          pip install --global-option=build_ext --global-option="-I/usr/include/gdal" GDAL==`gdal-config --version`
+
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
