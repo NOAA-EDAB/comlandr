@@ -103,12 +103,12 @@ get_comdisc_raw_data <- function(channel, filterByYear){
                            6883, 6894:6897))]  
   
   #Convert lat/lon to decimal degrees
-  ob[, LATDD := as.numeric(substr(LATHBEG, 1, 2)) + ((as.numeric(substr(LATHBEG, 3, 4))
-                                                      + as.numeric(substr(LATHBEG, 5, 6)))
-                                                     /60)]
-  ob[, LONDD := as.numeric(substr(LONHBEG, 1, 2)) + ((as.numeric(substr(LONHBEG, 3, 4))
-                                                      + as.numeric(substr(LONHBEG, 5, 6)))
-                                                     /60) * -1]
+  ob[, LAT := as.numeric(substr(LATHBEG, 1, 2)) + ((as.numeric(substr(LATHBEG, 3, 4))
+                                                  + as.numeric(substr(LATHBEG, 5, 6)))
+                                                  /60)]
+  ob[, LON := as.numeric(substr(LONHBEG, 1, 2)) + ((as.numeric(substr(LONHBEG, 3, 4))
+                                                  + as.numeric(substr(LONHBEG, 5, 6)))
+                                                  /60) * -1]
   ob[, c('LATHBEG', 'LONHBEG') := NULL]
   
   #Convert weights
