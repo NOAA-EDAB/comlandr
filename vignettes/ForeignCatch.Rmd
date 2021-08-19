@@ -2,7 +2,7 @@
 title: "Foreign Catch Data (NAFO)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Foreign Catch Data}
+  %\VignetteIndexEntry{Foreign Catch Data (NAFO)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -85,16 +85,21 @@ The Country, Gear, Tonnage, MainSpecies, AreaCode fields contain coded values. T
 * `MainSpecies` -> main species.txt
 * `SpeciesEffort` -> species.txt
 
+Caution: The format and content of these supporting files changes from decade to decade. Some files are tab delimited others are comma delimited. Some files of the same name switch from tab to comma delimited over the decades
+
 #### Effort
 
 The `Effort` field should be ignored. Values of "0 means no effort data are available while 1 and 9 both mean that there is data (with no explanation of the difference) but in practice these values seem to have been used differently during different time periods". This is somewhat redundant since the effort data are recorded by month. The field `SpeciesEffort` help determine the effort levels.
 
-For example:
+For example, `SpeciesEffort`
 
-`SpeciesEffort`
 * = 1 - Hours Fished, the total number of hours spent fishing while in NAFO regulatory area
+
 * = 2 - Days Fished, the number of days fishing took place.
-* = 3 - Days on ground, the number of days a vessel was in the NAFO regulatory area whether fishing or not
+
+* = 3 - Days on ground, the number of days a vessel was in the NAFO regulatory
+area whether fishing or not
+
 * = Anything else (Species codes listed in species.txt).
 
 In the data shown above the 3 ton vessel from Canada Maritimes & Quebec (Country = 2), using Bottom otter trawl (GearCode = 10), targeted American plaice (mainSpecies = 10), in division 32, fished for 74 hours in June over a period of 10 days (~7.4 hours per day) and caught 38 tons of Atlantic cod (Code = 101) and 114 tons of American plaice (Code = 112)
@@ -103,7 +108,7 @@ So a vessel that reported 67 hours of fishing over 8 days ~ 8.375 hours per day.
 
 ## Use of NAFO data in `comlandr`
 
-The data from database `21B` is used in `comlandr`.
+The data from database `21B` is used in `comlandr`. Years with missing data are supplemented by `21A`
 
 Effort is not considered.
 
