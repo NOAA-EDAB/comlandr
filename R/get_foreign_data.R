@@ -105,6 +105,7 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
   nafoland[, MONTH := 0]
   data.table::setnames(nafoland, 'Catches', 'SPPLIVMT')
 
+
   month <- c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
   for(i in 1:12){
     nafoland.month <- nafo[, list(Year, GearCode, Tonnage, Divcode, Country, Code, get(month[i]))]
@@ -123,15 +124,10 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
   nafoland[MONTH %in% 10:12, QY := 4]
   nafoland[MONTH == 0,       QY := 1] # Catches for Unknown MONTH
 
-
-  # change name of NAFO species field
-  data.table::setnames(nafoland,"Code", "NAFOCode")
-
-
   # aggregate over country
   if (aggregateCountry) {
     nafoland <- nafoland %>%
-      dplyr::group_by(Year,GearCode,Tonnage,Divcode,NAFOCode,MONTH,QY) %>%
+      dplyr::group_by(Year,GearCode,Tonnage,Divcode,Code,MONTH,QY) %>%
       dplyr::summarise(SPPLIVMT=sum(SPPLIVMT),.groups="drop") %>%
       data.table::as.data.table(.)
   }
