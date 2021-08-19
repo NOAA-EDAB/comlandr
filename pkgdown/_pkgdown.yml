@@ -25,7 +25,7 @@ reference:
   - get_vessels
 - title: "Helper Functions"
 - contents:
-  - clean_foreign_data
+  - process_foreign_data
 - title: "Plotting"
   desc: "Basic plotting functions to visualize data"
 - contents:
