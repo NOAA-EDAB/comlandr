@@ -80,7 +80,6 @@ process_foreign_data <- function(channel, nafoland, EPUs = NULL,GEARS=comlandr::
   spp <- as.data.table(DBI::dbGetQuery(channel, "select NAFOSPP, NESPP3 from CFSPP"))
   spp$NAFOSPP <- as.integer(spp$NAFOSPP)
   spp$NESPP3 <- as.integer(spp$NESPP3)
-  #spp <- as.data.table(RODBC::sqlQuery(channel, "select NAFOSPP, NESPP3 from CFSPP"))
   #Fix missing NAFO codes
   missing.spp <- data.table::data.table(NAFOSPP = c(110, 141, 189, 480, 484, 487, 488, 489),
                                         NESPP3  = c(240, 509, 512, 366, 368, 367, 370, 369))
