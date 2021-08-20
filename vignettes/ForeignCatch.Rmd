@@ -38,9 +38,9 @@ Example data:
 options(warn = -1)
 filepath <- system.file("extdata","SS_NAFO_21A.csv",package="comlandr")
 nafo21a <- readr::read_csv(filepath, skip = 8,n_max=10)
+nafo21a <- nafo21a[,-ncol(nafo21a)]
 
   nafo21a %>% 
-    dplyr::select(-X7) %>% 
     kableExtra::kbl() %>%
     kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width=F)
 ```
