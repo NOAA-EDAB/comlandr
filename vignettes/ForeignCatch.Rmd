@@ -37,7 +37,7 @@ Example data:
 ```{r nafo21a, eval=T, echo=F, message=F}
 options(warn = -1)
 filepath <- system.file("extdata","SS_NAFO_21A.csv",package="comlandr")
-nafo21a <- readr::read_csv(filepath, skip = 8,n_max=10)
+nafo21a <- readr::read_csv(filepath, skip = 8,n_max=10,show_col_types = F)
 nafo21a <- nafo21a[,-ncol(nafo21a)]
 
   nafo21a %>% 
@@ -57,7 +57,7 @@ Example data (Decade 1960-1969):
 ```{r nafo21b, eval=T, echo=F, message=F}
 temp <- tempfile()
   download.file("https://www.nafo.int/Portals/0/Stats/nafo-21b-60-69.zip",temp,quiet=T)
-  nafo21b <- readr::read_csv(unz(temp, "NAFO21B-60-69.txt"))
+  nafo21b <- readr::read_csv(unz(temp, "NAFO21B-60-69.txt"),show_col_types = F)
   nafo21b <- nafo21b %>% 
     dplyr::filter(Year == 1961) %>%
     dplyr::arrange(Country) %>% 
