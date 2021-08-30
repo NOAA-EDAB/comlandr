@@ -14,7 +14,7 @@
 #'
 #'@export
 
-aggregate_gear <- function(comData, userGears, fleetDescription, negear = T){
+aggregate_gear <- function(comData, userGears, fleetDescription){
   
   call <- dbutils::capture_function_call()
   
@@ -24,14 +24,12 @@ aggregate_gear <- function(comData, userGears, fleetDescription, negear = T){
   
   #Assign gears to fleets
   #Generate NEGEAR2 codes from NEGEAR
-  if(negear){
-    if(is.numeric(comData$NEGEAR)){
-      comData[NEGEAR < 100, NEGEAR3 := paste0(0, NEGEAR)]
-      comData[NEGEAR >= 100, NEGEAR3 := NEGEAR]
-      comData[, NEGEAR2 := as.numeric(substr(NEGEAR3, 1, 2))]
-    } else {
-      comData[, NEGEAR2 := as.numeric(substr(NEGEAR, 1, 2))]
-    }
+  if(is.numeric(comData$NEGEAR)){
+    comData[NEGEAR < 100, NEGEAR3 := paste0(0, NEGEAR)]
+    comData[NEGEAR >= 100, NEGEAR3 := NEGEAR]
+    comData[, NEGEAR2 := as.numeric(substr(NEGEAR3, 1, 2))]
+  } else {
+    comData[, NEGEAR2 := as.numeric(substr(NEGEAR, 1, 2))]
   }
   
   fleets <- unique(gears$fleet)
