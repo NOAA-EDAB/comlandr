@@ -23,8 +23,9 @@
 calc_DK <- function(comdiscData, areaDescription, fleetDescription){
   
   #Standardize column names
-  data.table::setnames(comdiscData, c(areaDescription, fleetDescription), 
-                       c('area', 'fleet'))
+  comdiscData <- data.table::setnames(comdiscData, c(areaDescription, 
+                                                     fleetDescription), 
+                                      c('area', 'fleet'))
   
   #sum catch by species/disposition/area/fleet
   ob.sums <- comdiscData[, sum(SPPLIVMT), by = c('YEAR', 'area', 'fleet', 'NESPP3',
@@ -56,6 +57,6 @@ calc_DK <- function(comdiscData, areaDescription, fleetDescription){
   data.table::setnames(dk, c('area', 'fleet'), 
                        c(areaDescription, fleetDescription))
   
-  return(dk)
+  return(dk[])
 }
   
