@@ -46,5 +46,5 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
   #Rename columns
   data.table::setnames(comData, 'fleet', fleetDescription)
   
-  return(comData)
+  return(comData[])
 }                 
