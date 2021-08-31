@@ -46,5 +46,5 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
   # comland$call <- c(comland$call, call)
   # comland$userAreas <- userAreas
   
-  return(comData[])
+  return(new.area[])
 }                 
