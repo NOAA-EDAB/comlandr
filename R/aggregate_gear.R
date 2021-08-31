@@ -37,8 +37,12 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
   for(ifleet in 1:length(fleets)){
     fleet.gear <- gears[fleet == fleets[ifleet], NEGEAR2]
     fleet.mesh <- unique(gears[fleet == fleets[ifleet], MESHCAT])
-    
-    comData[NEGEAR2 %in% fleet.gear & MESHCAT == fleet.mesh, fleet := fleets[ifleet]]
+    #Check if there is a mesh characteristic associated with this gear
+    if(is.na(fleet.mesh)){
+      comData[NEGEAR2 %in% fleet.gear, fleet := fleets[ifleet]]
+    } else {
+      comData[NEGEAR2 %in% fleet.gear & MESHCAT == fleet.mesh, fleet := fleets[ifleet]]
+    }
   }
   
   comData[, fleet := as.factor(fleet)]
