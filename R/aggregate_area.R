@@ -14,35 +14,37 @@
 #'
 #'@export
 
-aggregate_area <- function(comland, userAreas, areaDescription, propDescription){
+aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
+                           applyPropValue = T){
   
   call <- dbutils::capture_function_call()
-  
-  #Pull out landings from comland object
-  landings <- comland$comland
   
   #Convert userAreas to data.table
   areas <- data.table::as.data.table(userAreas)
   setnames(areas, c(areaDescription, propDescription), c('newarea', 'prop'))
   
   #Merge new area descriptions to landings
-  new.area.land <- merge(landings, areas, by = c('NESPP3', 'AREA'))
+  new.area <- merge(comData, areas, by = c('NESPP3', 'AREA'))
   
   #Proportion landings to new areas
-  new.area.land[, newspplivmt := SPPLIVMT * prop]
-  new.area.land[, newsppvalue := SPPVALUE * prop]
+  new.area[, newspplivmt := SPPLIVMT * prop]
+  if(applyPropValue) new.area[, newsppvalue := SPPVALUE * prop]
   
-  #Drop extra columns
-  new.area.land[, c('SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
-  
-  #Rename columns
-  data.table::setnames(new.area.land, c('newarea', 'newspplivmt', 'newsppvalue'), 
-                       c(areaDescription, 'SPPLIVMT', 'SPPVALUE'))
+  #Drop extra columns and rename
+  if(applyPropValue){
+    new.area[, c('SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
+    data.table::setnames(new.area, c('newarea', 'newspplivmt', 'newsppvalue'), 
+                         c(areaDescription, 'SPPLIVMT', 'SPPVALUE'))
+  } else {
+    new.area[, c('SPPLIVMT', 'prop') := NULL]
+    data.table::setnames(new.area, c('newarea', 'newspplivmt'), 
+                         c(areaDescription, 'SPPLIVMT'))
+  }
   
   #Add changes back into comland
-  comland$comland <- new.area.land[]
-  comland$call <- c(comland$call, call)
-  comland$userAreas <- userAreas
+  # comland$comland <- new.area.land[]
+  # comland$call <- c(comland$call, call)
+  # comland$userAreas <- userAreas
   
-  return(comland)
+  return(comData[])
 }                 
