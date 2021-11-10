@@ -22,7 +22,9 @@ Imports:
     DBI,
     odbc,
     magrittr,
-    ggplot2
+    ggplot2,
+    dbutils,
+    survdat
 Remotes:
     andybeet/dbutils,
     NOAA-EDAB/survdat
