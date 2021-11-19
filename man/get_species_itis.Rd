@@ -8,12 +8,13 @@ get_species_itis(channel, species = "all", nameType = "common_name")
 }
 \arguments{
 \item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+to communicate with the database engine. (see \code{\link{connect_to_database}})}
 
 \item{species}{a specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
 Numeric codes (SPECIES_ITIS) are converted to VARCHAR2(33) when creating the sql statement. Character codes are short character strings.}
 
-\item{nameType}{Character string. either "common_name" (default) or "scientific_name". Determins which type of name to search under}
+\item{nameType}{Character string. Upper or lower case. Either "common_name" (default), "scientific_name" or "nespp4".
+Determines which type of name to search under.}
 }
 \value{
 A list is returned:
@@ -50,6 +51,17 @@ get_species_itis(channel,"cod") #o r
 get_species_itis(channel,"co") # or (note also return cockles, calico scallop etc.)
 get_species_itis(channel,"COD")
 
+# extracts info for cod ("gadus")
+channel <- connect_to_database(server="name_of_server",uid="individuals_username")
+get_species_itis(channel,"gadus",nameType="scientific_name") #o r
+get_species_itis(channel,"morh",nameType="scientific_name") #o r
+get_species_itis(channel,"GADUS",nameType="scientific_name") #o r
+
+#' # extracts info for cod ("0814") market category 4
+channel <- connect_to_database(server="name_of_server",uid="individuals_username")
+get_species_itis(channel,"0814",nameType="NESPP4") #o r
+get_species_itis(channel,814,nameType="NESPP4")
+
 
 # extracts info for cod (164712)  and bluefish (168559)
 channel <- connect_to_database(server="name_of_server",uid="individuals_username")
@@ -59,7 +71,7 @@ get_species_itis(channel,species= c("164712","168559"))
 
 }
 \seealso{
-\code{\link[dbutils]{connect_to_database}}
+\code{\link{connect_to_database}}
 
 Other get functions: 
 \code{\link{get_areas}()},
