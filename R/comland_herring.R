@@ -16,7 +16,6 @@ comland_herring <- function(channel,comland) {
   herr.qry <- "select year, month, stock_area, negear, gearname, keptmt, discmt
              from maine_herring_catch"
 
-  #herr.catch <- as.data.table(RODBC::sqlQuery(channel, herr.qry))
   herr.catch <- data.table::as.data.table(DBI::dbGetQuery(channel, herr.qry))
 
   herr.catch$YEAR <- as.integer(herr.catch$YEAR)

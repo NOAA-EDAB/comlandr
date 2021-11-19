@@ -10,7 +10,8 @@ get_locations(channel, sqlStatement = "select * from cfdbs.loc;")
 \item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
-\item{sqlStatement}{Character string. An sql statement (optional)}
+\item{sqlStatement}{Character string. An sql statement (optional).
+If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.loc}" is used}
 }
 \value{
 A list is returned:
@@ -20,8 +21,6 @@ A list is returned:
    \item{sql}{containing the \code{sqlStatement} itself}
 
    \item{colNames}{a vector of the table's column names}
-
-If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.loc}" is used
 }
 \description{
 Extract a list of lat, long, ten minute square, etc from the NEFSC "loc" supporting table
@@ -37,7 +36,8 @@ Use the data dictionary for field name explanations
 channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_locations(channel)
 
-# extracts subset of location information. Statistical area, and 10 minute square based on custom sql statement
+# extracts subset of location information. Statistical area, and 10 minute square based
+on custom sql statement
 channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 sqlStatement <- "select area TENMSQ from cfdbs.loc;"
 get_locations(channel,sqlStatement)

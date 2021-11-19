@@ -12,9 +12,10 @@ reference:
   - EPUs
   - GEARs
 - title: "Get Data"
-  desc: "Functions that pull data from the ADIOS/CFDBS database"
+  desc: "Functions that pull data from the ADIOS/CFDBS/NAFO databases"
 - contents:
   - get_comland_data
+  - get_foreign_data
   - get_species
   - get_species_itis
   - get_areas
@@ -22,6 +23,9 @@ reference:
   - get_locations
   - get_ports
   - get_vessels
+- title: "Helper Functions"
+- contents:
+  - process_foreign_data
 - title: "Plotting"
   desc: "Basic plotting functions to visualize data"
 - contents:

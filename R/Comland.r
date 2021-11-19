@@ -115,13 +115,6 @@ if(use.existing == 'n'){
   comland$AREA <- as.integer(comland$AREA)
   #comland$AREA <- as.factor(comland$AREA)
 
-  # # fixes needed when data is pulled using RODBC
-  # comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%
-  #   dplyr::mutate(AREA = dplyr::case_when(AREA=="0" ~ "000",AREA=="2" ~ "002",TRUE ~ AREA)) %>%
-  #   dplyr::filter(!grepl("^[A-Z]",AREA)) %>%
-  #   dplyr::mutate(AREA=as.integer(AREA)) %>%
-  #   as.data.table()
-
   # Convert from lbs to metric tons ----------------------------------------
 
   comland[, SPPLIVMT := SPPLIVLB * 0.00045359237]
