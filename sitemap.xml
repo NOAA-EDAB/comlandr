@@ -22,6 +22,9 @@
     <loc>https://noaa-edab.github.io/comlandr//reference/get_comland_data.html</loc>
   </url>
   <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/get_foreign_data.html</loc>
+  </url>
+  <url>
     <loc>https://noaa-edab.github.io/comlandr//reference/get_gears.html</loc>
   </url>
   <url>
@@ -41,6 +44,18 @@
   </url>
   <url>
     <loc>https://noaa-edab.github.io/comlandr//reference/plot_comland.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/process_foreign_data.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//reference/process_foreign_data_skate_hake.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//articles/ForeignCatch.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/comlandr//articles/ForeignCatchCompare21A21B.html</loc>
   </url>
   <url>
     <loc>https://noaa-edab.github.io/comlandr//articles/Notes.html</loc>
