@@ -32,7 +32,13 @@
 
 get_comland_data <- function(channel, filterByYear = NA, useLanded = T, 
                              removeParts = T, useHerringMaine = T, useForeign = T,
-                             refYear = NA, refMonth = NA, disagSkatesHakes = T) {
+                             refYear = NA, refMonth = NA, disagSkatesHakes = T,
+                             userAreas = system.file("data", "mykeyAreas.rda", 
+                                                     package = "comlandr"),
+                             areaDescription = 'EPU', propDescription = 'MeanProp',
+                             userGears = system.file("data", "mykeyGears.rda", 
+                                                     package = "comlandr"),
+                             fleetDescription = 'Fleet') {
   
   call <- dbutils::capture_function_call()
   
@@ -54,6 +60,12 @@ get_comland_data <- function(channel, filterByYear = NA, useLanded = T,
   if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, channel, 
                                                             filterByYear)
   
+  #Aggregate areas
+  if(userAreas) comland <- aggregate_area(comland, userAreas, areaDescription, 
+                                          propDescription)
+  
+  #Aggregate gears
+  if(userGears) comland <- aggregate_gear(comland, userGears, fleetDescription)
   
   comland$call <- call
   
