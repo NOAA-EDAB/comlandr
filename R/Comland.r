@@ -5,7 +5,7 @@
 #'SML
 #'
 #'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-#' to communicate with the database engine. (see \code{\link{connect_to_database}})
+#' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
 #'@param EPUS List. Designates the stat areas that comprise an EPU. Default = EPUs (lazily loaded data)
 #'@param GEARS List. Designates the NEGEAR codes that comprise a fishing fleet. Default = GEARs (lazily loaded data)
 #'@param use.existing String. Pull from database "n" or use existing pull "y" (saves time) . Default = "y"

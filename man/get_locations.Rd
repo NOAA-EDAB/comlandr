@@ -8,7 +8,7 @@ get_locations(channel, sqlStatement = "select * from cfdbs.loc;")
 }
 \arguments{
 \item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-to communicate with the database engine. (see \code{\link{connect_to_database}})}
+to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{sqlStatement}{Character string. An sql statement (optional).
 If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.loc}" is used}
@@ -50,7 +50,7 @@ get_locations(channel,sqlStatement)
 
 }
 \seealso{
-\code{\link{connect_to_database}}
+\code{\link[dbutils]{connect_to_database}}
 
 Other get functions: 
 \code{\link{get_areas}()},

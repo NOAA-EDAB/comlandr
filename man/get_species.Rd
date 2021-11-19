@@ -8,7 +8,7 @@ get_species(channel, species = "all")
 }
 \arguments{
 \item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-to communicate with the database engine. (see \code{\link{connect_to_database}})}
+to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{species}{a specific species code or set of codes. Either numeric or character vector. (NESPP3 codes)
 Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement.
@@ -59,7 +59,7 @@ get_species(channel,species= c("081","023"))
 
 }
 \seealso{
-\code{\link{connect_to_database}}
+\code{\link[dbutils]{connect_to_database}}
 
 Other get functions: 
 \code{\link{get_areas}()},

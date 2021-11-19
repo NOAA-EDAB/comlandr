@@ -8,7 +8,7 @@ get_species_itis(channel, species = "all", nameType = "common_name")
 }
 \arguments{
 \item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-to communicate with the database engine. (see \code{\link{connect_to_database}})}
+to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{species}{a specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
 Numeric codes (SPECIES_ITIS) are converted to VARCHAR2(33) when creating the sql statement. Character codes are short character strings.}
@@ -59,7 +59,7 @@ get_species_itis(channel,species= c("164712","168559"))
 
 }
 \seealso{
-\code{\link{connect_to_database}}
+\code{\link[dbutils]{connect_to_database}}
 
 Other get functions: 
 \code{\link{get_areas}()},
