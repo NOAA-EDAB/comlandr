@@ -1,4 +1,4 @@
-name: deploy to github pages
+name: gh-pages
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         run: |
             brew install gdal
             brew install proj
-            
+
       - name: Query dependencies
         run: |
           install.packages('remotes')

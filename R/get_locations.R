@@ -33,7 +33,7 @@
 #' get_locations(channel)
 #'
 #' # extracts subset of location information. Statistical area, and 10 minute square based
-#' on custom sql statement
+#' # on custom sql statement
 #' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' sqlStatement <- "select area TENMSQ from cfdbs.loc;"
 #' get_locations(channel,sqlStatement)

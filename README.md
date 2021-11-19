@@ -1,8 +1,8 @@
 # comlandr
 
-![deploy to github pages](https://github.com/NOAA-EDAB/comlandr/workflows/deploy%20to%20github%20pages/badge.svg)
-![Install on windows](https://github.com/NOAA-EDAB/comlandr/workflows/Install%20on%20windows/badge.svg)
-![gitleaks](https://github.com/NOAA-EDAB/comlandr/workflows/gitleaks/badge.svg)
+[![gh-pages](https://github.com/NOAA-EDAB/comlandr/workflows/gh-pages/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions)
+
+[![gitleaks](https://github.com/NOAA-EDAB/comlandr/workflows/gitleaks/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions)
 
 Pull and process fishing data
 
@@ -10,7 +10,8 @@ To use this package you will need:
 
 1. To be behind the NEFSC firewall
 2. Permissions to access the required server : a username and password.
-3. Oracle's instant Client installed
+3. Permission to access the required database
+4. Oracle's instant Client installed
 
 ## Usage
 
