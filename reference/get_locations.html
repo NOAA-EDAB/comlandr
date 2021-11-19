@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">comlandr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@
     <tr>
       <th>channel</th>
       <td><p>DBI Object. Inherited from <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection-class</a>. This object is used to connect
-to communicate with the database engine. (see <code><a href='https://rdrr.io/pkg/dbutils/man/connect_to_database.html'>connect_to_database</a></code>)</p></td>
+to communicate with the database engine. (see <code>connect_to_database</code>)</p></td>
     </tr>
     <tr>
       <th>sqlStatement</th>
@@ -185,7 +185,24 @@ If no <code>sqlStatement</code> is provided the default sql statement "<code>sel
 <code><a href='get_vessels.html'>get_vessels</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># extracts complete locations table based on default sql statement</span></span>
+<span class='r-in'><span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>get_locations</span><span class='op'>(</span><span class='va'>channel</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># extracts subset of location information. Statistical area, and 10 minute square based</span></span>
+<span class='r-in'><span class='co'># on custom sql statement</span></span>
+<span class='r-in'><span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>sqlStatement</span> <span class='op'>&lt;-</span> <span class='st'>"select area TENMSQ from cfdbs.loc;"</span></span>
+<span class='r-in'><span class='fu'>get_locations</span><span class='op'>(</span><span class='va'>channel</span>,<span class='va'>sqlStatement</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># extracts 10 minute square info for an area on geaorges bank (511) based on custom sql statement</span></span>
+<span class='r-in'><span class='va'>channel</span> <span class='op'>&lt;-</span> <span class='fu'>connect_to_database</span><span class='op'>(</span>server<span class='op'>=</span><span class='st'>"name_of_server"</span>,uid<span class='op'>=</span><span class='st'>"individuals_username"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>sqlStatement</span> <span class='op'>&lt;-</span> <span class='st'>"select area, tenmsq  from cfdbs.loc where area=511;"</span></span>
+<span class='r-in'><span class='fu'>get_locations</span><span class='op'>(</span><span class='va'>channel</span>,<span class='va'>sqlStatement</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
