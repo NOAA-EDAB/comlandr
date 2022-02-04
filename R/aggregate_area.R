@@ -24,7 +24,7 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
   setnames(areas, c(areaDescription, propDescription), c('newarea', 'prop'))
   
   #Merge new area descriptions to landings
-  new.area <- merge(comData, areas, by = c('NESPP3', 'AREA'), all.x = T)
+  new.area <- merge(comData, areas, by = c('NESPP3', 'AREA'), all.x = T, allow.cartesian=TRUE)
   
   #If no proportion assume 100% in
   validAreas <- unique(areas[, newarea])
