@@ -10,8 +10,8 @@ get_species_itis(channel, species = "all", nameType = "common_name")
 \item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
 to communicate with the database engine. (see \code{\link{connect_to_database}})}
 
-\item{species}{a specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
-Numeric codes (SPECIES_ITIS) are converted to VARCHAR2(33) when creating the sql statement. Character codes are short character strings.}
+\item{species}{A specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
+Numeric codes (SPECIES_ITIS, NESPP4) are converted to VARCHAR2 (6 and 4 characters respectively) when creating the sql statement.}
 
 \item{nameType}{Character string. Upper or lower case. Either "common_name" (default), "scientific_name" or "nespp4".
 Determines which type of name to search under.}
