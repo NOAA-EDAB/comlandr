@@ -29,8 +29,8 @@
 #'
 #'@export
 
-get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T, 
-                                 removeParts = T){
+get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA, 
+                                 useLanded = T, removeParts = T){
   
   message("Pulling landings data from database. This could take a while (> 1 hour) ... ")
   
@@ -54,6 +54,10 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
       landings.qry <- paste("select year, month, negear, toncl1, nespp3, nespp4, area,
                            spplivlb, spplndlb, sppvalue, utilcd
                            from", tables[itab])
+      if(!is.na(filterByArea[1])){
+        landings.qry <- paste0(landings.qry, " where area in (", survdat:::sqltext(filterByArea), ")
+                               order by area")
+      }
       comland.yr <- data.table::as.data.table(DBI::dbGetQuery(channel, landings.qry))
       comland.yr[, MESH := 5] #Identify all as large mesh
     } else {
@@ -68,6 +72,10 @@ get_comland_raw_data <- function(channel, filterByYear = NA, useLanded = T,
                            a.utilcd, b.mesh
                            from", tables[itab], "a,", trip.table, "b
                            where a.link = b.link")
+      if(!is.na(filterByArea[1])){
+        landings.qry <- paste0(landings.qry, " and a.area in (", survdat:::sqltext(filterByArea), ")
+                               order by area")
+      }
       comland.yr <- data.table::as.data.table(DBI::dbGetQuery(channel, landings.qry))
     }
     sql <- c(sql, landings.qry)
