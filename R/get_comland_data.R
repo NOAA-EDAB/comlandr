@@ -46,17 +46,18 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
   
   #Pull herring data from the state of Maine
   if(useHerringMaine) comland <- comlandr::get_herring_data(channel, comland, 
-                                                            filterByYear)
+                                                            filterByYear, filterByArea)
   
   #Pull foreign landings
-  if(useForeign) comland <- comlandr::get_foreign_data(channel, comland, filterByYear)
+  if(useForeign) comland <- comlandr::get_foreign_data(channel, comland, filterByYear,
+                                                       filterByArea)
   
   #Apply correction for inflation
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
   
   #Disaggregate skates and hakes
   if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, channel, 
-                                                            filterByYear)
+                                                            filterByYear, filterByArea)
   
   #Aggregate areas
   if(aggArea) comland <- aggregate_area(comland, userAreas, areaDescription, 
