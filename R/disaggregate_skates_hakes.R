@@ -31,6 +31,9 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear) {
         skate.survey <- survdat::post_strat(skate.survey, Stat.areas, 'Id')
         data.table::setnames(skate.survey, 'Id', 'AREA')
         
+        #Filter By Area
+        if(!is.na(filterByArea[1])) skate.survey <- skate.survey[AREA %in% filterByArea, ]
+        
         #Figure out proportion of skates
         data.table::setkey(skate.survey, YEAR, SEASON, AREA)
         
@@ -119,6 +122,9 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear) {
         #Identify Stat areas catch occured in
         hake.survey <- survdat::post_strat(hake.survey, Stat.areas, 'Id')
         data.table::setnames(hake.survey, 'Id', 'AREA')
+        
+        #Filter By Area
+        if(!is.na(filterByArea[1])) hake.survey <- hake.survey[AREA %in% filterByArea, ]
         
         #Figure out proportion of skates
         data.table::setkey(hake.survey, YEAR, SEASON, AREA)
