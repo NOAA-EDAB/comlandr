@@ -13,7 +13,7 @@
 #' @noRd
 #' @export
 
-disaggregate_skates_hakes <- function(comland, channel, filterByYear) {
+disaggregate_skates_hakes <- function(comland, channel, filterByYear, filterByArea) {
         
         message("Grabbing survey data to disaggregate skates and hakes ... ")
         
