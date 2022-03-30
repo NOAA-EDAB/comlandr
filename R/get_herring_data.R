@@ -27,8 +27,8 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
                      from maine_herring_catch
                      where year ", years)
   if(!is.na(filterByArea[1])){
-    herr.qry <- paste0(herr.qry, " and area in (", survdat:::sqltext(filterByArea), ")
-                               order by area")
+    herr.qry <- paste0(herr.qry, " and stock_area in (", survdat:::sqltext(filterByArea), ")
+                               order by stock_area")
   }
   
   sql <- c(comland$sql, herr.qry)
