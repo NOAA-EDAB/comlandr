@@ -21,17 +21,13 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
   
   #Convert userAreas to data.table
   areas <- data.table::as.data.table(userAreas)
-  setnames(areas, c(areaDescription, propDescription), c('newarea', 'prop'))
+  data.table::setnames(areas, c(areaDescription, propDescription), c('newarea', 'prop'))
   
   #Merge new area descriptions to landings
   new.area <- merge(comData, areas, by = c('NESPP3', 'AREA'), all.x = T, allow.cartesian=TRUE)
   
   #If no proportion assume 100% in
-  validAreas <- unique(areas[, newarea])
-  new.area[is.na(prop) & newarea %in% validAreas, prop := 1]
-  
-  #drop records outside the scope
-  new.area <- new.area[!is.na(prop), ]
+  new.area[is.na(prop), prop := 1]
   
   #Proportion landings to new areas
   new.area[, newspplivmt := SPPLIVMT * prop]
