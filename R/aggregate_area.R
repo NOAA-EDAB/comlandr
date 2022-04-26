@@ -14,8 +14,14 @@
 #'
 #'@export
 
-aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
+aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
                            applyPropValue = T){
+  
+  #Pulling data
+  message("Aggregating Areas ...")
+  
+  #Grab just the data
+  comData <- comland$comland
   
   call <- dbutils::capture_function_call()
   
@@ -46,9 +52,9 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
 
   
   #Add changes back into comland
-  # comland$comland <- new.area.land[]
-  # comland$call <- c(comland$call, call)
-  # comland$userAreas <- userAreas
+   comland$comland <- new.area[]
+   comland$call <- c(comland$call, call)
+   comland$userAreas <- userAreas
   
-  return(new.area[])
+  return(comland[])
 }                 
