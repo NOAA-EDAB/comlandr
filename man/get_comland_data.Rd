@@ -7,13 +7,21 @@
 get_comland_data(
   channel,
   filterByYear = NA,
+  filterByArea = NA,
   useLanded = T,
   removeParts = T,
   useHerringMaine = T,
   useForeign = T,
   refYear = NA,
   refMonth = NA,
-  disagSkatesHakes = T
+  disagSkatesHakes = T,
+  aggArea = F,
+  userAreas = comlandr::mskeyAreas,
+  areaDescription = "EPU",
+  propDescription = "MeanProp",
+  aggGear = F,
+  userGears = comlandr::mykeyGears,
+  fleetDescription = "Fleet"
 )
 }
 \arguments{
