@@ -3,7 +3,7 @@
 #' Assign observer data (points, lat and lon) to designated regions (polygons) from a shape file.
 #'
 #'
-#' @inheritParams strat_prep
+# @inheritParams strat_prep
 #' @param na.keep Boolean. Logical value to indicate whether original strata names
 #'  should be retained.
 #'

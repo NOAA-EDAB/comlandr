@@ -3,7 +3,7 @@
 #' Use observer data to calculate the ratio of discards to kept by species.
 #' 
 #'
-#' @inheritParams strat_prep
+# @inheritParams strat_prep
 #' @param na.keep Boolean. Logical value to indicate whether original strata names
 #'  should be retained.
 #'
