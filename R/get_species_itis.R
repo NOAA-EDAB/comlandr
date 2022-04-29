@@ -5,8 +5,8 @@
 #'
 #' @param channel DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
 #' to communicate with the database engine. (see \code{\link{connect_to_database}})
-#' @param species a specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
-#' Numeric codes (SPECIES_ITIS) are converted to VARCHAR2(33) when creating the sql statement. Character codes are short character strings.
+#' @param species A specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
+#' Numeric codes (SPECIES_ITIS, NESPP4) are converted to VARCHAR2 (6 and 4 characters respectively) when creating the sql statement.
 #' @param nameType Character string. Upper or lower case. Either "common_name" (default), "scientific_name" or "nespp4".
 #'  Determines which type of name to search under.
 #'
@@ -78,8 +78,12 @@ get_species_itis <- function(channel,species="all",nameType="common_name"){
 
   # strip ; and add additional content
   sqlStatement <- sub(";","",sqlStatement)
-  if (tolower(species) == "all") {
-    sqlStatement <- paste0(sqlStatement," where NESPP4_FLAG = 1;")
+  if (length(species) == 1) {
+    if (tolower(species) == "all") {
+      sqlStatement <- paste0(sqlStatement," where NESPP4_FLAG = 1;")
+    } else {
+      sqlStatement <- paste0(sqlStatement," and NESPP4_FLAG = 1;")
+    }
   } else {
     sqlStatement <- paste0(sqlStatement," and NESPP4_FLAG = 1;")
   }
