@@ -32,7 +32,12 @@
 get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA, 
                                  useLanded = T, removeParts = T){
   
-  message("Pulling landings data from database. This could take a while (> 1 hour) ... ")
+  #If not specifying a year default to 1964 - 2019
+  if(is.na(filterByYear)) filterByYear <- 1964:2019
+  
+  message(paste0("Pulling landings data from ",
+  filterByYear[1], " to ", filterByYear[length(filterByYear)],
+  ". This could take a while (> 1 hour) ... "))
   
   #Generate vector of tables to loop through
   if(any(filterByYear < 1964)) stop("Landings data start in 1964")
