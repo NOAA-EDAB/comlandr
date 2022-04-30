@@ -5,7 +5,7 @@
 #'SML
 #'
 #'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-#' to communicate with the database engine. (see \code{\link{connect_to_database}})
+#' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
 #'@param EPUS List. Designates the stat areas that comprise an EPU. Default = EPUs (lazily loaded data)
 #'@param GEARS List. Designates the NEGEAR codes that comprise a fishing fleet. Default = GEARs (lazily loaded data)
 #'@param use.existing String. Pull from database "n" or use existing pull "y" (saves time) . Default = "y"
@@ -114,13 +114,6 @@ if(use.existing == 'n'){
   comland <- comland[!ind,]
   comland$AREA <- as.integer(comland$AREA)
   #comland$AREA <- as.factor(comland$AREA)
-
-  # # fixes needed when data is pulled using RODBC
-  # comland <- comland %>% dplyr::mutate_if(is.factor, as.character) %>%
-  #   dplyr::mutate(AREA = dplyr::case_when(AREA=="0" ~ "000",AREA=="2" ~ "002",TRUE ~ AREA)) %>%
-  #   dplyr::filter(!grepl("^[A-Z]",AREA)) %>%
-  #   dplyr::mutate(AREA=as.integer(AREA)) %>%
-  #   as.data.table()
 
   # Convert from lbs to metric tons ----------------------------------------
 

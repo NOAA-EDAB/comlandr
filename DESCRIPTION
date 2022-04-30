@@ -1,27 +1,38 @@
 Package: comlandr
 Title: Pulls and processes commercial fishing data
-Version: 0.0.0.9000
+Version: 0.3.0
 Authors@R: c(person("Sean", "Lucey", email = "sean.lucey@noaa.gov", role = c("aut","cre")),
     person("Andy", "Beet", email = "andrew.beet@noaa.gov", role = c("aut")))
 Description: Pulls and processes commercial fishing data (US and NAFO)
+URL: https://github.com/NOAA-EDAB/comlandr
+BugReports: https://github.com/NOAA-EDAB/comlandr/issues
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends: 
+    R (>= 3.5.0)
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    testthat (>= 3.0.0),
+    markdown,
+    patchwork,
+    readr,
+    kableExtra,
+    tidyr,
+    ggforce
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     data.table,
     sf,
     DBI,
     odbc,
     magrittr,
-    ggplot2
+    ggplot2,
+    dbutils,
+    survdat
 Remotes:
     andybeet/dbutils,
     NOAA-EDAB/survdat
-Depends: 
-    R (>= 2.10)
+Config/testthat/edition: 3

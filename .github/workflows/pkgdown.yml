@@ -1,4 +1,4 @@
-name: deploy to github pages
+name: gh-pages
 
 on:
   push:
@@ -17,6 +17,11 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
 
       - uses: r-lib/actions/setup-pandoc@v1
+
+      - name: Install GDAL
+        run: |
+            brew install gdal
+            brew install proj
 
       - name: Query dependencies
         run: |
