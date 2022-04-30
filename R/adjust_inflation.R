@@ -6,8 +6,8 @@
 #'
 #'
 #'@param comland Data frame. master data frame containing species landings
-#'@param refmonth Integer. Reference month
-#'@param refyear Integer. Reference year
+#'@param refMonth Integer. Reference month
+#'@param refYear Integer. Reference year
 #'
 #'@return comland data frame adjusted for inflation
 #'
@@ -16,7 +16,17 @@
 
 
 
-adjust_inflation <- function(comland,refyear,refmonth){
+adjust_inflation <- function(comland, refYear, refMonth){
+  
+  call <- c(comland$call, capture_function_call())
+  
+  #Pulling data
+  message("Adjusting for inflation ...")
+  
+  #pull out comland data
+  sql <- comland$sql
+  comland <- comland$comland
+  
   temp <- tempfile()
   download.file("http://download.bls.gov/pub/time.series/wp/wp.data.3.ProcessedFoods", temp)
   inflate <- data.table::as.data.table(read.delim(temp))
@@ -37,5 +47,9 @@ adjust_inflation <- function(comland,refyear,refmonth){
 
   #Remove extra column
   comland[, PPI := NULL]
-  return(comland)
+  
+  return(list(comland      = comland[], 
+              sql          = sql,
+              pullDate     = date(),
+              functionCall = call))
 }
