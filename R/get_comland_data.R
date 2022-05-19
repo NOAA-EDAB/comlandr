@@ -30,45 +30,67 @@
 #'
 #'@export
 
-get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useLanded = T, 
+get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useLanded = T,
                              removeParts = T, useHerringMaine = T, useForeign = T,
                              refYear = NA, refMonth = NA, disagSkatesHakes = T,
-                             aggArea = F, userAreas = comlandr::mskeyAreas, 
-                             areaDescription = 'EPU', propDescription = 'MeanProp', 
+                             aggArea = F, userAreas = comlandr::mskeyAreas,
+                             areaDescription = 'EPU', propDescription = 'MeanProp',
                              aggGear = F, userGears = comlandr::mykeyGears,
                              fleetDescription = 'Fleet') {
-  
+
   call <- dbutils::capture_function_call()
-  
+
   #Pull raw data
-  comland <- comlandr::get_comland_raw_data(channel, filterByYear, filterByArea, 
+  comland <- comlandr::get_comland_raw_data(channel, filterByYear, filterByArea,
                                             useLanded, removeParts)
-  
+
   #Pull herring data from the state of Maine
-  if(useHerringMaine) comland <- comlandr::get_herring_data(channel, comland, 
+  if(useHerringMaine) comland <- comlandr::get_herring_data(channel, comland,
                                                             filterByYear, filterByArea)
-  
+
+
+
   #Pull foreign landings
-  if(useForeign) comland <- comlandr::get_foreign_data(channel, comland, filterByYear,
-                                                       filterByArea)
-  
+  if(useForeign){
+    # map statisical areas to NAFO areas
+    if (all(!is.na(filterByArea))) {
+      NAFOAreas <- comlandr::get_areas(channel)$data %>%
+        dplyr::select(AREA,NAFDVCD) %>%
+        dplyr::filter(AREA %in% filterByArea) %>%
+        dplyr::pull(NAFDVCD) %>%
+        unique() %>%
+        as.integer()
+    } else {
+      NAFOAreas <- NA
+    }
+    nafoland <- comlandr::get_foreign_data(filterByYear,
+                                          filterByArea = NAFOAreas,
+                                          removeUSA = T,
+                                          aggregateCountry = T)
+    # process foreign landings to have same tonnage class, gear type, species as USA data
+    nafoland2 <- comlandr::process_foreign_data(channel, nafoland, EPUs = NULL,GEARS=comlandr::GEARs)
+    # combine nafo landings with USA data
+    # Isn't clear how to do this
+
+  }
+
   #Apply correction for inflation
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
-  
+
   #Disaggregate skates and hakes
-  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, channel, 
+  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, channel,
                                                             filterByYear, filterByArea)
-  
+
   #Aggregate areas
-  if(aggArea) comland <- aggregate_area(comland, userAreas, areaDescription, 
+  if(aggArea) comland <- aggregate_area(comland, userAreas, areaDescription,
                                           propDescription)
-  
+
   #Aggregate gears
   if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
-  
+
   comland$call <- call
-  
-  message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")  
+
+  message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")
   return(comland)
 
 }
