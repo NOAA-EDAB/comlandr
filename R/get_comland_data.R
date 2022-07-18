@@ -36,7 +36,9 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
                              aggArea = F, userAreas = comlandr::mskeyAreas, 
                              areaDescription = 'EPU', propDescription = 'MeanProp', 
                              aggGear = F, userGears = comlandr::mykeyGears,
-                             fleetDescription = 'Fleet') {
+                             fleetDescription = 'Fleet', unkVar = 'Area',
+                             knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
+                                          'NEGEAR', 'TONCL1', 'AREA')) {
   
   call <- dbutils::capture_function_call()
   
@@ -66,6 +68,10 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
   #Aggregate gears
   if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
   
+  #Impute unknown catch variables
+  if(!is.null(unkVar)) comland <- assign_unknown(comland, unkVar, knStrata)
+  
+    
   comland$call <- call
   
   message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")  
