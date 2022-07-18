@@ -50,7 +50,7 @@ assign_unknown <- function (comland, var,
   if(nrow(unknown) > 0){
     cat(paste('Total', var, 'unknown records', nrow(unknown), '\n'))
     
-    for(i in length(strata):2){
+    for(i in length(strata):1){
       #Identify columns that are not part of the stratification
       ext.col <- names(comland)[which(!names(comland) %in% c(strata[1:i], 
                                                              'VAR', 'SPPLIVMT'))]
@@ -62,7 +62,8 @@ assign_unknown <- function (comland, var,
       known.sum <- known[, .(VARMT = sum(SPPLIVMT)), by = c(strata[1:i], 'VAR')]
       
       #Match records but keep unmatched records to carry forward
-      match <- merge(known.sum, unknown, by = strata[1:i], all.y = T)
+      match <- merge(known.sum, unknown, by = strata[1:i], all.y = T, 
+                     allow.cartesian = T)
       
       #Remove unmatched for next round
       unknown <- match[is.na(VAR.x), ]
