@@ -4,25 +4,26 @@
 #'
 #'
 # @inheritParams 
-#' @param na.keep Boolean. Logical value to indicate whether original strata names
-#'  should be retained.
+#' @param unkVar Vector. Catch variables to be imputed.  Should be in the order
+#'  you would like them to be solved.
+#'  
+#' @param knStrata Vector. Catch variables to be used to impute \code{unkVar}. An
+#'  \code{unkVar} can be included in this list if it is used to solve a second 
+#'  \code{unkVar}.  Should be in the order of most restrictive to least restrictive.
 #'
-#' @return Returns a \code{comdiscData} data.table with one additional column labeled
-#'  with the value of \code{areaDescription}
+#' @return Returns a \code{comlandData} data.table.
 #'
-#' \item{areaDescription}{The name of the region (found in \code{areaPolygon})
-#'  that a record in \code{surveyData} is assigned to}
 #'
-#' @importFrom magrittr "%>%"
+#' @importFrom data.table ":="
 #'
 #'@family comland
 #'
 #' @export
 
 
-assign_unknown <- function (comland, var, 
-                            aggStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
-                                          'NEGEAR', 'TONCL1', 'AREA')) {
+assign_unknown <- function (comland, unkVar, 
+                            knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
+                                         'NEGEAR', 'TONCL1', 'AREA')) {
   
   #Assign Quarter/Half Years
   comland[MONTH == 0,       QY := 0]
@@ -35,16 +36,16 @@ assign_unknown <- function (comland, var,
   comland[QY %in% 1:2, HY := 1]
   comland[QY %in% 3:4, HY := 2]
   
-  for(ivar in 1:length(var)){
-    if(var[ivar] %in% aggStrata){
-      strata <- aggStrata[which(aggStrata != var[ivar])]  
+  for(ivar in 1:length(unkVar)){
+    if(unkVar[ivar] %in% knStrata){
+      strata <- knStrata[which(knStrata != unkVar[ivar])]  
     } else {
-      strata <- aggStrata
+      strata <- knStrata
     }
     
     #Change names of strata
     strata.code <- paste0('STR', 1:length(strata))
-    data.table::setnames(comland, c(strata, var[ivar]), c(strata.code, 'VAR'))
+    data.table::setnames(comland, c(strata, unkVar[ivar]), c(strata.code, 'VAR'))
     
     #Identify records with known and unknown variable
     known   <- comland[!VAR %in% c(0, 999), ]
@@ -55,7 +56,7 @@ assign_unknown <- function (comland, var,
     comland.out <- data.table::copy(known)
     
     if(nrow(unknown) > 0){
-      cat(paste('Total', var[ivar], 'unknown records', nrow(unknown), '\n'))
+      cat(paste('Total', unkVar[ivar], 'unknown records', nrow(unknown), '\n'))
       
       for(i in length(strata.code):1){
         #Identify columns that are not part of the stratification
@@ -98,8 +99,8 @@ assign_unknown <- function (comland, var,
       }
     }
     #Revert names for subsequent runs and the output
-    data.table::setnames(comland, c(strata.code, 'VAR'), c(strata, var[ivar]))
-    data.table::setnames(comland.out, c(strata.code, 'VAR'), c(strata, var[ivar]))
+    data.table::setnames(comland, c(strata.code, 'VAR'), c(strata, unkVar[ivar]))
+    data.table::setnames(comland.out, c(strata.code, 'VAR'), c(strata, unkVar[ivar]))
   }
   
   #Drop QY and HY
