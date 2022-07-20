@@ -2,7 +2,7 @@
 #'
 #' Connects to obdbs and pulls fields from OBSPP, OBINC, ASMSPP, and ASMINC
 #'
-#'@inheritParams get_comlands_raw_data
+#'@inheritParams get_comland_raw_data
 #'
 #'@return Data frame (data.table) (n x 10)
 #'Each row of the data.table represents a species record for a given tow/trip
