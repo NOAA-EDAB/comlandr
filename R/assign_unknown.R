@@ -25,6 +25,15 @@ assign_unknown <- function (comland, unkVar,
                             knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
                                          'NEGEAR', 'TONCL1', 'AREA')) {
   
+  call <- c(comland$call, capture_function_call())
+  
+  #Pulling data
+  message("Imputing unknown catch parameters ...")
+  
+  #pull out comland data
+  sql <- comland$sql
+  comland <- comland$comland
+  
   #Assign Quarter/Half Years
   comland[MONTH == 0,       QY := 0]
   comland[MONTH %in% 1:3,   QY := 1]
@@ -106,5 +115,8 @@ assign_unknown <- function (comland, unkVar,
   #Drop QY and HY
   comland.out[, c('QY', 'HY') := NULL]
   
-  return(comland.out)
+  return(list(comland      = comland.out[], 
+              sql          = sql,
+              pullDate     = date(),
+              functionCall = call))
 }
