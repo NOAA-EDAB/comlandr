@@ -51,8 +51,12 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
                                                             filterByYear, filterByArea)
   
   #Pull foreign landings
-  if(useForeign) comland <- comlandr::get_foreign_data(channel, comland, filterByYear,
-                                                       filterByArea)
+  if(useForeign){
+    comland.foreign <- comlandr::get_foreign_data()
+    comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign, 
+                                                      useHerringMaine)
+    comland.foreign <- comlandr::process_foreign_data_skate_hake()
+  } 
   
   #Apply correction for inflation
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
