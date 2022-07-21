@@ -25,7 +25,7 @@ assign_unknown <- function (comland, unkVar,
                             knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
                                          'NEGEAR', 'TONCL1', 'AREA')) {
   
-  call <- c(comland$call, capture_function_call())
+  call <- c(comland$call, dbutils::capture_function_call())
   
   #Pulling data
   message("Imputing unknown catch parameters ...")
