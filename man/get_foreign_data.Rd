@@ -4,9 +4,18 @@
 \alias{get_foreign_data}
 \title{Downloads all NAFO data}
 \usage{
-get_foreign_data(removeUSA = T, aggregateCountry = T)
+get_foreign_data(
+  filterByYear = NA,
+  filterByArea = NA,
+  removeUSA = T,
+  aggregateCountry = T
+)
 }
 \arguments{
+\item{filterByYear}{Numeric vector. Years for which data is required}
+
+\item{filterByArea}{Character vector. NAFO Areas for which data is required}
+
 \item{removeUSA}{Boolean. Should USA landings be removed from data set (Default = T, remove)}
 
 \item{aggregateCountry}{Boolean. Should all catch be aggregated over country codes? (Default = T)}

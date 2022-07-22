@@ -74,6 +74,40 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
 
   nafoland <- data.table::rbindlist(list(nafoland, SS.land))
 
+  ####### comment out by Andy Beet
+  # SS.nafo <- data.table::as.data.table(read.csv(system.file("extdata","SS_NAFO_21A.csv",package="comlandr"), skip = 8))
+  #
+  # #Add NAFOSPP code to SS.nafo
+  # nafo.spp <- data.table::as.data.table(read.csv(system.file("extdata","species.txt",package="comlandr")))
+  # data.table::setnames(nafo.spp, "Abbreviation", "Species_ASFIS")
+  # nafo.spp <- nafo.spp[, list(Code, Species_ASFIS)]
+  #
+  # SS.nafo <- merge(SS.nafo, nafo.spp, by = 'Species_ASFIS', all.x = T)
+  #
+  # #Only grab missing data
+  # SS.nafo <- SS.nafo[Year %in% c(2003, 2008, 2009), ]
+  #
+  # data.table::setkey(SS.nafo,
+  #                    Year,
+  #                    Code)
+  #
+  # SS.land <- SS.nafo[, sum(Catch...000.Kg.), by = key(SS.nafo)]
+  #
+  # data.table::setnames(SS.land, "V1", "SPPLIVMT")
+  #
+  # #Add GearCode, Tonnage, Month, and EPU
+  # SS.land[, GearCode := 99]
+  # SS.land[, Tonnage  := 0]
+  # SS.land[, MONTH    := 0]
+  # SS.land[, EPU      := 'SS']
+  # SS.land[, QY       := 1]
+  #
+  # setcolorder(SS.land, names(nafoland))
+  #
+  # nafoland <- data.table::rbindlist(list(nafoland, SS.land))
+  ####### end comment out by Andy Beet
+
+
   #Rectify NAFO codes with US codes
   #Species
   data.table::setnames(nafoland,
