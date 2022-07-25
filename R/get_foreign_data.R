@@ -149,5 +149,5 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
 
 
 
-  return(nafoland)
+  return(nafoland[])
 }
