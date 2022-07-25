@@ -114,6 +114,9 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
   herring[, c('Total', 'Prop', 'cum.prop', 'price', 'DISCMT') := NULL]
   herring[, NESPP3 := 168]
 
+  #Add Nationality Flag
+  herring[, US := T]
+  
   data.table::setcolorder(herring, names(comland))
 
   #remove herring from data pull and add in Maine numbers

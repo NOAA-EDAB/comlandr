@@ -179,6 +179,9 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
   nafoland.agg[, UTILCD := 0]
   nafoland.agg[, MESHCAT := NA]
   nafoland.agg[, MKTCAT := 0]
+  
+  #Add Nationality Flag
+  nafoland.agg[, US := F]
 
-  return(nafoland.agg)
+  return(nafoland.agg[])
 }

@@ -147,6 +147,8 @@ get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA,
   #standardize YEAR field
   comland[YEAR < 100, YEAR := YEAR + 1900L]
 
+  #Add Nationality Flag
+  comland[, US := T]
   
   return(list(comland = comland[], 
               sql     = sql))
