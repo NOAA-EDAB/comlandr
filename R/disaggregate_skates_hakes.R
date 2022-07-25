@@ -25,38 +25,66 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear, filterByAr
         skates <- 22:28
         skate.survey <- survey$survdat[SVSPP %in% skates, ]
         
-        #Identify Stat areas catch occured in
+        #Identify Stat areas/Divisions catch occurred in
         Stat.areas <- sf::st_read(dsn=system.file("extdata","Statistical_Areas_2010.shp",
                                                   package="comlandr"), quiet = T)
+                        
         skate.survey <- survdat::post_strat(skate.survey, Stat.areas, 'Id')
         data.table::setnames(skate.survey, 'Id', 'AREA')
         
+        # Add NAFO divisions for foreign landings
+        NAFOAreas <- data.table::as.data.table(comlandr::get_areas(channel)$data)
+        NAFOAreas <- unique(NAFOAreas[, c('AREA', 'NAFDVCD')])
+        NAFOAreas <- NAFOAreas[, .(AREA = as.integer(AREA), 
+                                   NAFDVCD = as.integer(NAFDVCD))]
+        
+        skate.survey <- merge(skate.survey, NAFOAreas, by = 'AREA', all.x = T)
+        
         #Filter By Area
-        if(!is.na(filterByArea[1])) skate.survey <- skate.survey[AREA %in% filterByArea, ]
+        if(all(!is.na(filterByArea))){
+                skate.survey <- skate.survey[AREA %in% filterByArea | 
+                                                     NAFDVCD %in% filterByArea, ]
+        }
         
-        #Figure out proportion of skates
-        data.table::setkey(skate.survey, YEAR, SEASON, AREA)
+        #Figure out proportion of skates by stat area and division
+        byStat <- c('YEAR', 'SEASON', 'AREA')
+        byDiv  <- c('YEAR', 'SEASON', 'NAFDVCD')
         
+        #All Skate biomass
         skates.prop <- skate.survey[, .(skates.all = sum(BIOMASS)), 
-                                    by = key(skate.survey)]
-        
+                                    by = byStat]
+        skates.div <- skate.survey[, .(skates.all = sum(BIOMASS)),
+                                   by = byDiv]
+        #Little Skates
         little <- skate.survey[SVSPP == 26, .(little = sum(BIOMASS)), 
-                               by = key(skate.survey)]
-        
-        skates.prop <- merge(skates.prop, little, by = key(skate.survey), all = T)
-        
+                               by = byStat]
+        little.div <- skate.survey[SVSPP == 26, .(little = sum(BIOMASS)), 
+                                   by = byDiv]
+        #Winter Skates
         winter <- skate.survey[SVSPP == 23, .(winter = sum(BIOMASS)), 
-                               by = key(skate.survey)]
+                               by = byStat]
+        winter.div <- skate.survey[SVSPP == 23, .(winter = sum(BIOMASS)),
+                                   by = byDiv]
         
-        skates.prop <- merge(skates.prop, winter, by = key(skate.survey), all = T)
+        #Merge data sets
+        skates.prop <- merge(skates.prop, little, by = byStat, all = T)
+        skates.prop <- merge(skates.prop, winter, by = byStat, all = T)
+        skates.div <- merge(skates.div, little.div, by = byDiv, all = T)
+        skates.div <- merge(skates.div, winter.div, by = byDiv, all = T)
         
+        #Calc proportion
         skates.prop[, little.per := little/skates.all]
         skates.prop[, winter.per := winter/skates.all]
+        skates.div[, little.per.div := little/skates.all]
+        skates.div[, winter.per.div := winter/skates.all]
         
         #Drop extra columns and fix NAs
         skates.prop[, c('skates.all', 'little', 'winter') := NULL]
         skates.prop[is.na(little.per), little.per := 0]
         skates.prop[is.na(winter.per), winter.per := 0]
+        skates.div[, c('skates.all', 'little', 'winter') := NULL]
+        skates.div[is.na(little.per), little.per := 0]
+        skates.div[is.na(winter.per), winter.per := 0]
         
         #disaggregate little and winter skates from skates(ns) - use survey in half years
         #Generate season variable in comland
@@ -65,41 +93,51 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear, filterByAr
         comland.skates[MONTH %in% 7:12, SEASON := 'FALL']
 
         comland.skates <- merge(comland.skates, skates.prop, 
-                                by = c('YEAR', 'SEASON', 'AREA'), all.x = T)
-        
+                                by = byStat, all.x = T)
+        data.table::setnames(skates.div, 'NAFDVCD', 'AREA')
+        comland.skates <- merge(comland.skates, skates.div, 
+                                by = byStat, all.x = T)
         #Fix NAs
         comland.skates[is.na(little.per), little.per := 0]
         comland.skates[is.na(winter.per), winter.per := 0]
-
-        #Disaggregate
-        comland.skates[, little       := little.per * SPPLIVMT]
-        comland.skates[, little.value := round(little.per * SPPVALUE)]
-
-        comland.skates[, winter       := winter.per * SPPLIVMT]
-        comland.skates[, winter.value := round(winter.per * SPPVALUE)]
-
+        comland.skates[is.na(little.per.div), little.per.div := 0]
+        comland.skates[is.na(winter.per.div), winter.per.div := 0]
+        
+        #Disaggregate - US landings by Area and Foreign by Division
+        #Little Skates
+        comland.skates[US == T, little       := little.per * SPPLIVMT]
+        comland.skates[US == T, little.value := round(little.per * SPPVALUE)]
+        comland.skates[US == F, little       := little.per.div * SPPLIVMT]
+        comland.skates[US == F, little.value := round(little.per.div * SPPVALUE)]
+        #Winter Skates
+        comland.skates[US == T, winter       := winter.per * SPPLIVMT]
+        comland.skates[US == T, winter.value := round(winter.per * SPPVALUE)]
+        comland.skates[US == F, winter       := winter.per.div * SPPLIVMT]
+        comland.skates[US == F, winter.value := round(winter.per.div * SPPVALUE)]
+        #Other Skates
         comland.skates[, other.skate       := SPPLIVMT - (little       + winter)]
         comland.skates[, other.skate.value := SPPVALUE - (little.value + winter.value)]
 
         #Little (366), winter (367), skates(ns) (365)
         #put skates in comland format to merge back
+        #Little
         little <- comland.skates[, list(YEAR, AREA, MONTH, NEGEAR,
                                         TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
-                                        little, little.value)]
+                                        little, little.value, US)]
         little[, NESPP3 := 366]
         data.table::setnames(little, c('little', 'little.value'), c('SPPLIVMT', 'SPPVALUE'))
         little <- little[SPPLIVMT > 0, ]
-
+        #Winter
         winter <- comland.skates[, list(YEAR, AREA, MONTH, NEGEAR,
                                         TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
-                                        winter, winter.value)]
+                                        winter, winter.value, US)]
         winter[, NESPP3 := 367]
         data.table::setnames(winter, c('winter', 'winter.value'), c('SPPLIVMT', 'SPPVALUE'))
         winter <- winter[SPPLIVMT > 0, ]
-
+        #Other skates
         other <- comland.skates[, list(YEAR, AREA, MONTH, NEGEAR,
                                        TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
-                                       other.skate, other.skate.value)]
+                                       other.skate, other.skate.value, US)]
         other[, NESPP3 := 365]
         data.table::setnames(other, c('other.skate', 'other.skate.value'), c('SPPLIVMT', 'SPPVALUE'))
         other <- other[SPPLIVMT > 0, ]
