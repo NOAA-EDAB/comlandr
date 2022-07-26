@@ -14,13 +14,13 @@
 #'
 #'@export
 
-aggregate_gear <- function(comData, userGears, fleetDescription){
+aggregate_gear <- function(comland, userGears, fleetDescription){
   
   #Pulling data
   message("Aggregating Gears ...")
   
   #Grab just the data
-  comData <- comland$comland
+  comData <- copy(comland$comland)
   
   call <- dbutils::capture_function_call()
   
@@ -61,7 +61,7 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
   #Aggregate to new areas
   catch.var <- names(comData)[which(!names(comData) %in% c('SPPLIVMT', 
                                                            'SPPVALUE'))]
-  comData <- comData[, .(SPPLIVMT = sum(SPPLIVMT), SPPLIVMT = sum(SPPVALUE)),
+  comData <- comData[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
                        by = catch.var]
   
   #Add changes back into comland

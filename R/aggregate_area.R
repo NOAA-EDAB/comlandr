@@ -79,7 +79,7 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
   
   #Drop extra columns and rename
   if(applyPropValue){
-    new.area[, c('SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
+    new.area[, c('AREA', 'SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
     data.table::setnames(new.area, c('newarea', 'newspplivmt', 'newsppvalue'), 
                          c(areaDescription, 'SPPLIVMT', 'SPPVALUE'))
   } else {
@@ -91,7 +91,7 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
   #Aggregate to new areas
   catch.var <- names(new.area)[which(!names(new.area) %in% c('SPPLIVMT', 
                                                              'SPPVALUE'))]
-  new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT), SPPLIVMT = sum(SPPVALUE)),
+  new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
                        by = catch.var]
   
   #Add changes back into comland
