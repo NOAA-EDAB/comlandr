@@ -15,7 +15,7 @@
 #'@export
 
 aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
-                           applyPropValue = T){
+                           useForeign, applyPropValue = T){
   
   #Pulling data
   message("Aggregating Areas ...")
@@ -28,6 +28,44 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
   #Convert userAreas to data.table
   areas <- data.table::as.data.table(userAreas)
   data.table::setnames(areas, c(areaDescription, propDescription), c('newarea', 'prop'))
+  
+  #Figure out NAFO divisions/weightings
+  if(useForeign){
+    #Pull NAFO divisions
+    NAFOAreas <- data.table::as.data.table(comlandr::get_areas(channel)$data)
+    NAFOAreas <- unique(NAFOAreas[, c('AREA', 'NAFDVCD')])
+    NAFOAreas <- NAFOAreas[, .(AREA = as.integer(AREA), 
+                               NAFDVCD = as.integer(NAFDVCD))]
+    areasNAFO <- merge(unique(areas[, c('AREA')]), NAFOAreas, by = 'AREA', all.x = T)
+    
+    #Calc area weights
+    #Pull area of stat areas
+    statarea <- sf::read_sf(dsn = system.file("extdata","Statistical_Areas_2010.shp",
+                                              package="comlandr"), quiet = T)
+    statarea.area <- data.table::data.table(AREA = statarea$Id,
+                                            area = sf::st_area(statarea))
+    areasNAFO <- merge(areasNAFO, statarea.area, by = 'AREA', all.x = T)
+    
+    #Get total per division
+    areasNAFO[, divarea := sum(area), by = NAFDVCD]
+    
+    #Calculate strata weight
+    areasNAFO[, weight := area / divarea]
+    
+    #Drop extra columns
+    areasNAFO[, c('area', 'divarea') := NULL]
+    
+    #Calculate weighted proportions from Stat areas
+    areas.weighted <- merge(areas, areasNAFO, by = 'AREA', all.x = T)
+    div.prop <- areas.weighted[, .(prop = sum(prop * weight)), 
+                               by = c('NESPP3', 'NAFDVCD', 'newarea')]
+    
+    #Get in the right format and merge
+    data.table::setnames(div.prop, 'NAFDVCD', 'AREA')
+    numberCols <- c('AREA', 'prop')
+    div.prop[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols]
+    areas <- data.table::rbindlist(list(areas, div.prop), use.names = T)
+  }
   
   #Merge new area descriptions to landings
   new.area <- merge(comData, areas, by = c('NESPP3', 'AREA'), all.x = T, allow.cartesian=TRUE)

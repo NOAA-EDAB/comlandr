@@ -28,6 +28,9 @@
 #'A file containing the data.table above will also be saved to the users machine in the directory provided
 #'
 #'
+#'@importFrom data.table ":="
+#'@importFrom magrittr "%>%"
+#'
 #'@export
 
 get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useLanded = T,
@@ -53,15 +56,22 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
 
   #Pull foreign landings
   if(useForeign){
-    comland.foreign <- comlandr::get_foreign_data()
+    #Look up NAFO divisions that contain Stat areas
+    if (all(!is.na(filterByArea))) {
+      NAFOAreas <- comlandr::get_areas(channel)$data %>%
+        dplyr::select(AREA,NAFDVCD) %>%
+        dplyr::filter(AREA %in% filterByArea) %>%
+        dplyr::pull(NAFDVCD) %>%
+        unique() %>%
+        as.integer()
+      filterByArea <- c(filterByArea, NAFOAreas)
+    }
+    
+    #Pull data and process to look like comland data
+    comland.foreign <- comlandr::get_foreign_data(filterByYear, filterByArea)
     comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign, 
                                                       useHerringMaine)
-    if(!is.na(filterByYear)){
-      comland.foreign <- comland.foreign[YEAR %in% filterByYear]
-    }
-    if(!is.na(filterByArea)){
-      comland.foreign <- comland.foreign[AREA %in% filterByArea]
-    }
+   
     #Combine foreign landings
     comland$comland <- data.table::rbindlist(list(comland$comland, comland.foreign), 
                                              use.names = T)
@@ -77,7 +87,7 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
 
   #Aggregate areas
   if(aggArea) comland <- aggregate_area(comland, userAreas, areaDescription,
-                                          propDescription)
+                                          propDescription, useForeign)
 
   #Aggregate gears
   if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
