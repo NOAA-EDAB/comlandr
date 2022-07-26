@@ -12,7 +12,8 @@
 #' @noRd
 #' @export
 
-get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
+get_herring_data <- function(channel, comland, filterByYear, filterByArea, 
+                             useForeign) {
   
   #Pulling data
   message("Pulling Atlantic herring data from maine_herring_catch ...")
@@ -125,7 +126,9 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
   #remove herring from data pull and add in Maine numbers
   comland <- data.table::rbindlist(list(comland[NESPP3 != 168, ], herring))
 
-
+  #If not grabbing foreign data - remove from data set
+  if(!useForeign) comland <- comland[US == T, ] 
+  
   return(list(comland = comland[], 
               sql     = sql))
 

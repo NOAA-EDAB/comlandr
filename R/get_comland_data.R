@@ -38,7 +38,7 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
                              refYear = NA, refMonth = NA, disagSkatesHakes = T,
                              aggArea = F, userAreas = comlandr::mskeyAreas,
                              areaDescription = 'EPU', propDescription = 'MeanProp',
-                             aggGear = F, userGears = comlandr::mykeyGears,
+                             aggGear = F, userGears = comlandr::mskeyGears,
                              fleetDescription = 'Fleet', unkVar = 'Area',
                              knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
                                           'NEGEAR', 'TONCL1', 'AREA')) {
@@ -51,8 +51,10 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
                                             useLanded, removeParts)
 
   #Pull herring data from the state of Maine
-  if(useHerringMaine) comland <- comlandr::get_herring_data(channel, comland,
-                                                            filterByYear, filterByArea)
+  if(useHerringMaine){
+    comland <- comlandr::get_herring_data(channel, comland,filterByYear, 
+                                          filterByArea, useForeign)
+  }
 
   #Pull foreign landings
   if(useForeign){
