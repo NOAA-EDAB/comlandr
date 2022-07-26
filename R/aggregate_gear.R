@@ -16,6 +16,12 @@
 
 aggregate_gear <- function(comData, userGears, fleetDescription){
   
+  #Pulling data
+  message("Aggregating Gears ...")
+  
+  #Grab just the data
+  comData <- comland$comland
+  
   call <- dbutils::capture_function_call()
   
   #Convert userGears to data.table
@@ -47,8 +53,22 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
   
   comData[, fleet := as.factor(fleet)]
   
-  #Rename columns
+  #Drop extra columns and rename
+  comData[, c('NEGEAR3', 'NEGEAR2', 'NEGEAR', 'MESHCAT') := NULL]
   data.table::setnames(comData, 'fleet', fleetDescription)
   
-  return(comData[])
+  #Aggregate over new gears
+  #Aggregate to new areas
+  catch.var <- names(comData)[which(!names(comData) %in% c('SPPLIVMT', 
+                                                           'SPPVALUE'))]
+  comData <- comData[, .(SPPLIVMT = sum(SPPLIVMT), SPPLIVMT = sum(SPPVALUE)),
+                       by = catch.var]
+  
+  #Add changes back into comland
+  comland$comland <- comData[]
+  comland$call <- c(comland$call, call)
+  comland$userGears <- userGears
+  
+  return(comland[])
 }                 
+                 
