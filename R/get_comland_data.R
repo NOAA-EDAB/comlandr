@@ -39,7 +39,7 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
                              aggArea = F, userAreas = comlandr::mskeyAreas,
                              areaDescription = 'EPU', propDescription = 'MeanProp',
                              aggGear = F, userGears = comlandr::mskeyGears,
-                             fleetDescription = 'Fleet', unkVar = 'Area',
+                             fleetDescription = 'Fleet', unkVar = 'AREA',
                              knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
                                           'NEGEAR', 'TONCL1', 'AREA')) {
   
