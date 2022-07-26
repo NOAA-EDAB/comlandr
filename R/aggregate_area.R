@@ -83,11 +83,16 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
     data.table::setnames(new.area, c('newarea', 'newspplivmt', 'newsppvalue'), 
                          c(areaDescription, 'SPPLIVMT', 'SPPVALUE'))
   } else {
-    new.area[, c('SPPLIVMT', 'prop') := NULL]
+    new.area[, c('AREA', 'SPPLIVMT', 'prop') := NULL]
     data.table::setnames(new.area, c('newarea', 'newspplivmt'), 
                          c(areaDescription, 'SPPLIVMT'))
   }
 
+  #Aggregate to new areas
+  catch.var <- names(new.area)[which(!names(new.area) %in% c('SPPLIVMT', 
+                                                             'SPPVALUE'))]
+  new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT), SPPLIVMT = sum(SPPVALUE)),
+                       by = catch.var]
   
   #Add changes back into comland
    comland$comland <- new.area[]
