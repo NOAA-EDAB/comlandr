@@ -83,8 +83,8 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear, filterByAr
         skates.prop[is.na(little.per), little.per := 0]
         skates.prop[is.na(winter.per), winter.per := 0]
         skates.div[, c('skates.all', 'little', 'winter') := NULL]
-        skates.div[is.na(little.per), little.per := 0]
-        skates.div[is.na(winter.per), winter.per := 0]
+        skates.div[is.na(little.per.div), little.per.div := 0]
+        skates.div[is.na(winter.per.div), winter.per.div := 0]
         
         #disaggregate little and winter skates from skates(ns) - use survey in half years
         #Generate season variable in comland
@@ -141,7 +141,7 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear, filterByAr
         other[, NESPP3 := 365]
         data.table::setnames(other, c('other.skate', 'other.skate.value'), c('SPPLIVMT', 'SPPVALUE'))
         other <- other[SPPLIVMT > 0, ]
-
+       
         #merge all three and reformat for comland
         skates.add.back <- data.table::rbindlist(list(little, winter, other))
 
@@ -157,29 +157,51 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear, filterByAr
         hake <- c(69, 72)
         hake.survey <- survey$survdat[SVSPP %in% hake, ]
         
-        #Identify Stat areas catch occured in
+        #Identify Stat areas/Division catch occured in
         hake.survey <- survdat::post_strat(hake.survey, Stat.areas, 'Id')
         data.table::setnames(hake.survey, 'Id', 'AREA')
         
+        # Add NAFO divisions for foreign landings
+        hake.survey <- merge(hake.survey, NAFOAreas, by = 'AREA', all.x = T)
+        
         #Filter By Area
-        if(!is.na(filterByArea[1])) hake.survey <- hake.survey[AREA %in% filterByArea, ]
+        if(all(!is.na(filterByArea))){
+                hake.survey <- hake.survey[AREA %in% filterByArea |
+                                                   NAFDVCD %in% filterByArea, ]      
+        } 
         
         #Figure out proportion of skates
-        data.table::setkey(hake.survey, YEAR, SEASON, AREA)
-        
         hake.prop <- hake.survey[, .(hake.all = sum(BIOMASS, na.rm = T)), 
-                                 by = key(hake.survey)]
+                                 by = byStat]
+        hake.div  <- hake.survey[, .(hake.all = sum(BIOMASS, na.rm = T)), 
+                                 by = byDiv]
         
+        #Silvers
         silvers <- hake.survey[SVSPP == 72, .(silver = sum(BIOMASS, na.rm = T)), 
-                               by = key(hake.survey)]
+                               by = byStat]
+        silvers.div <- hake.survey[SVSPP == 72, .(silver = sum(BIOMASS, na.rm = T)), 
+                                   by = byDiv]
+        #Merge Data sets
+        hake.prop <- merge(hake.prop, silvers, by = byStat, all = T)
+        hake.div  <- merge(hake.div,  silvers.div, by = byDiv, all = T)
         
-        hake.prop <- merge(hake.prop, silvers, all = T)
+        #Calc proportion
         hake.prop[is.na(silver), silver := 0]
+        hake.div[is.na(silver), silver := 0]
         
         hake.prop[, silver.per := silver / hake.all]
+        hake.div[, silver.per.div := silver / hake.all]
         
         hake.prop[, offshore.per := 1 - silver.per]
+        hake.div[, offshore.per.div := 1 - silver.per.div]
+        
+        #Drop extra columns and fix NAs
         hake.prop[, c('hake.all', 'silver') := NULL]
+        hake.prop[is.na(silver.per), silver.per := 0]
+        hake.prop[is.na(offshore.per), offshore.per := 0]
+        hake.div[, c('hake.all', 'silver') := NULL]
+        hake.div[is.na(silver.per.div), silver.per.div := 0]
+        hake.div[is.na(offshore.per.div), offshore.per.div := 0]
         
         #disaggregate silver and offshore hake from whiting - use survey in half years
         #Generate season variable in comland
@@ -188,18 +210,28 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear, filterByAr
         comland.hakes[MONTH %in% 7:12, SEASON := 'FALL']
         
         comland.hakes <- merge(comland.hakes, hake.prop, 
-                               by = c('YEAR', 'SEASON', 'AREA'), all.x = T)
+                               by = byStat, all.x = T)
+        data.table::setnames(hake.div, 'NAFDVCD', 'AREA')
+        comland.hakes <- merge(comland.hakes, hake.div, 
+                                by = byStat, all.x = T)
         
         #Fix NAs
         comland.hakes[is.na(silver.per), silver.per := 0]
         comland.hakes[is.na(offshore.per), offshore.per := 0]
+        comland.hakes[is.na(silver.per.div), silver.per.div := 0]
+        comland.hakes[is.na(offshore.per.div), offshore.per.div := 0]
         
         #Disaggregate
-        comland.hakes[, silver       := silver.per * SPPLIVMT]
-        comland.hakes[, silver.value := round(silver.per * SPPVALUE)]
-        
-        comland.hakes[, offshore       := offshore.per * SPPLIVMT]
-        comland.hakes[, offshore.value := round(offshore.per * SPPVALUE)]
+        #Silver Hakes
+        comland.hakes[US == T, silver       := silver.per * SPPLIVMT]
+        comland.hakes[US == T, silver.value := round(silver.per * SPPVALUE)]
+        comland.hakes[US == F, silver       := silver.per.div * SPPLIVMT]
+        comland.hakes[US == F, silver.value := round(silver.per.div * SPPVALUE)]
+        #Offshore
+        comland.hakes[US == T, offshore       := offshore.per * SPPLIVMT]
+        comland.hakes[US == T, offshore.value := round(offshore.per * SPPVALUE)]
+        comland.hakes[US == F, offshore       := offshore.per.div * SPPLIVMT]
+        comland.hakes[US == F, offshore.value := round(offshore.per.div * SPPVALUE)]
         
         comland.hakes[, other.hakes       := SPPLIVMT - (silver       + offshore)]
         comland.hakes[, other.hakes.value := SPPVALUE - (silver.value + offshore.value)]
@@ -208,21 +240,21 @@ disaggregate_skates_hakes <- function(comland, channel, filterByYear, filterByAr
         #put hakes in comland format to merge back
         silver <- comland.hakes[, list(YEAR, AREA, MONTH, NEGEAR,
                                        TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
-                                       silver, silver.value)]
+                                       silver, silver.value, US)]
         silver[, NESPP3 := 509]
         data.table::setnames(silver, c('silver', 'silver.value'), c('SPPLIVMT', 'SPPVALUE'))
         silver <- silver[SPPLIVMT > 0, ]
         
         offshore <- comland.hakes[, list(YEAR, AREA, MONTH, NEGEAR,
                                          TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
-                                         offshore, offshore.value)]
+                                         offshore, offshore.value, US)]
         offshore[, NESPP3 := 508]
         data.table::setnames(offshore, c('offshore', 'offshore.value'), c('SPPLIVMT', 'SPPVALUE'))
         offshore <- offshore[SPPLIVMT > 0, ]
         
         other <- comland.hakes[, list(YEAR, AREA, MONTH, NEGEAR,
                                       TONCL1, NESPP3, UTILCD, MESHCAT, MKTCAT, 
-                                      other.hakes, other.hakes.value)]
+                                      other.hakes, other.hakes.value, US)]
         other[, NESPP3 := 507]
         data.table::setnames(other, c('other.hakes', 'other.hakes.value'), c('SPPLIVMT', 'SPPVALUE'))
         other <- other[SPPLIVMT > 0, ]
