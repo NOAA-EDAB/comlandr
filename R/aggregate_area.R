@@ -40,7 +40,8 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
     
     #Calc area weights
     #Pull area of stat areas
-    statarea <- sf::read_sf(dsn = system.file("extdata","Statistical_Areas_2010.shp",
+    sf::sf_use_s2(F) #Fixes an error with the stat area shapefile
+    statarea <- sf::read_sf(dsn = system.file("extdata", "Statistical_Areas_2010.shp",
                                               package="comlandr"), quiet = T)
     statarea.area <- data.table::data.table(AREA = statarea$Id,
                                             area = sf::st_area(statarea))
