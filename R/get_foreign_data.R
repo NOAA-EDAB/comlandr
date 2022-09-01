@@ -2,6 +2,8 @@
 #'
 #'Downloads, imports, aggregates NAFO data
 #'
+#' @param filterByYear Numeric vector. Years for which data is required
+#' @param filterByArea Character vector. NAFO Areas for which data is required
 #'@param removeUSA Boolean. Should USA landings be removed from data set (Default = T, remove)
 #'@param aggregateCountry Boolean. Should all catch be aggregated over country codes? (Default = T)
 #'
@@ -22,7 +24,7 @@
 #'
 #' @export
 
-get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
+get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggregateCountry = T){
   #Note - NAFO landings by division only so not available in sum.by = "stat.area"
   #Add NAFO foreign landings - Data from http://www.nafo.int/data/frames/data.html
 
@@ -31,13 +33,13 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-80-89.zip",
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-90-99.zip",
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-2000-09.zip",
-                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-16.zip"),
+                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-18.zip"),
                       filename = c("NAFO21B-60-69.txt",
                                    "NAFO21B-70-79.txt",
                                    "NAFO21B-80-89.txt",
                                    "NAFO21B-90-99.txt",
                                    "NAFO21B-2000-09.txt",
-                                   "nafo-21b-2010-16/NAFO-21B-2010-16.txt"),
+                                   "NAFO-21B-2010-18/NAFO-21b-2010-18.txt"),
                       stringsAsFactors = FALSE)
 
 
@@ -128,13 +130,24 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
   if (aggregateCountry) {
     nafoland <- nafoland %>%
       dplyr::group_by(Year,GearCode,Tonnage,Divcode,Code,MONTH,QY) %>%
-      dplyr::summarise(SPPLIVMT=sum(SPPLIVMT),.groups="drop") %>%
+      dplyr::summarise(SPPLIVMT=sum(as.numeric(SPPLIVMT)),.groups="drop") %>%
       data.table::as.data.table(.)
   }
 
   # set NA's in monthly catch to zero
   nafoland[is.na(SPPLIVMT), SPPLIVMT := 0]
 
+  # Filter data pull based on user inputs, years, areas
+  if (all(!is.na(filterByYear))) {
+    nafoland <- nafoland %>%
+      dplyr::filter(Year %in% filterByYear)
+  }
+  if (all(!is.na(filterByArea))) {
+    nafoland <- nafoland %>%
+      dplyr::filter(Divcode %in% filterByArea)
+  }
 
-  return(nafoland)
+
+
+  return(nafoland[])
 }

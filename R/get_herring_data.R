@@ -12,7 +12,8 @@
 #' @noRd
 #' @export
 
-get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
+get_herring_data <- function(channel, comland, filterByYear, filterByArea, 
+                             useForeign) {
   
   #Pulling data
   message("Pulling Atlantic herring data from maine_herring_catch ...")
@@ -23,7 +24,8 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
     years <- paste0("in (", survdat:::sqltext(filterByYear), ")")
   }
   
-  herr.qry <- paste0("select year, month, stock_area, negear, gearname, keptmt, discmt
+  herr.qry <- paste0("select year, month, category, stock_area, negear, gearname, 
+                     keptmt, discmt
                      from maine_herring_catch
                      where year ", years)
   if(!is.na(filterByArea[1])){
@@ -43,7 +45,7 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
   herr.catch[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols]
 
   #Aggregate data
-  data.table::setkey(herr.catch, YEAR, MONTH, STOCK_AREA, NEGEAR)
+  data.table::setkey(herr.catch, YEAR, MONTH, CATEGORY, STOCK_AREA, NEGEAR)
 
   herring <- herr.catch[, list(sum(KEPTMT, na.rm = T), sum(DISCMT, na.rm = T)), 
                         by = key(herr.catch)]
@@ -114,12 +116,19 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
   herring[, c('Total', 'Prop', 'cum.prop', 'price', 'DISCMT') := NULL]
   herring[, NESPP3 := 168]
 
+  #Add Nationality Flag
+  herring[, US := T]
+  herring[CATEGORY == 'NAFO', US := F]
+  herring[, CATEGORY := NULL]
+  
   data.table::setcolorder(herring, names(comland))
 
   #remove herring from data pull and add in Maine numbers
   comland <- data.table::rbindlist(list(comland[NESPP3 != 168, ], herring))
 
-
+  #If not grabbing foreign data - remove from data set
+  if(!useForeign) comland <- comland[US == T, ] 
+  
   return(list(comland = comland[], 
               sql     = sql))
 

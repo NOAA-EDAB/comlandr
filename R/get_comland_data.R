@@ -28,47 +28,78 @@
 #'A file containing the data.table above will also be saved to the users machine in the directory provided
 #'
 #'
+#'@importFrom data.table ":="
+#'@importFrom magrittr "%>%"
+#'
 #'@export
 
-get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useLanded = T, 
+get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useLanded = T,
                              removeParts = T, useHerringMaine = T, useForeign = T,
                              refYear = NA, refMonth = NA, disagSkatesHakes = T,
-                             aggArea = F, userAreas = comlandr::mskeyAreas, 
-                             areaDescription = 'EPU', propDescription = 'MeanProp', 
-                             aggGear = F, userGears = comlandr::mykeyGears,
-                             fleetDescription = 'Fleet') {
+                             aggArea = F, userAreas = comlandr::mskeyAreas,
+                             areaDescription = 'EPU', propDescription = 'MeanProp',
+                             aggGear = F, userGears = comlandr::mskeyGears,
+                             fleetDescription = 'Fleet', unkVar = 'AREA',
+                             knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
+                                          'NEGEAR', 'TONCL1', 'AREA')) {
   
+
   call <- dbutils::capture_function_call()
-  
+
   #Pull raw data
-  comland <- comlandr::get_comland_raw_data(channel, filterByYear, filterByArea, 
+  comland <- comlandr::get_comland_raw_data(channel, filterByYear, filterByArea,
                                             useLanded, removeParts)
-  
+
   #Pull herring data from the state of Maine
-  if(useHerringMaine) comland <- comlandr::get_herring_data(channel, comland, 
-                                                            filterByYear, filterByArea)
-  
+  if(useHerringMaine){
+    comland <- comlandr::get_herring_data(channel, comland,filterByYear, 
+                                          filterByArea, useForeign)
+  }
+
   #Pull foreign landings
-  if(useForeign) comland <- comlandr::get_foreign_data(channel, comland, filterByYear,
-                                                       filterByArea)
+  if(useForeign){
+    #Look up NAFO divisions that contain Stat areas
+    if (all(!is.na(filterByArea))) {
+      NAFOAreas <- comlandr::get_areas(channel)$data %>%
+        dplyr::select(AREA,NAFDVCD) %>%
+        dplyr::filter(AREA %in% filterByArea) %>%
+        dplyr::pull(NAFDVCD) %>%
+        unique() %>%
+        as.integer()
+      filterByArea <- c(filterByArea, NAFOAreas)
+    }
+    
+    #Pull data and process to look like comland data
+    comland.foreign <- comlandr::get_foreign_data(filterByYear, filterByArea)
+    comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign, 
+                                                      useHerringMaine)
+   
+    #Combine foreign landings
+    comland$comland <- data.table::rbindlist(list(comland$comland, comland.foreign), 
+                                             use.names = T)
+  } 
+  
   
   #Apply correction for inflation
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
-  
+
   #Disaggregate skates and hakes
-  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, channel, 
+  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, channel,
                                                             filterByYear, filterByArea)
-  
+
   #Aggregate areas
-  if(aggArea) comland <- aggregate_area(comland, userAreas, areaDescription, 
-                                          propDescription)
-  
+  if(aggArea) comland <- aggregate_area(comland, userAreas, areaDescription,
+                                          propDescription, useForeign)
+
   #Aggregate gears
   if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
   
+  #Impute unknown catch variables
+  if(!is.null(unkVar)) comland <- assign_unknown(comland, unkVar, knStrata)
+
   comland$call <- call
-  
-  message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")  
+
+  message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")
   return(comland)
 
 }
