@@ -40,7 +40,8 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
     
     #Calc area weights
     #Pull area of stat areas
-    statarea <- sf::read_sf(dsn = system.file("extdata","Statistical_Areas_2010.shp",
+    sf::sf_use_s2(F) #Fixes an error with the stat area shapefile
+    statarea <- sf::read_sf(dsn = system.file("extdata", "Statistical_Areas_2010.shp",
                                               package="comlandr"), quiet = T)
     statarea.area <- data.table::data.table(AREA = statarea$Id,
                                             area = sf::st_area(statarea))
@@ -79,15 +80,20 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
   
   #Drop extra columns and rename
   if(applyPropValue){
-    new.area[, c('SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
+    new.area[, c('AREA', 'SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
     data.table::setnames(new.area, c('newarea', 'newspplivmt', 'newsppvalue'), 
                          c(areaDescription, 'SPPLIVMT', 'SPPVALUE'))
   } else {
-    new.area[, c('SPPLIVMT', 'prop') := NULL]
+    new.area[, c('AREA', 'SPPLIVMT', 'prop') := NULL]
     data.table::setnames(new.area, c('newarea', 'newspplivmt'), 
                          c(areaDescription, 'SPPLIVMT'))
   }
 
+  #Aggregate to new areas
+  catch.var <- names(new.area)[which(!names(new.area) %in% c('SPPLIVMT', 
+                                                             'SPPVALUE'))]
+  new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
+                       by = catch.var]
   
   #Add changes back into comland
    comland$comland <- new.area[]
