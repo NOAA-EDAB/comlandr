@@ -12,13 +12,13 @@
 #'
 #'@export
 
-aggregate_gear <- function(comdata, userGears, fleetDescription){
+aggregate_gear <- function(comData, userGears, fleetDescription){
   
   #Pulling data
   message("Aggregating Gears ...")
   
   #Grab just the data
-  comData <- copy(comdata[[1]])
+  comdata <- copy(comData[[1]])
   
   call <- dbutils::capture_function_call()
   
@@ -28,13 +28,13 @@ aggregate_gear <- function(comdata, userGears, fleetDescription){
   
   #Assign gears to fleets
   #Generate NEGEAR2 codes from NEGEAR
-  if(is.numeric(comData$NEGEAR)){
-    comData[NEGEAR < 100, NEGEAR3 := paste0(0, NEGEAR)]
-    comData[NEGEAR >= 100, NEGEAR3 := NEGEAR]
-    comData[, NEGEAR2 := as.numeric(substr(NEGEAR3, 1, 2))]
-    comData[, NEGEAR3 := NULL]
+  if(is.numeric(comdata$NEGEAR)){
+    comdata[NEGEAR < 100, NEGEAR3 := paste0(0, NEGEAR)]
+    comdata[NEGEAR >= 100, NEGEAR3 := NEGEAR]
+    comdata[, NEGEAR2 := as.numeric(substr(NEGEAR3, 1, 2))]
+    comdata[, NEGEAR3 := NULL]
   } else {
-    comData[, NEGEAR2 := as.numeric(substr(NEGEAR, 1, 2))]
+    comdata[, NEGEAR2 := as.numeric(substr(NEGEAR, 1, 2))]
   }
   
   fleets <- unique(gears$fleet)
@@ -44,36 +44,36 @@ aggregate_gear <- function(comdata, userGears, fleetDescription){
     fleet.mesh <- unique(gears[fleet == fleets[ifleet], MESHCAT])
     #Check if there is a mesh characteristic associated with this gear
     if(is.na(fleet.mesh)){
-      comData[NEGEAR2 %in% fleet.gear, fleet := fleets[ifleet]]
+      comdata[NEGEAR2 %in% fleet.gear, fleet := fleets[ifleet]]
     } else {
-      comData[NEGEAR2 %in% fleet.gear & MESHCAT == fleet.mesh, fleet := fleets[ifleet]]
+      comdata[NEGEAR2 %in% fleet.gear & MESHCAT == fleet.mesh, fleet := fleets[ifleet]]
     }
   }
   
-  comData[, fleet := as.factor(fleet)]
+  comdata[, fleet := as.factor(fleet)]
   
   #Drop extra columns and rename
-  comData[, c('NEGEAR2', 'NEGEAR', 'MESHCAT') := NULL]
-  data.table::setnames(comData, 'fleet', fleetDescription)
+  comdata[, c('NEGEAR2', 'NEGEAR', 'MESHCAT') := NULL]
+  data.table::setnames(comdata, 'fleet', fleetDescription)
   
   #Aggregate over new gears
   #Aggregate to new fleets
-  catch.var <- names(comData)[which(!names(comData) %in% c('SPPLIVMT', 
+  catch.var <- names(comdata)[which(!names(comdata) %in% c('SPPLIVMT', 
                                                            'SPPVALUE'))]
   #Discard data does not have value so need to ensure this runs on both
-  if(length(which(names(comData) == 'SPPVALUE')) > 0){
-    comData <- comData[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
+  if(length(which(names(comdata) == 'SPPVALUE')) > 0){
+    comdata <- comdata[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
                        by = catch.var]
   } else {
-    comData <- comData[, .(SPPLIVMT = sum(SPPLIVMT)), by = catch.var]
+    comdata <- comdata[, .(SPPLIVMT = sum(SPPLIVMT)), by = catch.var]
   }
   
   
   #Add changes back into comdata
-  comdata[[1]] <- comData[]
-  comdata$call <- c(comdata$call, call)
-  comdata$userGears <- userGears
+  comData[[1]] <- comdata[]
+  comData$call <- c(comdata$call, call)
+  comData$userGears <- userGears
   
-  return(comdata[])
+  return(comData[])
 }                 
                  
