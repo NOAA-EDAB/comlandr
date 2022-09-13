@@ -31,10 +31,10 @@
 #'
 #'@export
 
-get_comdisc_data <- function(channel, comland, filterByArea = NA, 
+get_comdisc_data <- function(channel, comland, 
                              aggArea = F, 
                              areaDescription = 'EPU', propDescription = 'MeanProp',
-                             aggGear = F, userGears = comlandr::mskeyGears,
+                             aggGear = F,
                              fleetDescription = 'Fleet') {
   
 
@@ -59,6 +59,12 @@ get_comdisc_data <- function(channel, comland, filterByArea = NA,
     userGears <- comland$userGears
     comdisc <- aggregate_gear(comdisc, userGears, fleetDescription)
   } 
+  
+  #Calculate the discard to kept ratio
+  dk <- comlandr::calc_DK(comdisc, areaDescription, fleetDescription)
+  
+  #Apply the discard to kept ratio
+  comdisc <- comlandr::calc_discards(comland, dk, areaDescription, fleetDescription)
   
   comdisc$call <- call
 
