@@ -161,7 +161,11 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   #drop extra columns NESPP4
   comdisc[, c('DRFLAG', 'CF_LNDLB_LIVLB', 'CF_RPTQTY_LNDLB', 'HAILWT', 'C.HAILWT',
               'NESPP4') := NULL]
-
+  
+  #Convert number fields from chr to num
+  numberCols <- c('YEAR', 'MONTH', 'NEGEAR', 'NESPP3', 'AREA', 'MKTCAT')
+  comdisc[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols][]
+  
   return(list(comdisc = comdisc[],
               sql     = sql))
 }
