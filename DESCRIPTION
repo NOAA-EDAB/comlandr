@@ -22,7 +22,7 @@ Suggests:
     tidyr,
     ggforce
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Imports: 
     data.table,
     sf,
