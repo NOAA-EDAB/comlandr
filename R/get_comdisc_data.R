@@ -44,32 +44,35 @@ get_comdisc_data <- function(channel, comland,
   filterByYear <- range(comland[[1]][, YEAR])[1]:range(comland[[1]][, YEAR])[2]
 
   #Pull raw data
-  comdisc <- comlandr::get_comdisc_raw_data(channel, filterByYear)#, filterByArea)
+  comdisc.raw <- comlandr::get_comdisc_raw_data(channel, filterByYear)#, filterByArea)
 
   #Aggregate areas
   if(aggArea){
     userAreas <- comland$userAreas
-    comdisc <- comlandr::aggregate_area(comdisc, userAreas, areaDescription,
-                                        propDescription, useForeign = F,
-                                        applyPropValue = F)
+    comdisc.raw <- comlandr::aggregate_area(comdisc.raw, userAreas, areaDescription,
+                                            propDescription, useForeign = F,
+                                            applyPropValue = F)
   } 
 
   #Aggregate gears
   if(aggGear){
     userGears <- comland$userGears
-    comdisc <- aggregate_gear(comdisc, userGears, fleetDescription)
+    comdisc.raw <- aggregate_gear(comdisc.raw, userGears, fleetDescription)
   } 
   
   #Calculate the discard to kept ratio
-  dk <- comlandr::calc_DK(comdisc, areaDescription, fleetDescription)
+  dk <- comlandr::calc_DK(comdisc.raw, areaDescription, fleetDescription)
   
   #Apply the discard to kept ratio
   comdisc <- comlandr::calc_discards(comland, dk, areaDescription, fleetDescription)
-  
-  comdisc$call <- call
 
   message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")
-  return(comdisc)
+  
+  return(list(comdisc = comdisc[],
+              sql     = comdisc.raw$sql,
+              call    = c(call, comdisc.raw$call),
+              userAreas = comdisc.raw$userAreas,
+              userGears = comdisc.raw$userGears))
 
 }
 
