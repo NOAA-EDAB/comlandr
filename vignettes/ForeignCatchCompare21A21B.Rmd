@@ -25,15 +25,15 @@ NEUSDivs <- c(47, 51:56, 61:63)
 # Should really use latest decade for ALL supporting files, but the format is inconsistent!
 # species.txt is now bundled with the package since it contains additional species
 temp <- tempfile()
-download.file("https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-16.zip",destfile=temp,quiet=TRUE)
+download.file("https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-18.zip",destfile=temp,quiet=TRUE)
 
 # division codes. supporting table
-divCodes <- readr::read_csv(unz(temp,"nafo-21b-2010-16/divisions.txt"),col_names = F,show_col_types = F) %>%
+divCodes <- readr::read_csv(unz(temp,"NAFO-21B-2010-18/divisions.txt"),col_names = F,show_col_types = F) %>%
   magrittr::set_colnames(c("Divcode","Division"))
 
 # country codes. supporting table
 #countryCodes <- readr::read_csv(unz(temp, "nafo-21b-2010-16/country.txt")) %>%
-countryCodes <- readr::read_delim(unz(temp, "nafo-21b-2010-16/country.txt"),delim = "\t",show_col_types = F) %>%
+countryCodes <- readr::read_delim(unz(temp, "NAFO-21B-2010-18/country.txt"),delim = "\t",show_col_types = F) %>%
   dplyr::rename(Country = Description) %>%
   dplyr::mutate(dplyr::across(where(is.character), stringr::str_trim)) %>%
   dplyr::mutate(CountryName = paste0(toupper(Country)," - ",toupper(Abbreviation))) %>%
@@ -64,30 +64,21 @@ options(warn=-1)
 # read in statareas from package
 statAreas <- sf::st_read(system.file("extdata",package="comlandr"),layer="Statistical_Areas_2010",quiet=T)
 sf::st_crs(statAreas) <- 4269
-
 GB <- statAreas %>% dplyr::filter(Id %in% c(521, 522, 523, 524, 525, 526, 551, 552, 561, 562))
 GOM <- statAreas %>% dplyr::filter(Id %in% c(500, 510, 512, 513, 514, 515))
 MAB <- statAreas %>% dplyr::filter(Id %in% c(537, 539, 600, 612, 613, 614, 615, 616, 621, 622, 625, 626, 631, 632))
 SS <- statAreas %>% dplyr::filter(Id %in% c(463, 464,465, 466, 467, 511))
 NEUS <- rbind(GB,SS,GOM,MAB)
 
-divShapefile <- "https://www.nafo.int/Portals/0/GIS/Divisions.zip"
-temp1 <- tempfile()
-temp2 <- tempfile()
-download.file(divShapefile,destfile=temp1,quiet=TRUE)
-unzip(zipfile=temp1,exdir=temp2)
+divisions <- NEFSCspatial::NAFO_Divisions_2021_poly_clipped %>% 
+  dplyr::select(-X,-Y) %>% 
+  dplyr::mutate(Label = toupper(Label)) %>% 
+  dplyr::mutate(Label = gsub("-","",Label))
 
-divisions <- sf::st_read(paste0(temp2,"/Divisions/Divisions.shp"),quiet=T) %>%
-  dplyr::mutate(ZONE = toupper(ZONE)) %>%
-  dplyr::filter(!is.na(ZONE)) %>% # newfoundland
-  dplyr::left_join(.,divCodes,by =c("ZONE"="Division")) %>%
-  sf::st_set_crs(.,4269)
-unlink(temp1)
-unlink(temp2)
+centroids <-  sf::st_coordinates(sf::st_centroid(divisions)) 
 
-centroids <-  sf::st_coordinates(sf::st_centroid(divisions))
-
-divisions <- cbind(divisions,centroids)
+divisions <- cbind(divisions,centroids) %>%
+  dplyr::left_join(.,divCodes,by =c("Label"="Division"))
 
 data <-  sf::st_crop(divisions,xmin = -80, xmax = -60, ymin = 30, ymax = 46 )
 
@@ -98,16 +89,13 @@ p1 <- ggplot2::ggplot(data = data) +
   ggplot2::xlab("") +
   ggplot2::ylab("") +
   ggplot2::geom_sf(data=NEUS,mapping=ggplot2::aes(fill=Id),fill="salmon",alpha=.2)
-
-
 p2 <- ggplot2::ggplot(data = data) +
   ggplot2::geom_sf(mapping=ggplot2::aes(fill=Divcode),fill="white",color="grey") +
-  ggplot2::geom_text(data=data,ggplot2::aes(x=X,y=Y,label=ZONE),size=2) +
+  ggplot2::geom_text(data=data,ggplot2::aes(x=X,y=Y,label=Label),size=2) +
   ggplot2::ggtitle("Corresponding Divisions") +
   ggplot2::xlab("") +
   ggplot2::ylab("") +
   ggplot2::geom_sf(data=data %>% dplyr::filter(Divcode %in% NEUSDivs),mapping=ggplot2::aes(fill=Divcode),fill="salmon",alpha=.2)
-
 p1 + p2
 ```
 
