@@ -9,6 +9,7 @@ aggregate_area(
   userAreas,
   areaDescription,
   propDescription,
+  useForeign,
   applyPropValue = T
 )
 }
