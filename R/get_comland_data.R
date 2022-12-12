@@ -30,10 +30,11 @@
 #'
 #'@export
 
-get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useLanded = T, 
-                             removeParts = T, useHerringMaine = T, useForeign = T,
-                             refYear = NA, refMonth = NA, disagSkatesHakes = T,
-                             aggArea = F, userAreas = comlandr::mskeyAreas, 
+get_comland_data <- function(channelSole, channelNova, filterByYear = NA, 
+                             filterByArea = NA, useLanded = T, removeParts = T, 
+                             useHerringMaine = T, useForeign = T, refYear = NA, 
+                             refMonth = NA, disagSkatesHakes = T, aggArea = F, 
+                             userAreas = comlandr::mskeyAreas, 
                              areaDescription = 'EPU', propDescription = 'MeanProp', 
                              aggGear = F, userGears = comlandr::mykeyGears,
                              fleetDescription = 'Fleet') {
@@ -41,22 +42,24 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
   call <- dbutils::capture_function_call()
   
   #Pull raw data
-  comland <- comlandr::get_comland_raw_data(channel, filterByYear, filterByArea, 
+  comland <- comlandr::get_comland_raw_data(channelSole, channelNova, 
+                                            filterByYear, filterByArea, 
                                             useLanded, removeParts)
   
   #Pull herring data from the state of Maine
-  if(useHerringMaine) comland <- comlandr::get_herring_data(channel, comland, 
+  if(useHerringMaine) comland <- comlandr::get_herring_data(channelSole, comland, 
                                                             filterByYear, filterByArea)
   
   #Pull foreign landings
-  if(useForeign) comland <- comlandr::get_foreign_data(channel, comland, filterByYear,
-                                                       filterByArea)
+  if(useForeign) comland <- comlandr::get_foreign_data(channelSole, comland, 
+                                                       filterByYear, filterByArea)
   
   #Apply correction for inflation
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
   
   #Disaggregate skates and hakes
-  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, channel, 
+  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, 
+                                                                      channelSole, 
                                                             filterByYear, filterByArea)
   
   #Aggregate areas
