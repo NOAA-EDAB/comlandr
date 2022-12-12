@@ -11,7 +11,8 @@ get_comdisc_data(
   areaDescription = "EPU",
   propDescription = "MeanProp",
   aggGear = F,
-  fleetDescription = "Fleet"
+  fleetDescription = "Fleet",
+  extendTS = T
 )
 }
 \arguments{
