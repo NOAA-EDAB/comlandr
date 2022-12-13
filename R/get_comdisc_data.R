@@ -35,7 +35,8 @@ get_comdisc_data <- function(channel, comland,
                              aggArea = F, 
                              areaDescription = 'EPU', propDescription = 'MeanProp',
                              aggGear = F,
-                             fleetDescription = 'Fleet') {
+                             fleetDescription = 'Fleet',
+                             extendTS = T) {
   
 
   call <- dbutils::capture_function_call()
@@ -62,6 +63,31 @@ get_comdisc_data <- function(channel, comland,
   
   #Calculate the discard to kept ratio
   dk <- comlandr::calc_DK(comdisc.raw, areaDescription, fleetDescription)
+  
+  #Extend dk ratios beyond observer data
+  if(extendTS){
+    dk.mean <- dk[, .(meanDK = mean(DK, na.rm = T)), 
+                  by = c('NESPP3', areaDescription, fleetDescription)]
+    
+    #Create data table with unobserved periods
+    areas <- unique(dk[, .SD, .SDcols = areaDescription])[[1]]
+    fleets <- unique(dk[, .SD, .SDcols = fleetDescription])[[1]]
+    spp <- unique(dk[, NESPP3])
+    
+    blank <- data.table::CJ(YEAR = filterByYear, Area = areas, Fleet = fleets, 
+                            NESPP3 = spp)
+    
+    data.table::setnames(blank, c('Area', 'Fleet'), c(areaDescription, fleetDescription))
+    
+    dk.blank <- merge(blank, dk, by = c('YEAR', areaDescription, fleetDescription,
+                                        'NESPP3'), all.x = T)
+    
+    #Replace NAs with Mean value
+    dk <- merge(dk.blank, dk.mean, by = c('NESPP3', areaDescription, fleetDescription),
+                      all.x = T)
+    dk[is.na(DK), DK := meanDK]
+    dk[, meanDK := NULL]
+  }
   
   #Apply the discard to kept ratio
   comdisc <- comlandr::calc_discards(comland, dk, areaDescription, fleetDescription)
