@@ -6,6 +6,10 @@
 \usage{
 get_comdisc_raw_data(channel, filterByYear)
 }
+\arguments{
+\item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+}
 \value{
 Data frame (data.table) (n x 10)
 Each row of the data.table represents a species record for a given tow/trip

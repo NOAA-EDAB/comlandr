@@ -20,15 +20,16 @@
 #' @export
 
 
-calc_DK <- function(comdiscData, areaDescription, fleetDescription){
+calc_DK <- function(comData, areaDescription, fleetDescription){
+  
+  comdata <- data.table::copy(comData[[1]])
   
   #Standardize column names
-  comdiscData <- data.table::setnames(comdiscData, c(areaDescription, 
-                                                     fleetDescription), 
+  comdata <- data.table::setnames(comdata, c(areaDescription, fleetDescription), 
                                       c('area', 'fleet'))
   
   #sum catch by species/disposition/area/fleet
-  ob.sums <- comdiscData[, sum(SPPLIVMT), by = c('YEAR', 'area', 'fleet', 'NESPP3',
+  ob.sums <- comdata[, sum(SPPLIVMT), by = c('YEAR', 'area', 'fleet', 'NESPP3',
                                                  'CATDISP')]
   #identify discards
   ob.discard <- ob.sums[CATDISP == 0, ]
