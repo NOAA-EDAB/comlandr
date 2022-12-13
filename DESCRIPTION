@@ -20,7 +20,8 @@ Suggests:
     readr,
     kableExtra,
     tidyr,
-    ggforce
+    ggforce,
+    NEFSCspatial
 VignetteBuilder: knitr
 RoxygenNote: 7.2.1
 Imports: 
@@ -34,5 +35,6 @@ Imports:
     survdat
 Remotes:
     andybeet/dbutils,
-    NOAA-EDAB/survdat
+    NOAA-EDAB/survdat,
+    NEFSC/NEFSC-Spatial
 Config/testthat/edition: 3
