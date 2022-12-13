@@ -52,8 +52,18 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
   } else {
     st <- (min(filterByYear) >= files$startyr) & (min(filterByYear) <= files$endyr)
     fin <- (max(filterByYear) >= files$startyr) & (max(filterByYear) <= files$endyr)
-    filesToReadStart <- which(as.logical(st))
-    filesToReadEnd <- which(as.logical(fin))
+
+    if (all(st == F)) {
+      filesToReadStart <- 1
+    } else {
+      filesToReadStart <- which(as.logical(st))
+    }
+
+    if (all(fin == F)) {
+      filesToReadEnd <- nrow(files)
+    } else {
+      filesToReadEnd <- which(as.logical(fin))
+    }
   }
 
   # get file, catch error for missing file

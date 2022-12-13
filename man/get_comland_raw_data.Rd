@@ -5,7 +5,8 @@
 \title{Extracts commercial data from Database}
 \usage{
 get_comland_raw_data(
-  channel,
+  channelSole,
+  channelNova,
   filterByYear = NA,
   filterByArea = NA,
   useLanded = T,

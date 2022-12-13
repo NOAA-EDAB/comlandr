@@ -4,7 +4,7 @@
 \alias{aggregate_gear}
 \title{Assign landing records to an aggregated gear fleet}
 \usage{
-aggregate_gear(comland, userGears, fleetDescription)
+aggregate_gear(comData, userGears, fleetDescription)
 }
 \arguments{
 \item{userGears}{Data frame. Definitions to aggregate NEGEAR2 to user defined
