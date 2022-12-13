@@ -5,7 +5,8 @@
 \title{Extracts commercial data from Database}
 \usage{
 get_comland_data(
-  channel,
+  channelSole,
+  channelNova,
   filterByYear = NA,
   filterByArea = NA,
   useLanded = T,
@@ -20,7 +21,7 @@ get_comland_data(
   areaDescription = "EPU",
   propDescription = "MeanProp",
   aggGear = F,
-  userGears = comlandr::mskeyGears,
+  userGears = comlandr::mykeyGears,
   fleetDescription = "Fleet",
   unkVar = "AREA",
   knStrata = c("NESPP3", "YEAR", "HY", "QY", "MONTH", "NEGEAR", "TONCL1", "AREA")
