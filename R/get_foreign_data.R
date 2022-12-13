@@ -40,12 +40,25 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
                                    "NAFO21B-90-99.txt",
                                    "NAFO21B-2000-09.txt",
                                    "NAFO-21B-2010-18/NAFO-21b-2010-18.txt"),
+                      startyr = c(1960,1970,1980,1990,2000,2010),
+                      endyr = c(1969,1979,1989,1999,2009,2018),
                       stringsAsFactors = FALSE)
 
 
+  # Only read in files for the years requested
+  if (any(is.na(filterByYear))){
+    filesToReadStart <- 1 # read in all
+    filesToReadEnd <- nrow(files)
+  } else {
+    st <- (min(filterByYear) >= files$startyr) & (min(filterByYear) <= files$endyr)
+    fin <- (max(filterByYear) >= files$startyr) & (max(filterByYear) <= files$endyr)
+    filesToReadStart <- which(as.logical(st))
+    filesToReadEnd <- which(as.logical(fin))
+  }
+
   # get file, catch error for missing file
   nafo <- NULL
-  for (ifile in 1:nrow(files)) {
+  for (ifile in filesToReadStart:filesToReadEnd) {
     result <- tryCatch(
       {
         stringParts <- stringr::str_split(files$url[ifile],"/")
@@ -126,6 +139,22 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
   nafoland[MONTH %in% 10:12, QY := 4]
   nafoland[MONTH == 0,       QY := 1] # Catches for Unknown MONTH
 
+  # convert weight from character to integer.
+  # Filter out nonsense values inherent in dataset
+  nafoland <- nafoland %>%
+    dplyr::mutate(TEMP = dplyr::case_when(grepl("[^e]-",SPPLIVMT) ~ as.integer(NA),
+                                       SPPLIVMT == "" ~ as.integer(NA),
+                                       is.na(SPPLIVMT) ~ as.integer(NA),
+                                       TRUE ~ as.integer(1))) %>%
+    dplyr::filter(!is.na(TEMP)) %>%
+    dplyr::select(-TEMP) %>%
+    dplyr::mutate(SPPLIVMT = as.integer(SPPLIVMT)) %>%
+    data.table::as.data.table()
+
+  # set NA's in monthly catch to zero
+  nafoland[is.na(SPPLIVMT), SPPLIVMT := 0]
+
+
   # aggregate over country
   if (aggregateCountry) {
     nafoland <- nafoland %>%
@@ -134,8 +163,6 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
       data.table::as.data.table(.)
   }
 
-  # set NA's in monthly catch to zero
-  nafoland[is.na(SPPLIVMT), SPPLIVMT := 0]
 
   # Filter data pull based on user inputs, years, areas
   if (all(!is.na(filterByYear))) {
