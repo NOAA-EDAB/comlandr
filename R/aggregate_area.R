@@ -14,14 +14,14 @@
 #'
 #'@export
 
-aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
+aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
                            useForeign, applyPropValue = T){
   
   #Pulling data
   message("Aggregating Areas ...")
   
   #Grab just the data
-  comData <- comland$comland
+  comdata <- comData[[1]]
   
   call <- dbutils::capture_function_call()
   
@@ -69,7 +69,7 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
   }
   
   #Merge new area descriptions to landings
-  new.area <- merge(comData, areas, by = c('NESPP3', 'AREA'), all.x = T, allow.cartesian=TRUE)
+  new.area <- merge(comdata, areas, by = c('NESPP3', 'AREA'), all.x = T, allow.cartesian=TRUE)
   
   #If no proportion assume 100% in
   new.area[is.na(prop), prop := 1]
@@ -92,13 +92,19 @@ aggregate_area <- function(comland, userAreas, areaDescription, propDescription,
   #Aggregate to new areas
   catch.var <- names(new.area)[which(!names(new.area) %in% c('SPPLIVMT', 
                                                              'SPPVALUE'))]
-  new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
+  #Discard data does not have value so need to ensure this runs on both
+  if(length(which(names(new.area) == 'SPPVALUE')) > 0){
+    new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
                        by = catch.var]
+  } else {
+    new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT)), by = catch.var]
+  }
   
-  #Add changes back into comland
-   comland$comland <- new.area[]
-   comland$call <- c(comland$call, call)
-   comland$userAreas <- userAreas
   
-  return(comland[])
+  #Add changes back into comData
+  comData[[1]] <- new.area[]
+  comData$call <- c(comData$call, call)
+  comData$userAreas <- userAreas
+  
+  return(comData[])
 }                 

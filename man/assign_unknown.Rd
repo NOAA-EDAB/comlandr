@@ -5,7 +5,7 @@
 \title{Assigns unknown catch variables}
 \usage{
 assign_unknown(
-  comland,
+  comData,
   unkVar,
   knStrata = c("NESPP3", "YEAR", "HY", "QY", "MONTH", "NEGEAR", "TONCL1", "AREA")
 )

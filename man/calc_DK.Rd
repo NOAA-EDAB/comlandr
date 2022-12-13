@@ -4,7 +4,7 @@
 \alias{calc_DK}
 \title{Calculate discard to kept ratio}
 \usage{
-calc_DK(comdiscData, areaDescription, fleetDescription)
+calc_DK(comData, areaDescription, fleetDescription)
 }
 \arguments{
 \item{na.keep}{Boolean. Logical value to indicate whether original strata names

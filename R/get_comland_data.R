@@ -33,34 +33,39 @@
 #'
 #'@export
 
-get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useLanded = T,
-                             removeParts = T, useHerringMaine = T, useForeign = T,
-                             refYear = NA, refMonth = NA, disagSkatesHakes = T,
-                             aggArea = F, userAreas = comlandr::mskeyAreas,
-                             areaDescription = 'EPU', propDescription = 'MeanProp',
-                             aggGear = F, userGears = comlandr::mskeyGears,
+
+get_comland_data <- function(channelSole, channelNova, filterByYear = NA, 
+                             filterByArea = NA, useLanded = T, removeParts = T, 
+                             useHerringMaine = T, useForeign = T, refYear = NA, 
+                             refMonth = NA, disagSkatesHakes = T, aggArea = F, 
+                             userAreas = comlandr::mskeyAreas, 
+                             areaDescription = 'EPU', propDescription = 'MeanProp', 
+                             aggGear = F, userGears = comlandr::mykeyGears,
                              fleetDescription = 'Fleet', unkVar = 'AREA',
                              knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
                                           'NEGEAR', 'TONCL1', 'AREA')) {
+
   
 
   call <- dbutils::capture_function_call()
 
   #Pull raw data
-  comland <- comlandr::get_comland_raw_data(channel, filterByYear, filterByArea,
+  comland <- comlandr::get_comland_raw_data(channelSole, channelNova, 
+                                            filterByYear, filterByArea, 
                                             useLanded, removeParts)
 
   #Pull herring data from the state of Maine
   if(useHerringMaine){
-    comland <- comlandr::get_herring_data(channel, comland,filterByYear, 
-                                          filterByArea, useForeign)
+    comland <- comlandr::get_herring_data(channelSole, comland,
+                                          filterByYear, filterByArea, 
+                                          useForeign)
   }
 
   #Pull foreign landings
   if(useForeign){
     #Look up NAFO divisions that contain Stat areas
     if (all(!is.na(filterByArea))) {
-      NAFOAreas <- comlandr::get_areas(channel)$data %>%
+      NAFOAreas <- comlandr::get_areas(channelSole)$data %>%
         dplyr::select(AREA,NAFDVCD) %>%
         dplyr::filter(AREA %in% filterByArea) %>%
         dplyr::pull(NAFDVCD) %>%
@@ -71,7 +76,7 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
     
     #Pull data and process to look like comland data
     comland.foreign <- comlandr::get_foreign_data(filterByYear, filterByArea)
-    comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign, 
+    comland.foreign <- comlandr::process_foreign_data(channelSole, comland.foreign, 
                                                       useHerringMaine)
    
     #Combine foreign landings
@@ -84,18 +89,20 @@ get_comland_data <- function(channel, filterByYear = NA, filterByArea = NA, useL
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
 
   #Disaggregate skates and hakes
-  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, channel,
+  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, 
+                                                                      channelSole, 
                                                             filterByYear, filterByArea)
 
   #Aggregate areas
-  if(aggArea) comland <- aggregate_area(comland, userAreas, areaDescription,
-                                          propDescription, useForeign)
+  if(aggArea) comland <- comlandr::aggregate_area(comland, userAreas, 
+                                                  areaDescription, propDescription,
+                                                  useForeign)
 
   #Aggregate gears
-  if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
+  if(aggGear) comland <- comlandr::aggregate_gear(comland, userGears, fleetDescription)
   
   #Impute unknown catch variables
-  if(!is.null(unkVar)) comland <- assign_unknown(comland, unkVar, knStrata)
+  if(!is.null(unkVar)) comland <- comlandr::assign_unknown(comland, unkVar, knStrata)
 
   comland$call <- call
 

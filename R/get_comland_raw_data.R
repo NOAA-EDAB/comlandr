@@ -29,8 +29,8 @@
 #'
 #'@export
 
-get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA, 
-                                 useLanded = T, removeParts = T){
+get_comland_raw_data <- function(channelSole, channelNova, filterByYear = NA, 
+                                 filterByArea = NA, useLanded = T, removeParts = T){
   
   #If not specifying a year default to 1964 - 2019
   if(is.na(filterByYear[1])) filterByYear <- 1964:2019
@@ -42,9 +42,17 @@ get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA,
   #Generate vector of tables to loop through
   if(any(filterByYear < 1964)) stop("Landings data start in 1964")
   
+  #CAMS tables are on NEFSC_USER while the rest are on sole
+  channels <- rep('sole', length(filterByYear))
+  channels[which(filterByYear > 2019)] <- 'nova'
+  
+  #Name tables
   tables <- as.numeric(c(substr(filterByYear[which(filterByYear <= 1993)], 3, 4),
               filterByYear[which(filterByYear >  1993)]))
-  tables[which(tables > 1993)] <- paste0('CFDETS',  tables[which(tables > 1993)], 'AA')
+  tables[which(tables > 2019)] <- 
+    paste0('CAMS_GARFO.CAMS_CFDETS', tables[which(tables > 2019)], 'AA')
+  tables[which(tables > 1993 & tables <= 2019)] <- 
+    paste0('CFDETS', tables[which(tables > 1993 & tables <= 2019)], 'AA')
   tables[which(tables > 63 & tables <= 81)] <- paste0('WOLANDS', tables[which(tables > 63 & tables <= 81)])
   tables[which(tables > 81 & tables <= 93)] <- paste0('WODETS',  tables[which(tables > 81 & tables <= 93)])
   
@@ -53,6 +61,9 @@ get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA,
   sql <- c()
   
   for(itab in 1:length(tables)){
+    #Use correct connection
+    if(channels[itab] == 'sole') channel <- channelSole else channel <- channelNova
+    
     #Data query
     #Need to add mesh data post 1981
     if(substr(tables[itab], 1, 3) == 'WOL'){
@@ -66,7 +77,10 @@ get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA,
       comland.yr <- data.table::as.data.table(DBI::dbGetQuery(channel, landings.qry))
       comland.yr[, MESH := 5] #Identify all as large mesh
     } else {
-      if(filterByYear[itab] > 1993){
+      if(filterByYear[itab] > 2019){
+        trip.table <- paste0('CAMS_GARFO.CAMS_CFDETT', filterByYear[itab], 'AA')
+      }
+      if(filterByYear[itab] > 1993 & filterByYear[itab] <= 2019){
         trip.table <- paste0('CFDETT',  filterByYear[itab], 'AA')
       } 
       if(filterByYear[itab] > 1981 & filterByYear[itab] <= 1993){
