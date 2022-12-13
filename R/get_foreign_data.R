@@ -41,7 +41,7 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
                                    "NAFO21B-2000-09.txt",
                                    "NAFO-21B-2010-18/NAFO-21b-2010-18.txt"),
                       startyr = c(1960,1970,1980,1990,2000,2010),
-                      endyr = c(1969,1979,1989,1999,2009,2032),
+                      endyr = c(1969,1979,1989,1999,2009,2018),
                       stringsAsFactors = FALSE)
 
 
@@ -52,8 +52,18 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
   } else {
     st <- (min(filterByYear) >= files$startyr) & (min(filterByYear) <= files$endyr)
     fin <- (max(filterByYear) >= files$startyr) & (max(filterByYear) <= files$endyr)
-    filesToReadStart <- which(as.logical(st))
-    filesToReadEnd <- which(as.logical(fin))
+
+    if (all(st == F)) {
+      filesToReadStart <- 1
+    } else {
+      filesToReadStart <- which(as.logical(st))
+    }
+
+    if (all(fin == F)) {
+      filesToReadEnd <- nrow(files)
+    } else {
+      filesToReadEnd <- which(as.logical(fin))
+    }
   }
 
   # get file, catch error for missing file
