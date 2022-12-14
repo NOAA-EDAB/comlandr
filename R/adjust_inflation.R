@@ -12,13 +12,14 @@
 #'@return comland data frame adjusted for inflation
 #'
 #'@noRd
-#'
+#'@export
+
 
 
 
 adjust_inflation <- function(comland, refYear, refMonth){
   
-  call <- c(comland$call, capture_function_call())
+  call <- c(comland$call, dbutils::capture_function_call())
   
   #Pulling data
   message("Adjusting for inflation ...")
@@ -40,7 +41,7 @@ adjust_inflation <- function(comland, refYear, refMonth){
 
   #Set yearly deflator to 0 instead of 13 to match unknown month designation
   deflate[MONTH == 13, MONTH := 0]
-  deflate.base <- deflate[YEAR == refyear & MONTH == refmonth, PPI]
+  deflate.base <- deflate[YEAR == refYear & MONTH == refMonth, PPI]
 
   comland <- merge(comland, deflate, by = c('YEAR', 'MONTH'), all.x = T)
   comland[, SPPVALUE := round((SPPVALUE * deflate.base) / PPI)]
