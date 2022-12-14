@@ -96,7 +96,7 @@ get_comland_data <- function(channelSole, channelNova, filterByYear = NA,
   #Aggregate areas
   if(aggArea) comland <- comlandr::aggregate_area(comland, userAreas, 
                                                   areaDescription, propDescription,
-                                                  useForeign)
+                                                  useForeign, channelSole)
 
   #Aggregate gears
   if(aggGear) comland <- comlandr::aggregate_gear(comland, userGears, fleetDescription)

@@ -15,7 +15,7 @@
 #'@export
 
 aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
-                           useForeign, applyPropValue = T){
+                           useForeign, channel, applyPropValue = T){
   
   #Pulling data
   message("Aggregating Areas ...")
