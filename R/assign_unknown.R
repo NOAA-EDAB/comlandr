@@ -93,6 +93,8 @@ assign_unknown <- function (comData, unkVar,
         
         #Determine proportion of known catch per area
         match[, totlivmt := sum(VARMT), by = c(strata.code[1:i])]
+          #Catch zeros that lead to NaN
+          match[totlivmt == 0, totlivmt := 1]
         match[, prop := VARMT / totlivmt]
         
         #Proportion catch from unknown areas to known areas
