@@ -61,6 +61,9 @@ assign_unknown <- function (comData, unkVar,
     known   <- known[!is.na(VAR), ]
     unknown <- comdata[ VAR %in% c(0, 999) |  is.na(VAR), ]
     
+    #Need record ID to calculate proportions correctly
+    unknown[, ID := 1:nrow(unknown)]
+    
     #set output to known records only
     comdata.out <- data.table::copy(known)
     
@@ -92,7 +95,7 @@ assign_unknown <- function (comData, unkVar,
         match <- match[!is.na(VAR.x), ]
         
         #Determine proportion of known catch per area
-        match[, totlivmt := sum(VARMT), by = c(strata.code[1:i])]
+        match[, totlivmt := sum(VARMT), by = c(strata.code[1:i], 'ID')]
           #Catch zeros that lead to NaN
           match[totlivmt == 0, totlivmt := 1]
         match[, prop := VARMT / totlivmt]
