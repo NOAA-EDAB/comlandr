@@ -18,7 +18,7 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
   message("Aggregating Gears ...")
   
   #Grab just the data
-  comdata <- copy(comData[[1]])
+  comdata <- data.table::copy(comData[[1]])
   
   call <- dbutils::capture_function_call()
   
