@@ -102,10 +102,13 @@ assign_unknown <- function (comData, unkVar,
         
         #Proportion catch from unknown areas to known areas
         match[, newlivmt := SPPLIVMT * prop]
+        match[, newvalue := SPPVALUE * prop]
         
         #Drop extra columns
-        match <- match[, c('VAR.y', 'VARMT', 'totlivmt', 'prop', 'SPPLIVMT') := NULL]
-        data.table::setnames(match, c('VAR.x', 'newlivmt'), c('VAR', 'SPPLIVMT'))
+        match <- match[, c('VAR.y', 'VARMT', 'totlivmt', 'prop', 'SPPLIVMT', 
+                           'SPPVALUE') := NULL]
+        data.table::setnames(match, c('VAR.x', 'newlivmt', 'newvalue'), 
+                             c('VAR', 'SPPLIVMT', 'SPPVALUE'))
         
         #Append new entries to output
         comdata.out <- data.table::rbindlist(list(comdata.out, match), use.names = T)
