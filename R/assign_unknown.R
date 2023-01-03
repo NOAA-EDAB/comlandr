@@ -106,7 +106,7 @@ assign_unknown <- function (comData, unkVar,
         
         #Drop extra columns
         match <- match[, c('VAR.y', 'VARMT', 'totlivmt', 'prop', 'SPPLIVMT', 
-                           'SPPVALUE') := NULL]
+                           'SPPVALUE', 'ID') := NULL]
         data.table::setnames(match, c('VAR.x', 'newlivmt', 'newvalue'), 
                              c('VAR', 'SPPLIVMT', 'SPPVALUE'))
         
