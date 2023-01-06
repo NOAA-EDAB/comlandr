@@ -56,10 +56,21 @@ assign_unknown <- function (comData, unkVar,
     strata.code <- paste0('STR', 1:length(strata))
     data.table::setnames(comdata, c(strata, unkVar[ivar]), c(strata.code, 'VAR'))
     
+    #Set unknown Var to NA
+    comdata[VAR == 0,   VAR := NA]
+    comdata[VAR == 999, VAR := NA]
+    
+    #Set all unknowns to NA
+    for(ist in 1:length(strata.code)){
+      data.table::setnames(comdata, strata.code[ist], 'ST')
+      comdata[ST == 0,   ST := NA]
+      comdata[ST == 999, ST := NA]
+      data.table::setnames(comdata, 'ST', strata.code[ist])
+    }
+    
     #Identify records with known and unknown variable
-    known   <- comdata[!VAR %in% c(0, 999), ]
-    known   <- known[!is.na(VAR), ]
-    unknown <- comdata[ VAR %in% c(0, 999) |  is.na(VAR), ]
+    known   <- comdata[!is.na(VAR), ]
+    unknown <- comdata[ is.na(VAR), ]
     
     #Need record ID to calculate proportions correctly
     unknown[, ID := 1:nrow(unknown)]
