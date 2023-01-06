@@ -89,17 +89,14 @@ assign_unknown <- function (comData, unkVar,
         #Remove from known
         known[, c(names(known)[which(names(known) %in% ext.col)]) := NULL]
         
-        #Need to only match with known variables - start with complete case
+        #Need to only match with known variables
+        #Step 1: Complete cases
         known.all <- known[complete.cases(known), ]
         known.some <- known[!complete.cases(known), ]
         
-        #Identify unknown strata with known variable
-        missing.strata <- which(is.na(known), arr.ind = T)
-        missing.strata <- names(known)[unique(missing.strata[, 2])]
-        
         #Sum landings per stratification
-        known.sum <- known[, .(VARMT = sum(SPPLIVMT)), by = c(strata.code[1:i], 
-                                                              'VAR')]
+        known.sum <- known.all[, .(VARMT = sum(SPPLIVMT)), 
+                               by = c(strata.code[1:i], 'VAR')]
         
         #Match records but keep unmatched records to carry forward
         match <- merge(known.sum, unknown, by = strata.code[1:i], all.y = T, 
@@ -115,8 +112,9 @@ assign_unknown <- function (comData, unkVar,
         
         #Determine proportion of known catch per area
         match[, totlivmt := sum(VARMT), by = c(strata.code[1:i], 'ID')]
-          #Catch zeros that lead to NaN
-          match[totlivmt == 0, totlivmt := 1]
+        #Catch zeros that lead to NaN
+        match[totlivmt == 0, totlivmt := 1]
+        
         match[, prop := VARMT / totlivmt]
         
         #Proportion catch from unknown areas to known areas
@@ -134,16 +132,21 @@ assign_unknown <- function (comData, unkVar,
         cat(paste('Unknown records remaining', nrow(unknown), '\n'))
       }
     }
+    #Append any remaining unknown records
+    comdata.out <- data.table::rbindlist(list(comdata.out, unknown), use.names = T)
+    
     #Revert names for subsequent runs and the output
-    data.table::setnames(comdata, c(strata.code, 'VAR'), c(strata, unkVar[ivar]))
     data.table::setnames(comdata.out, c(strata.code, 'VAR'), c(strata, unkVar[ivar]))
+    
+    #Update comdata set for next variable to solve
+    comdata <- comdata.out
   }
   
   #Drop QY and HY
-  comdata.out[, c('QY', 'HY') := NULL]
+  comdata[, c('QY', 'HY') := NULL]
   
   #Add changes back into comdata
-  comData[[1]] <- comdata.out[]
+  comData[[1]] <- comdata[]
   
   return(comData[])
 }
