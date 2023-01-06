@@ -89,6 +89,14 @@ assign_unknown <- function (comData, unkVar,
         #Remove from known
         known[, c(names(known)[which(names(known) %in% ext.col)]) := NULL]
         
+        #Need to only match with known variables - start with complete case
+        known.all <- known[complete.cases(known), ]
+        known.some <- known[!complete.cases(known), ]
+        
+        #Identify unknown strata with known variable
+        missing.strata <- which(is.na(known), arr.ind = T)
+        missing.strata <- names(known)[unique(missing.strata[, 2])]
+        
         #Sum landings per stratification
         known.sum <- known[, .(VARMT = sum(SPPLIVMT)), by = c(strata.code[1:i], 
                                                               'VAR')]
