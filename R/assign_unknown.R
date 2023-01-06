@@ -133,7 +133,8 @@ assign_unknown <- function (comData, unkVar,
       }
     }
     #Append any remaining unknown records
-    comdata.out <- data.table::rbindlist(list(comdata.out, unknown), use.names = T)
+    comdata.out <- data.table::rbindlist(list(comdata.out, unknown[, ID := NULL]), 
+                                         use.names = T)
     
     #Revert names for subsequent runs and the output
     data.table::setnames(comdata.out, c(strata.code, 'VAR'), c(strata, unkVar[ivar]))
