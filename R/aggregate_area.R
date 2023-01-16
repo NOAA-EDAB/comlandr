@@ -34,6 +34,11 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     #Pull NAFO divisions
     NAFOAreas <- data.table::as.data.table(comlandr::get_areas(channel)$data)
     NAFOAreas <- unique(NAFOAreas[, c('AREA', 'NAFDVCD')])
+    #Missing NAFO Divcodes 54 (5Z) and 56 (5ZU) - setting both equal to 5ZE (52)
+    missingNAFO <- NAFOAreas[NAFDVCD == 52, ]
+    missing54 <- data.table::copy(missingNAFO)[, NAFDVCD := 54]
+    missing56 <- data.table::copy(missingNAFO)[, NAFDVCD := 56]
+    NAFOAreas <- data.table::rbindlist(list(NAFOAreas, missing54, missing56))
     NAFOAreas <- NAFOAreas[, .(AREA = as.integer(AREA), 
                                NAFDVCD = as.integer(NAFDVCD))]
     areasNAFO <- merge(unique(areas[, c('AREA')]), NAFOAreas, by = 'AREA', all.x = T)
@@ -61,6 +66,8 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     areas.weighted <- merge(areas, areasNAFO, by = 'AREA', all.x = T)
     div.prop <- areas.weighted[, .(prop = sum(prop * weight, na.rm = T)), 
                                by = c('NESPP3', 'NAFDVCD', 'newarea')]
+    #Fix zeros
+    div.prop[prop == 0, prop := 1]
     
     #Get in the right format and merge
     data.table::setnames(div.prop, 'NAFDVCD', 'AREA')
