@@ -34,7 +34,6 @@ assign_unknown <- function (comData, unkVar,
   sql <- comData$sql
   comdata <- data.table::copy(comData[[1]])
   
-  comdata <- copy(comData$comland[NESPP3 == 789,]) #Testing - Delete when done
   #Assign Quarter/Half Years
   comdata[MONTH == 0,       QY := 0]
   comdata[MONTH %in% 1:3,   QY := 1]
