@@ -63,7 +63,7 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     areasNAFO[, c('area', 'divarea') := NULL]
     
     #Calculate weighted proportions from Stat areas
-    areas.weighted <- merge(areas, areasNAFO, by = 'AREA', all.x = T)
+    areas.weighted <- merge(areas, areasNAFO, by = 'AREA', all.x = T, allow.cartesian = T)
     div.prop <- areas.weighted[, .(prop = sum(prop * weight, na.rm = T)), 
                                by = c('NESPP3', 'NAFDVCD', 'newarea')]
     #Fix zeros
