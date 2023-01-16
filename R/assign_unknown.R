@@ -156,8 +156,154 @@ assign_unknown <- function (comData, unkVar,
           'variables: Unknown records remaining', nrow(unknown), '\n'))
           }
         }
+      ##Still no match - use 3 or 5 year window then drop year
+      if(nrow(unknown) > 0){
+        #Remove extra columns from known
+        known.all <- copy(known)
+        known.all <- known.all[, list(YEAR, NESPP3, VAR, SPPLIVMT)]
+        
+        #3 year window
+        years <- unique(unknown[, YEAR])
+        known.sum <- c()
+        for(iyr in 1:length(years)){
+          known.3 <- known.all[YEAR %in% (years[iyr] - 1):(years[iyr] + 1), ]
+          
+          #Sum landings per stratification
+          sum.3 <- known.3[, .(VARMT = sum(SPPLIVMT)), by = c('NESPP3', 'VAR')]
+          sum.3[, YEAR := years[iyr]]
+          known.sum <- data.table::rbindlist(list(known.sum, sum.3))
+          }
+          
+          #Match unknown records for the year
+          match <- merge(known.sum, unknown, by = c('YEAR', 'NESPP3'), all.y = T, 
+                         allow.cartesian = T)
+          
+          #Remove unmatched for next round
+          unknown <- match[is.na(VAR.x), ]
+          unknown[, c('VAR.x', 'VARMT') := NULL]
+          data.table::setnames(unknown, 'VAR.y', 'VAR')
+          
+          #Remove unmatched records from merge
+          match <- match[!is.na(VAR.x), ]
+          
+          #Determine proportion of known catch per variable
+          match[, totlivmt := sum(VARMT), by = c(stra.combo, 'ID')]
+          #Catch zeros that lead to NaN
+          match[totlivmt == 0, totlivmt := 1]
+          
+          match[, prop := VARMT / totlivmt]
+          
+          #Proportion catch from unknown variable to known variable
+          match[, newlivmt := SPPLIVMT * prop]
+          match[, newvalue := SPPVALUE * prop]
+          
+          #Drop extra columns
+          match <- match[, c('VAR.y', 'VARMT', 'totlivmt', 'prop', 'SPPLIVMT', 
+                             'SPPVALUE', 'ID') := NULL]
+          data.table::setnames(match, c('VAR.x', 'newlivmt', 'newvalue'), 
+                               c('VAR', 'SPPLIVMT', 'SPPVALUE'))
+          
+          #Append new entries to output
+          comdata.out <- data.table::rbindlist(list(comdata.out, match), 
+                                               use.names = T)
+
+          cat(paste('After using 3 year window: Unknown records remaining', nrow(unknown), '\n'))
+          
+          if(nrow(unknown) > 0){
+            #5 Year window
+            years <- unique(unknown[, YEAR])
+            known.sum <- c()
+            for(iyr in 1:length(years)){
+              known.5 <- known.all[YEAR %in% (years[iyr] - 2):(years[iyr] + 2), ]
+            
+              #Sum landings per stratification
+              sum.5 <- known.5[, .(VARMT = sum(SPPLIVMT)), by = c('NESPP3', 'VAR')]
+              sum.5[, YEAR := years[iyr]]
+              known.sum <- data.table::rbindlist(list(known.sum, sum.5))
+              }
+            
+            #Match unknown records for the year
+            match <- merge(known.sum, unknown, by = c('YEAR', 'NESPP3'), all.y = T, 
+                           allow.cartesian = T)
+          
+            #Remove unmatched for next round
+            unknown <- match[is.na(VAR.x), ]
+            unknown[, c('VAR.x', 'VARMT') := NULL]
+            data.table::setnames(unknown, 'VAR.y', 'VAR')
+          
+            #Remove unmatched records from merge
+            match <- match[!is.na(VAR.x), ]
+          
+            #Determine proportion of known catch per variable
+            match[, totlivmt := sum(VARMT), by = c(stra.combo, 'ID')]
+            #Catch zeros that lead to NaN
+            match[totlivmt == 0, totlivmt := 1]
+          
+            match[, prop := VARMT / totlivmt]
+          
+            #Proportion catch from unknown variable to known variable
+            match[, newlivmt := SPPLIVMT * prop]
+            match[, newvalue := SPPVALUE * prop]
+          
+            #Drop extra columns
+            match <- match[, c('VAR.y', 'VARMT', 'totlivmt', 'prop', 'SPPLIVMT', 
+                               'SPPVALUE', 'ID') := NULL]
+            data.table::setnames(match, c('VAR.x', 'newlivmt', 'newvalue'), 
+                                 c('VAR', 'SPPLIVMT', 'SPPVALUE'))
+          
+            #Append new entries to output
+            comdata.out <- data.table::rbindlist(list(comdata.out, match), 
+                                                 use.names = T)
+            cat(paste('After using 5 year window: Unknown records remaining', 
+                      nrow(unknown), '\n'))
+          }
+        }
+      ##Still no match - match to species
+      if(nrow(unknown) > 0){
+        #Remove extra columns from known
+        known.all <- copy(known)
+        known.all <- known.all[, list(NESPP3, VAR, SPPLIVMT)]
+          
+        #Sum landings per stratification
+        known.sum <- known.all[, .(VARMT = sum(SPPLIVMT)), by = c('NESPP3', 'VAR')]
+        
+        #Match unknown records for the year
+        match <- merge(known.sum, unknown, by = 'NESPP3', all.y = T, 
+                       allow.cartesian = T)
+        
+        #Remove unmatched for next round
+        unknown <- match[is.na(VAR.x), ]
+        unknown[, c('VAR.x', 'VARMT') := NULL]
+        data.table::setnames(unknown, 'VAR.y', 'VAR')
+        
+        #Remove unmatched records from merge
+        match <- match[!is.na(VAR.x), ]
+        
+        #Determine proportion of known catch per variable
+        match[, totlivmt := sum(VARMT), by = c(stra.combo, 'ID')]
+        #Catch zeros that lead to NaN
+        match[totlivmt == 0, totlivmt := 1]
+        
+        match[, prop := VARMT / totlivmt]
+        
+        #Proportion catch from unknown variable to known variable
+        match[, newlivmt := SPPLIVMT * prop]
+        match[, newvalue := SPPVALUE * prop]
+        
+        #Drop extra columns
+        match <- match[, c('VAR.y', 'VARMT', 'totlivmt', 'prop', 'SPPLIVMT', 
+                           'SPPVALUE', 'ID') := NULL]
+        data.table::setnames(match, c('VAR.x', 'newlivmt', 'newvalue'), 
+                             c('VAR', 'SPPLIVMT', 'SPPVALUE'))
+        
+        #Append new entries to output
+        comdata.out <- data.table::rbindlist(list(comdata.out, match), 
+                                             use.names = T)
+        
+        cat(paste('After using only species: Unknown records remaining', 
+                  nrow(unknown), '\n'))
       }
-    
+    }
 
     #Append any remaining unknown records
     comdata.out <- data.table::rbindlist(list(comdata.out, unknown[, ID := NULL]), 
