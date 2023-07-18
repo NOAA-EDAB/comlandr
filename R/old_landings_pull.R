@@ -9,11 +9,11 @@ library(data.table); library(survdat); library(comlandr); library(here)
 channelSole <- dbutils::connect_to_database(server = "sole", uid = "slucey")
 channelNova <- dbutils::connect_to_database(server = "NEFSC_USERS", uid = "slucey")
 
-filterByYear <- 1964:2021
+filterByYear <- 1964:2022
 
 comland <- get_comland_raw_data(channelSole, channelNova, filterByYear = filterByYear)
-#save(comland, file = here::here('data_raw', 'comland_raw.rda'))
-load(here::here('data_raw', 'comland_raw.rda'))
+save(comland, file = here::here('data-raw', 'comland_raw_test.rda'))
+#load(here::here('data-raw', 'comland_raw_test.rda'))
 
 #Pull herring data from the state of Maine
 comland <- comlandr::get_herring_data(channelSole, comland, filterByYear, 
@@ -43,6 +43,9 @@ comland <- comlandr::disaggregate_skates_hakes(comland, channelSole, filterByYea
 #Impute unknowns
 #comland <- comlandr::assign_unknown(comland, unkVar = c('MONTH', 'Fleet', 'AREA'), 
 #                                    knStrata = c('AREA', 'Fleet', 'HY', 'QY', 'MONTH'))
+
+#Stage 1 - No foreign/unknown fixes
+save(comland, file = here::here('data-raw', 'comland_s1_test.rda'))
 
 #unknowns----
 comdata <- copy(comland$comland)
@@ -159,6 +162,9 @@ setkey(comdata,
 comland.agg <- comdata[, list(sum(SPPLIVMT), sum(SPPVALUE)), by = key(comdata)]
 
 setnames(comland.agg, c('V1', 'V2'), c('SPPLIVMT', 'SPPVALUE'))
+
+#Stage 2 - aggregated data
+save(comland.agg, file = here::here('data-raw', 'comland_s2_test.rda'))
 
 #3 - Use proportions of known catch to assign unknown catch
 #3.A QY/HY------------------------------------------------------------------------------
@@ -731,6 +737,9 @@ comland.agg <- comland.agg[, list(sum(SPPLIVMT), sum(SPPVALUE)),
                            by = key(comland.agg)]
 setnames(comland.agg, c('V1', 'V2'), c('SPPLIVMT', 'SPPVALUE'))
 
+#Stage 3 - Solved QY/HY
+save(comland.agg, file = here::here('data-raw', 'comland_s3_test.rda'))
+
 #3.B SIZE------------------------------------------------------------------------------
 unk.size <- comland.agg[SIZE == 'unknown', ]
 k.size   <- comland.agg[SIZE != 'unknown', ]
@@ -1094,6 +1103,9 @@ comland.agg <- comland.agg[, list(sum(SPPLIVMT), sum(SPPVALUE)),
                            by = key(comland.agg)]
 setnames(comland.agg, c('V1', 'V2'), c('SPPLIVMT', 'SPPVALUE'))
 
+#Stage 4 - solved size
+save(comland.agg, file = here::here('data-raw', 'comland_s4_test.rda'))
+
 #3.C GEAR------------------------------------------------------------------------------
 unk.gear <- comland.agg[GEAR == 'unknown', ]
 k.gear   <- comland.agg[GEAR != 'unknown', ]
@@ -1296,6 +1308,9 @@ comland.agg <- comland.agg[, list(sum(SPPLIVMT), sum(SPPVALUE)),
                            by = key(comland.agg)]
 setnames(comland.agg, c('V1', 'V2'), c('SPPLIVMT', 'SPPVALUE'))
 
+#Stage 5 - solved gear
+save(comland.agg, file = here::here('data-raw', 'comland_s5_test.rda'))
+
 #3.D AREA------------------------------------------------------------------------------
 unk.area <- comland.agg[AREA == 0, ]
 k.area   <- comland.agg[AREA != 0, ]
@@ -1482,6 +1497,9 @@ setkey(comland.agg,
 comland.agg <- comland.agg[, list(sum(SPPLIVMT), sum(SPPVALUE)), 
                            by = key(comland.agg)]
 setnames(comland.agg, c('V1', 'V2'), c('SPPLIVMT', 'SPPVALUE'))  
+
+#Stage 6 - solved area
+save(comland.agg, file = here::here('data-raw', 'comland_s6_test.rda'))
 
 #Agg old way----
 #Assign EPU based on statarea
