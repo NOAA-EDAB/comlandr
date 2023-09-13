@@ -132,10 +132,17 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
   #fix codes
   nafoland[NAFOGEAR == 8,  NEGEAR := 50L]
   nafoland[NAFOGEAR == 9,  NEGEAR := 370L]
+  nafoland[NAFOGEAR == 11, NEGEAR := 50L]
+  nafoland[NAFOGEAR == 12, NEGEAR := 50L]
+  nafoland[NAFOGEAR == 14, NEGEAR := 370L]
+  nafoland[NAFOGEAR == 15, NEGEAR := 370L]
+  nafoland[NAFOGEAR == 18, NEGEAR := 350L]
   nafoland[NAFOGEAR == 19, NEGEAR := 58L]
   nafoland[NAFOGEAR == 49, NEGEAR := 60L]
+  nafoland[NAFOGEAR == 52, NEGEAR := 10L]
   nafoland[NAFOGEAR == 56, NEGEAR := 21L]
-
+  nafoland[NAFOGEAR == 58, NEGEAR := 10L]
+  
   #Tonnage
   nafoland[TONCL1 == 7, TONCL1 := 6L]
 
