@@ -34,7 +34,7 @@
 calc_discards <- function(comland, dk, areaDescription, fleetDescription) {
 
   #Grab landings data
-  comdata <- copy(comland[[1]])
+  comdata <- data.table::copy(comland[[1]])
   
   #calculate total landings
   totland <- comdata[, .(SPPLIVMT = sum(SPPLIVMT, na.rm = T)), 
