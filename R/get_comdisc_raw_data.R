@@ -117,11 +117,11 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   convert <- data.table::as.data.table(DBI::dbGetQuery(channel, convert.qry))
   sql <- c(sql, convert.qry)
 
-  setnames(convert,
+  data.table::setnames(convert,
            c('NESPP4_OBS', 'CATDISP_CODE', 'DRFLAG_CODE'),
            c('NESPP4',     'CATDISP',      'DRFLAG'))
 
-  setkey(convert,
+  data.table::setkey(convert,
          NESPP4,
          CATDISP,
          DRFLAG)
@@ -145,6 +145,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   prflag[is.na(PR), PR := 0]
   prflag[, c('CETACEAN', 'TURTLE', 'PINNIPED') := NULL]
 
+  # data.table::merge???
   comdisc <- merge(ob.code, prflag, by = 'NESPP4', all.x = T)
 
   #Convert to metric tons to align with commercial landings data
