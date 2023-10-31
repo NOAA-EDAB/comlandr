@@ -39,7 +39,8 @@ get_comland_data <- function(channelSole, channelNova, filterByYear = NA,
                              useHerringMaine = T, useForeign = T, refYear = NA, 
                              refMonth = NA, disagSkatesHakes = T, aggArea = F, 
                              userAreas = comlandr::mskeyAreas, 
-                             areaDescription = 'EPU', propDescription = 'MeanProp', 
+                             areaDescription = 'EPU', propDescription = 'MeanProp',
+                             applyPropLand = T, applyPropValue = T,
                              aggGear = F, userGears = comlandr::mskeyGears,
                              fleetDescription = 'Fleet', unkVar = 'AREA',
                              knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
@@ -96,7 +97,8 @@ get_comland_data <- function(channelSole, channelNova, filterByYear = NA,
   #Aggregate areas
   if(aggArea) comland <- comlandr::aggregate_area(comland, userAreas, 
                                                   areaDescription, propDescription,
-                                                  useForeign, channelSole)
+                                                  useForeign, channelSole, 
+                                                  applyPropLand, applyPropValue)
 
   #Aggregate gears
   if(aggGear) comland <- comlandr::aggregate_gear(comland, userGears, fleetDescription)
