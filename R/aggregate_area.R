@@ -15,10 +15,17 @@
 #'@export
 
 aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
-                           useForeign, channel, applyPropValue = T){
+                           useForeign, channel, applyPropLand = T, 
+                           applyPropValue = T){
   
   #Pulling data
   message("Aggregating Areas ...")
+  
+  #Add message
+  if(applyPropLand == F & applyPropValue == T){
+    message("Can not apply proportions to Value and not Landings -- setting applyPropLand to F")
+    applyPropLand <- F
+  }
   
   #Grab just the data
   comdata <- comData[[1]]
@@ -34,6 +41,11 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     #Pull NAFO divisions
     NAFOAreas <- data.table::as.data.table(comlandr::get_areas(channel)$data)
     NAFOAreas <- unique(NAFOAreas[, c('AREA', 'NAFDVCD')])
+    #Missing NAFO Divcodes 54 (5Z) and 56 (5ZU) - setting both equal to 5ZE (52)
+    missingNAFO <- NAFOAreas[NAFDVCD == 52, ]
+    missing54 <- data.table::copy(missingNAFO)[, NAFDVCD := 54]
+    missing56 <- data.table::copy(missingNAFO)[, NAFDVCD := 56]
+    NAFOAreas <- data.table::rbindlist(list(NAFOAreas, missing54, missing56))
     NAFOAreas <- NAFOAreas[, .(AREA = as.integer(AREA), 
                                NAFDVCD = as.integer(NAFDVCD))]
     areasNAFO <- merge(unique(areas[, c('AREA')]), NAFOAreas, by = 'AREA', all.x = T)
@@ -45,10 +57,11 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
                                               package="comlandr"), quiet = T)
     statarea.area <- data.table::data.table(AREA = statarea$Id,
                                             area = sf::st_area(statarea))
+    statarea.area[, area := as.numeric(area)]
     areasNAFO <- merge(areasNAFO, statarea.area, by = 'AREA', all.x = T)
     
     #Get total per division
-    areasNAFO[, divarea := sum(area), by = NAFDVCD]
+    areasNAFO[, divarea := sum(area, na.rm = T), by = NAFDVCD]
     
     #Calculate strata weight
     areasNAFO[, weight := area / divarea]
@@ -57,9 +70,11 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     areasNAFO[, c('area', 'divarea') := NULL]
     
     #Calculate weighted proportions from Stat areas
-    areas.weighted <- merge(areas, areasNAFO, by = 'AREA', all.x = T)
-    div.prop <- areas.weighted[, .(prop = sum(prop * weight)), 
+    areas.weighted <- merge(areas, areasNAFO, by = 'AREA', all.x = T, allow.cartesian = T)
+    div.prop <- areas.weighted[, .(prop = sum(prop * weight, na.rm = T)), 
                                by = c('NESPP3', 'NAFDVCD', 'newarea')]
+    #Fix zeros
+    div.prop[prop == 0, prop := 1]
     
     #Get in the right format and merge
     data.table::setnames(div.prop, 'NAFDVCD', 'AREA')
@@ -69,8 +84,14 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
   }
   
   #Merge new area descriptions to landings
-  new.area <- merge(comdata, areas, by = c('NESPP3', 'AREA'), all.x = T, allow.cartesian=TRUE)
-  
+  if(applyPropLand){
+    new.area <- merge(comdata, areas, by = c('NESPP3', 'AREA'), all.x = T, 
+                      allow.cartesian = T)
+  } else {
+    areas[, NESPP3 := NULL]
+    new.area <- merge(comdata, areas, by = 'AREA', all.x = T, allow.cartesian = T)
+  }
+    
   #If no proportion assume 100% in
   new.area[is.na(prop), prop := 1]
   

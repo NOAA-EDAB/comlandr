@@ -6,9 +6,9 @@ nespp3 <- unique(species[, NESPP3])
 
 GOM <- data.table::CJ(AREA = comlandr::EPUs$GOM$statAreas, NESPP3 = nespp3, 
                       MeanProp = 1, EPU = 'GOM')
-GB  <- data.table::CJ(AREA = comlandr::EPUs$GB$statAreas, NESPP3 = nespp3, 
+GB  <- data.table::CJ(AREA = c(comlandr::EPUs$GB$statAreas, 538), NESPP3 = nespp3, 
                       MeanProp = 1, EPU = 'GB')
-MAB <- data.table::CJ(AREA = comlandr::EPUs$MAB$statAreas, NESPP3 = nespp3, 
+MAB <- data.table::CJ(AREA = c(comlandr::EPUs$MAB$statAreas, 611),NESPP3 = nespp3, 
                       MeanProp = 1, EPU = 'MAB')
 SS  <- data.table::CJ(AREA = comlandr::EPUs$SS$statAreas, NESPP3 = nespp3, 
                       MeanProp = 1, EPU = 'SS')
