@@ -15,10 +15,17 @@
 #'@export
 
 aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
-                           useForeign, channel, applyPropValue = T){
+                           useForeign, channel, applyPropLand = T, 
+                           applyPropValue = T){
   
   #Pulling data
   message("Aggregating Areas ...")
+  
+  #Add message
+  if(applyPropLand == F & applyPropValue == T){
+    message("Can not apply proportions to Value and not Landings -- setting applyPropLand to F")
+    applyPropLand <- F
+  }
   
   #Grab just the data
   comdata <- comData[[1]]
@@ -77,9 +84,14 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
   }
   
   #Merge new area descriptions to landings
-  new.area <- merge(comdata, areas, by = c('NESPP3', 'AREA'), all.x = T, 
-                    allow.cartesian = T)
-  
+  if(applyPropLand){
+    new.area <- merge(comdata, areas, by = c('NESPP3', 'AREA'), all.x = T, 
+                      allow.cartesian = T)
+  } else {
+    areas[, NESPP3 := NULL]
+    new.area <- merge(comdata, areas, by = 'AREA', all.x = T, allow.cartesian = T)
+  }
+    
   #If no proportion assume 100% in
   new.area[is.na(prop), prop := 1]
   
