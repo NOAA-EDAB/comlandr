@@ -107,7 +107,7 @@ get_comland_raw_data <- function(channelSole, channelNova, filterByYear = NA,
                     where year in (", filteryears, ")
                     group by year, month, negear, toncl2, nespp3, nespp4, area, 
                     utilcd, mesh, market_code")
-    comland <- data.table::as.data.table(DBI::dbGetQuery(channel, landings.qry))
+    comland <- data.table::as.data.table(DBI::dbGetQuery(channelSole, landings.qry))
   
     sql <- c(sql, landings.qry)
 
