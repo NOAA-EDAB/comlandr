@@ -109,7 +109,7 @@ get_comland_raw_data <- function(channelSole, channelNova, filterByYear = NA,
                     utilcd, mesh, market_code")
     comland <- data.table::as.data.table(DBI::dbGetQuery(channelSole, landings.qry))
   
-    sql <- c(sql, landings.qry)
+    sql <- landings.qry
 
     #Identify small/large mesh fisheries
     comland[MESH <= 3, MESHCAT := 'SM']
