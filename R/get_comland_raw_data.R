@@ -121,11 +121,11 @@ get_comland_raw_data <- function(channelSole, channelNova, filterByYear = NA,
     
     # Remove fish parts so live weight is not double counted
     if(removeParts){
-      comland <- comland.yr[!NESPP4 %in% c('0119', '0123', '0125', '0127', '0812', 
-                                           '0819', '0828', '0829', '1731', '2351', 
-                                           '2690', '2699', '3472', paste0(348:359, 8),
-                                           '3868', paste0(469:471, 4), paste0(480:499, 8), 
-                                           '5018', '5039', '5261', '5265'), ]
+      comland <- comland[!NESPP4 %in% c('0119', '0123', '0125', '0127', '0812', 
+                                        '0819', '0828', '0829', '1731', '2351', 
+                                        '2690', '2699', '3472', paste0(348:359, 8),
+                                        '3868', paste0(469:471, 4), paste0(480:499, 8), 
+                                        '5018', '5039', '5261', '5265'), ]
     }
     
     # #Sum landings and value
