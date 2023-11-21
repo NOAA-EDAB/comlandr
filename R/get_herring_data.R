@@ -54,7 +54,7 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea,
                        c('AREA', 'SPPLIVMT', 'DISCMT'))
 
   #Using averages from comland to fill in categories
-  herring[, MKTCAT := 5]
+  herring[, MARKET_CODE := 'UN']
 
   herring[, TONCL2 := 30]
 
