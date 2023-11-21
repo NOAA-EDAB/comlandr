@@ -118,6 +118,7 @@ get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA,
     
     # Use landed weight instead of live weight for shellfish
     if(useLanded) {comland[NESPP3 %in% 743:800, SPPLIVLB := SPPLNDLB]}
+    comland[, SPPLNDLB := NULL]
     
     # Remove fish parts so live weight is not double counted
     if(removeParts){
