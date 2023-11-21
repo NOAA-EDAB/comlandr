@@ -34,7 +34,7 @@
 #'@export
 
 
-get_comland_data <- function(channelSole, channelNova, filterByYear = NA, 
+get_comland_data <- function(channel, filterByYear = NA, 
                              filterByArea = NA, useLanded = T, removeParts = T, 
                              useHerringMaine = T, useForeign = T, refYear = NA, 
                              refMonth = NA, disagSkatesHakes = T, aggArea = F, 
@@ -51,13 +51,13 @@ get_comland_data <- function(channelSole, channelNova, filterByYear = NA,
   call <- dbutils::capture_function_call()
 
   #Pull raw data
-  comland <- comlandr::get_comland_raw_data(channelSole, channelNova, 
+  comland <- comlandr::get_comland_raw_data(channel, 
                                             filterByYear, filterByArea, 
                                             useLanded, removeParts)
 
   #Pull herring data from the state of Maine
   if(useHerringMaine){
-    comland <- comlandr::get_herring_data(channelSole, comland,
+    comland <- comlandr::get_herring_data(channel, comland,
                                           filterByYear, filterByArea, 
                                           useForeign)
   }
@@ -66,7 +66,7 @@ get_comland_data <- function(channelSole, channelNova, filterByYear = NA,
   if(useForeign){
     #Look up NAFO divisions that contain Stat areas
     if (all(!is.na(filterByArea))) {
-      NAFOAreas <- comlandr::get_areas(channelSole)$data %>%
+      NAFOAreas <- comlandr::get_areas(channel)$data %>%
         dplyr::select(AREA,NAFDVCD) %>%
         dplyr::filter(AREA %in% filterByArea) %>%
         dplyr::pull(NAFDVCD) %>%
@@ -77,7 +77,7 @@ get_comland_data <- function(channelSole, channelNova, filterByYear = NA,
     
     #Pull data and process to look like comland data
     comland.foreign <- comlandr::get_foreign_data(filterByYear, filterByArea)
-    comland.foreign <- comlandr::process_foreign_data(channelSole, comland.foreign, 
+    comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign, 
                                                       useHerringMaine)
    
     #Combine foreign landings
@@ -91,13 +91,13 @@ get_comland_data <- function(channelSole, channelNova, filterByYear = NA,
 
   #Disaggregate skates and hakes
   if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, 
-                                                                      channelSole, 
+                                                                      channel, 
                                                             filterByYear, filterByArea)
 
   #Aggregate areas
   if(aggArea) comland <- comlandr::aggregate_area(comland, userAreas, 
                                                   areaDescription, propDescription,
-                                                  useForeign, channelSole, 
+                                                  useForeign, channel, 
                                                   applyPropLand, applyPropValue)
 
   #Aggregate gears
