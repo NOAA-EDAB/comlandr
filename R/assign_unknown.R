@@ -88,7 +88,7 @@ assign_unknown <- function (comData, unkVar,
       #combinations of strata codes
       num.combos <- data.table::setDT(list(gtools::combinations(length(strata.code), 
                                                                 inum, strata.code)))
-      combos <- rbindlist(list(combos, num.combos), fill = T)
+      combos <- data.table::rbindlist(list(combos, num.combos), fill = T)
     }
     
     
