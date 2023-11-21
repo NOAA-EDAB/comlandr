@@ -46,8 +46,8 @@ assign_unknown <- function (comData, unkVar,
   comdata[QY %in% 3:4, HY := 2]
   
   #Assign size classes
-  comdata[TONCL1 %in% 1:3, SIZE := 1] #Small
-  comdata[TONCL1 > 3,      SIZE := 2] #Large
+  #comdata[TONCL1 %in% 1:3, SIZE := 1] #Small
+  #comdata[TONCL1 > 3,      SIZE := 2] #Large
   
   for(ivar in 1:length(unkVar)){
     if(unkVar[ivar] %in% knStrata){
