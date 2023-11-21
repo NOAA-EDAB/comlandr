@@ -128,6 +128,9 @@ get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA,
                                         '5018', '5039', '5261', '5265'), ]
     }
     
+    #Remove NESPP4
+    comland[, NESPP4 := NULL]
+    
     # #Sum landings and value
     # data.table::setkey(comland.yr,
     #                    YEAR,
