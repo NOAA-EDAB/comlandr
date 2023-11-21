@@ -29,8 +29,8 @@
 #'
 #'@export
 
-get_comland_raw_data <- function(channelSole, channelNova, filterByYear = NA, 
-                                 filterByArea = NA, useLanded = T, removeParts = T){
+get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA, 
+                                 useLanded = T, removeParts = T){
   
   #If not specifying a year default to 1964 - 2019
   if(is.na(filterByYear[1])) filterByYear <- 1964:2019
@@ -107,7 +107,7 @@ get_comland_raw_data <- function(channelSole, channelNova, filterByYear = NA,
                     where year in (", filteryears, ")
                     group by year, month, negear, toncl2, nespp3, nespp4, area, 
                     utilcd, mesh, market_code")
-    comland <- data.table::as.data.table(DBI::dbGetQuery(channelSole, landings.qry))
+    comland <- data.table::as.data.table(DBI::dbGetQuery(channel, landings.qry))
   
     sql <- landings.qry
 
