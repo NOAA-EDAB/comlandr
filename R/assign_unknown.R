@@ -108,7 +108,7 @@ assign_unknown <- function (comData, unkVar,
                                                  'SPPLIVMT'))]
             
           #Remove extra columns from known
-          known.simple <- copy(known)
+          known.simple <- data.table::copy(known)
           known.simple <- known.simple[, c(names(known)[which(names(known) %in%
                                                                 ext.col)]) := NULL]
             
@@ -158,7 +158,7 @@ assign_unknown <- function (comData, unkVar,
       ##Still no match - use 3 or 5 year window then drop year
       if(nrow(unknown) > 0){
         #Remove extra columns from known
-        known.all <- copy(known)
+        known.all <- data.table::copy(known)
         known.all <- known.all[, list(YEAR, NESPP3, VAR, SPPLIVMT)]
         
         #3 year window
@@ -260,7 +260,7 @@ assign_unknown <- function (comData, unkVar,
       ##Still no match - match to species
       if(nrow(unknown) > 0){
         #Remove extra columns from known
-        known.all <- copy(known)
+        known.all <- data.table::copy(known)
         known.all <- known.all[, list(NESPP3, VAR, SPPLIVMT)]
           
         #Sum landings per stratification
