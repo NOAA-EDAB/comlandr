@@ -10,6 +10,8 @@ aggregate_area(
   areaDescription,
   propDescription,
   useForeign,
+  channel,
+  applyPropLand = T,
   applyPropValue = T
 )
 }

@@ -20,8 +20,10 @@ get_comland_data(
   userAreas = comlandr::mskeyAreas,
   areaDescription = "EPU",
   propDescription = "MeanProp",
+  applyPropLand = T,
+  applyPropValue = T,
   aggGear = F,
-  userGears = comlandr::mykeyGears,
+  userGears = comlandr::mskeyGears,
   fleetDescription = "Fleet",
   unkVar = "AREA",
   knStrata = c("NESPP3", "YEAR", "HY", "QY", "MONTH", "NEGEAR", "TONCL1", "AREA")
