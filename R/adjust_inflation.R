@@ -28,10 +28,11 @@ adjust_inflation <- function(comland, refYear, refMonth){
   sql <- comland$sql
   comland <- comland$comland
   
-  temp <- tempfile()
-  download.file("http://download.bls.gov/pub/time.series/wp/wp.data.3.ProcessedFoods", temp)
-  inflate <- data.table::as.data.table(read.delim(temp))
-  unlink(temp)
+  #This isn't working right now - using downloaded file
+  # temp <- tempfile()
+  # download.file("http://download.bls.gov/pub/time.series/wp/wp.data.3.ProcessedFoods", temp)
+  inflate <- data.table::as.data.table(read.delim(here::here('data-raw', 'wp.data.3.ProcessedFoods')))
+  #unlink(temp)
 
   inflate[, series_id := gsub(" ", "", inflate[, series_id])]
   deflate <- inflate[series_id == "WPU0223", ]
