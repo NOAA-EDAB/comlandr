@@ -7,7 +7,7 @@
 assign_unknown(
   comData,
   unkVar,
-  knStrata = c("NESPP3", "YEAR", "HY", "QY", "MONTH", "NEGEAR", "TONCL1", "AREA")
+  knStrata = c("HY", "QY", "MONTH", "NEGEAR", "TONCL1", "AREA")
 )
 }
 \arguments{
