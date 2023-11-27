@@ -34,11 +34,11 @@
 #'@export
 
 
-get_comland_data <- function(channel, filterByYear = NA, 
-                             filterByArea = NA, useLanded = T, removeParts = T, 
-                             useHerringMaine = T, useForeign = T, refYear = NA, 
-                             refMonth = NA, disagSkatesHakes = T, aggArea = F, 
-                             userAreas = comlandr::mskeyAreas, 
+get_comland_data <- function(channel, filterByYear = NA,
+                             filterByArea = NA, useLanded = T, removeParts = T,
+                             useHerringMaine = T, useForeign = T, refYear = NA,
+                             refMonth = NA, disagSkatesHakes = T, aggArea = F,
+                             userAreas = comlandr::mskeyAreas,
                              areaDescription = 'EPU', propDescription = 'MeanProp',
                              applyPropLand = T, applyPropValue = T,
                              aggGear = F, userGears = comlandr::mskeyGears,
@@ -46,19 +46,19 @@ get_comland_data <- function(channel, filterByYear = NA,
                              knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
                                           'NEGEAR', 'TONCL1', 'AREA')) {
 
-  
+
 
   call <- dbutils::capture_function_call()
 
   #Pull raw data
-  comland <- comlandr::get_comland_raw_data(channel, 
-                                            filterByYear, filterByArea, 
+  comland <- comlandr::get_comland_raw_data(channel,
+                                            filterByYear, filterByArea,
                                             useLanded, removeParts)
 
   #Pull herring data from the state of Maine
   if(useHerringMaine){
     comland <- comlandr::get_herring_data(channel, comland,
-                                          filterByYear, filterByArea, 
+                                          filterByYear, filterByArea,
                                           useForeign)
   }
 
@@ -74,35 +74,35 @@ get_comland_data <- function(channel, filterByYear = NA,
         as.integer()
       filterByArea <- c(filterByArea, NAFOAreas)
     }
-    
+
     #Pull data and process to look like comland data
     comland.foreign <- comlandr::get_foreign_data(filterByYear, filterByArea)
-    comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign, 
+    comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign,
                                                       useHerringMaine)
-   
+
     #Combine foreign landings
-    comland$comland <- data.table::rbindlist(list(comland$comland, comland.foreign), 
+    comland$comland <- data.table::rbindlist(list(comland$comland, comland.foreign),
                                              use.names = T)
-  } 
-  
-  
+  }
+
+
   #Apply correction for inflation
   if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
 
   #Disaggregate skates and hakes
-  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland, 
-                                                                      channel, 
+  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland,
+                                                                      channel,
                                                             filterByYear, filterByArea)
 
   #Aggregate areas
-  if(aggArea) comland <- comlandr::aggregate_area(comland, userAreas, 
+  if(aggArea) comland <- comlandr::aggregate_area(comland, userAreas,
                                                   areaDescription, propDescription,
-                                                  useForeign, channel, 
+                                                  useForeign, channel,
                                                   applyPropLand, applyPropValue)
 
   #Aggregate gears
   if(aggGear) comland <- comlandr::aggregate_gear(comland, userGears, fleetDescription)
-  
+
   #Impute unknown catch variables
   if(!is.null(unkVar)) comland <- comlandr::assign_unknown(comland, unkVar, knStrata)
 
