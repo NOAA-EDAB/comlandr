@@ -4,22 +4,40 @@
 #'
 #'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
 #' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
-#'@param endyear Numeric Scalar. Final year of query.
-#'@param landed Character String. Use landed weight ("y" - meatwt) for scallops and clams instead of live weight ("n" - livewt).
-#'@param out.dir path to directory where final output will be saved
+#'@param filterByYear numeric vector
+#'@param filterByArea numeric vector
+#'@param useLanded boolean
+#'@param removeParts boolean
+#'@param useHerringMaine boolean
+#'@param useForeign boolean
+#'@param refYear numeric
+#'@param refMonth numeric
+#'@param disaggSkatesHakes boolean
+#'@param aggArea boolean
+#'@param userAreas data frame
+#'@param areaDescription character string
+#'@param propDescription character string
+#'@param applyPropLand boolean
+#'@param applyPropValue boolean
+#'@param aggGear boolean
+#'@param userGears data frame
+#'@param fleetDescription character string
+#'@param unkVar character vector
+#'@param knStrata character vector
 #'
-#'
-#'@return Data frame (data.table) (n x 10)
+#'@return Data frame (data.table) (n x 12)
 #'Each row of the data.table represents a species record for a given tow/trip
 #'
 #'\item{YEAR}{Year of trip/tow}
 #'\item{MONTH}{Month of trip/tow}
 #'\item{NEGEAR}{Fishing gear used on trip/tow}
-#'\item{TONCL1}{Tonnage class of the fishing vessel}
+#'\item{TONCL2}{Tonnage class of the fishing vessel (2 digit value)}
 #'\item{NESPP3}{Species code (3 charachters)}
-#'\item{NESPP4}{Species code and market code (4 characters)}
-#'\item{AREA}{Statistical area in which species was reportly caught}
+#'\item{MARKET_CODE}{market code (2 characters)}
+#'\item{MESHCAT}{Code to describe the mesh size for a trawl vessel}
+#'\item{AREA/EPU}{Statistical area/ Ecological Production Unit in which species was reportly caught}
 #'\item{UTILCD}{Utilization code}
+#'\item{US}{Landing from the USA vessels or foreign vessels}
 #'\item{SPPLIVLB}{live weight (landed = "n") or landed weight (landed="y") in lbs}
 #'\item{SPPVALUE}{The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.}
 #'
@@ -42,9 +60,9 @@ get_comland_data <- function(channel, filterByYear = NA,
                              areaDescription = 'EPU', propDescription = 'MeanProp',
                              applyPropLand = T, applyPropValue = T,
                              aggGear = F, userGears = comlandr::mskeyGears,
-                             fleetDescription = 'Fleet', unkVar = 'AREA',
-                             knStrata = c('NESPP3', 'YEAR', 'HY', 'QY', 'MONTH',
-                                          'NEGEAR', 'TONCL1', 'AREA')) {
+                             fleetDescription = 'Fleet',
+                             unkVar = c('MONTH','NEGEAR','AREA'),
+                             knStrata = c('HY', 'QY','MONTH','NEGEAR', 'TONCL2', 'AREA')) {
 
 
 
