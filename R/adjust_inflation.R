@@ -31,16 +31,17 @@ adjust_inflation <- function(comland, refYear, refMonth){
   #This isn't working right now - using downloaded file
   # temp <- tempfile()
   # download.file("http://download.bls.gov/pub/time.series/wp/wp.data.3.ProcessedFoods", temp)
-  inflate <- data.table::as.data.table(read.delim(here::here('data-raw', 'wp.data.3.ProcessedFoods')))
+  #inflate <- data.table::as.data.table(read.delim(comlandr::wp.data.3.ProcessedFoods))
   #unlink(temp)
 
-  inflate[, series_id := gsub(" ", "", inflate[, series_id])]
-  deflate <- inflate[series_id == "WPU0223", ]
-  deflate[, MONTH := as.numeric(substr(period, 2, 3))]
-  data.table::setnames(deflate, c('year', 'value'), c('YEAR', 'PPI'))
-  deflate <- deflate[, list(YEAR, MONTH, PPI)]
-
+  # inflate[, series_id := gsub(" ", "", inflate[, series_id])]
+  # deflate <- inflate[series_id == "WPU0223", ]
+  # deflate[, MONTH := as.numeric(substr(period, 2, 3))]
+  # data.table::setnames(deflate, c('year', 'value'), c('YEAR', 'PPI'))
+  # deflate <- deflate[, list(YEAR, MONTH, PPI)]
+  
   #Set yearly deflator to 0 instead of 13 to match unknown month designation
+  deflate <- comlandr::deflate
   deflate[MONTH == 13, MONTH := 0]
   deflate.base <- deflate[YEAR == refYear & MONTH == refMonth, PPI]
 
