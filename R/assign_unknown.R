@@ -46,8 +46,8 @@ assign_unknown <- function (comData, unkVar,
   comdata[QY %in% 3:4, HY := 2]
   
   #Assign size classes
-  comdata[TONCL1 %in% 1:3, SIZE := 1] #Small
-  comdata[TONCL1 > 3,      SIZE := 2] #Large
+  #comdata[TONCL1 %in% 1:3, SIZE := 1] #Small
+  #comdata[TONCL1 > 3,      SIZE := 2] #Large
   
   for(ivar in 1:length(unkVar)){
     if(unkVar[ivar] %in% knStrata){
@@ -88,7 +88,7 @@ assign_unknown <- function (comData, unkVar,
       #combinations of strata codes
       num.combos <- data.table::setDT(list(gtools::combinations(length(strata.code), 
                                                                 inum, strata.code)))
-      combos <- rbindlist(list(combos, num.combos), fill = T)
+      combos <- data.table::rbindlist(list(combos, num.combos), fill = T)
     }
     
     
@@ -108,7 +108,7 @@ assign_unknown <- function (comData, unkVar,
                                                  'SPPLIVMT'))]
             
           #Remove extra columns from known
-          known.simple <- copy(known)
+          known.simple <- data.table::copy(known)
           known.simple <- known.simple[, c(names(known)[which(names(known) %in%
                                                                 ext.col)]) := NULL]
             
@@ -158,7 +158,7 @@ assign_unknown <- function (comData, unkVar,
       ##Still no match - use 3 or 5 year window then drop year
       if(nrow(unknown) > 0){
         #Remove extra columns from known
-        known.all <- copy(known)
+        known.all <- data.table::copy(known)
         known.all <- known.all[, list(YEAR, NESPP3, VAR, SPPLIVMT)]
         
         #3 year window
@@ -260,7 +260,7 @@ assign_unknown <- function (comData, unkVar,
       ##Still no match - match to species
       if(nrow(unknown) > 0){
         #Remove extra columns from known
-        known.all <- copy(known)
+        known.all <- data.table::copy(known)
         known.all <- known.all[, list(NESPP3, VAR, SPPLIVMT)]
           
         #Sum landings per stratification

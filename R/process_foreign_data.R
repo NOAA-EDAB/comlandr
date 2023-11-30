@@ -22,14 +22,14 @@
 #'
 #'@export
 
-process_foreign_data <- function(channel, nafoland, useHerringMaine){
+process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMaine = T){
 
   ## All code copied directly from nafo_comland
   nafoland <- nafoland[Divcode %in% c(47, 51:56, 61:63) & Code > 3, ]
-  
+
   # Need to revisit to make more flexible if get_foreign_data sets
   # aggregateCountry = F
-  
+
   # nafoland <- nafoland[, Country :=NULL]
 
   nafoland <- nafoland[SPPLIVMT != 0,]
@@ -43,7 +43,7 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
   # nafoland[is.na(EPU),                EPU := 'OTHER']
 
   # nafoland[, Divcode := NULL]
-  
+
   ##Fix missing Scotian Shelf data from 21B
   SS.nafo <- data.table::as.data.table(read.csv(system.file("extdata","SS_NAFO_21A.csv",package="comlandr"), skip = 8))
 
@@ -84,7 +84,7 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
   spp <- data.table::as.data.table(DBI::dbGetQuery(channel, "select NAFOSPP, NESPP3 from CFSPP"))
   spp$NAFOSPP <- as.integer(spp$NAFOSPP)
   spp$NESPP3 <- as.integer(spp$NESPP3)
-  
+
   #Fix missing NAFO codes
   missing.spp <- data.table::data.table(NAFOSPP = c(110, 141, 189, 480, 484, 487, 488, 489),
                                         NESPP3  = c(240, 509, 512, 366, 368, 367, 370, 369))
@@ -116,6 +116,9 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
   #remove species without a match
   nafoland <- nafoland[!is.na(NESPP3), ]
 
+  #Convert scallops to meat weight
+  if(useLanded) nafoland[NESPP3 == 800, SPPLIVMT := SPPLIVMT / 8.33]
+  
   #Remove herring catch - if pulling using comlandr::get_herring_data()
   if(useHerringMaine) nafoland <- nafoland[NESPP3 != 168, ]
 
@@ -142,14 +145,14 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
   nafoland[NAFOGEAR == 52, NEGEAR := 10L]
   nafoland[NAFOGEAR == 56, NEGEAR := 21L]
   nafoland[NAFOGEAR == 58, NEGEAR := 10L]
-  
+
   #Tonnage
   nafoland[TONCL1 == 7, TONCL1 := 6L]
 
   #Drop NAFO codes
   nafoland[, c('NAFOGEAR', 'NAFOSPP') := NULL]
 
-  
+
   #aggregate nafo landings
   #2 - aggregate by quarter year, half year, major gear, and small/large TC
   #This isn't necessary in this function any more
@@ -171,22 +174,26 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
   # nafoland[NEGEAR == 99,          GEAR := 'unknown']
   # nafoland[is.na(GEAR),           GEAR := 'other']
   # nafoland[, GEAR := as.factor(GEAR)]
-  # 
+  #
   # nafoland[TONCL1 %in% 1:3, SIZE := 'small']
   # nafoland[TONCL1 > 3,      SIZE := 'large']
   # nafoland[TONCL1 == 0,     SIZE := 'unknown']
   # nafoland[, SIZE := as.factor(SIZE)]
 
-  nafoland.agg <- nafoland[, .(SPPLIVMT = sum(SPPLIVMT)), 
-                           by = c('NESPP3', 'YEAR', 'MONTH', 'NEGEAR', 'TONCL1',
+  # TONCL1 no longer used. TONCL2 used instead.
+  # Make 2 digits, add a zero
+  nafoland[,TONCL2 := as.numeric(paste0(TONCL1,"0"))]
+
+  nafoland.agg <- nafoland[, .(SPPLIVMT = sum(SPPLIVMT)),
+                           by = c('YEAR', 'MONTH', 'NEGEAR', 'TONCL2','NESPP3',
                                   'AREA')]
 
   #Create dummy variable for some columns in US landings
   nafoland.agg[, SPPVALUE := 0]
   nafoland.agg[, UTILCD := 0]
   nafoland.agg[, MESHCAT := NA]
-  nafoland.agg[, MKTCAT := 0]
-  
+  nafoland.agg[, MARKET_CODE := NA]
+
   #Add Nationality Flag
   nafoland.agg[, US := F]
 
