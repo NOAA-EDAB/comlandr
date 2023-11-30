@@ -117,7 +117,7 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
   nafoland <- nafoland[!is.na(NESPP3), ]
 
   #Convert scallops to meat weight
-  if(useLanded) nafoland[NESPP3 == 800, SPPLIVMT := SPPLIVMT / 8.33], ]
+  if(useLanded) nafoland[NESPP3 == 800, SPPLIVMT := SPPLIVMT / 8.33]
   
   #Remove herring catch - if pulling using comlandr::get_herring_data()
   if(useHerringMaine) nafoland <- nafoland[NESPP3 != 168, ]
