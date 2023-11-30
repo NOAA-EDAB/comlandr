@@ -96,7 +96,7 @@ get_comland_data <- function(channel, filterByYear = NA,
     #Pull data and process to look like comland data
     comland.foreign <- comlandr::get_foreign_data(filterByYear, filterByArea)
     comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign,
-                                                      useHerringMaine)
+                                                      useLanded, useHerringMaine)
 
     #Combine foreign landings
     comland$comland <- data.table::rbindlist(list(comland$comland, comland.foreign),

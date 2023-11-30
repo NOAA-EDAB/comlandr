@@ -22,7 +22,7 @@
 #'
 #'@export
 
-process_foreign_data <- function(channel, nafoland, useHerringMaine){
+process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMaine = T){
 
   ## All code copied directly from nafo_comland
   nafoland <- nafoland[Divcode %in% c(47, 51:56, 61:63) & Code > 3, ]
@@ -116,6 +116,9 @@ process_foreign_data <- function(channel, nafoland, useHerringMaine){
   #remove species without a match
   nafoland <- nafoland[!is.na(NESPP3), ]
 
+  #Convert scallops to meat weight
+  if(useLanded) nafoland[NESPP3 == 800, SPPLIVMT := SPPLIVMT / 8.33], ]
+  
   #Remove herring catch - if pulling using comlandr::get_herring_data()
   if(useHerringMaine) nafoland <- nafoland[NESPP3 != 168, ]
 
