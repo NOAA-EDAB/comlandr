@@ -91,7 +91,10 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     areas[, NESPP3 := NULL]
     new.area <- merge(comdata, areas, by = 'AREA', all.x = T, allow.cartesian = T)
   }
-    
+  
+  #If area is known but outside of aggregation set - set to "Other"
+  new.area[AREA != 0 & is.na(newarea), newarea := 'Other']
+  
   #If no proportion assume 100% in
   new.area[is.na(prop), prop := 1]
   
@@ -121,7 +124,7 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT)), by = catch.var]
   }
   
-  
+  #
   #Add changes back into comData
   comData[[1]] <- new.area[]
   comData$call <- c(comData$call, call)
