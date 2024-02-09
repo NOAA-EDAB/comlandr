@@ -41,14 +41,14 @@ get_comdisc_raw_data <- function(channel, filterByYear){
 
   ob.qry <- paste0("select year, month, area, negear, nespp4, hailwt, catdisp, drflag,
           tripid, haulnum, lathbeg, lonhbeg, link3
-          from OBSPP
+          from obdbs.OBSPP
           where obsrflag = 1
           and program not in ('127', '900', '250', '160')
           and year ", years,
                    "\n union
           select year, month, area, negear, nespp4, hailwt, catdisp, drflag,
           tripid, haulnum, lathbeg, lonhbeg, link3
-          from ASMSPP
+          from obdbs.ASMSPP
           where obsrflag = 1
           and program not in ('127', '900', '250', '160')
           and year ", years)
@@ -60,14 +60,14 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   mammal.qry <- paste0("select distinct a.year, a.month, b.area, b.negear, a.nespp4,
                1 as hailwt, 0 as catdisp, 1 as drflag, a.tripid, a.haulnum,
                b.lathbeg, b.lonhbeg, a.link3
-               from obinc a, obspp b
+               from obdbs.obinc a, obdbs.obspp b
                where a.tripid = b.tripid
                and a.year ", years,
                        "\n union
                select distinct a.year, a.month, b.area, b.negear, a.nespp4,
                1 as hailwt, 0 as catdisp, 1 as drflag, a.tripid, a.haulnum,
                b.lathbeg, b.lonhbeg, a.link3
-               from asminc a, asmspp b
+               from obdbs.asminc a, obdbs.asmspp b
                where a.tripid = b.tripid
                and a.year ", years)
 
@@ -78,7 +78,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
 
   #Grab otter trawl gear tables to get mesh size for small verses large mesh
   mesh.qry <- paste0("select link3, codmsize
-             from OBOTGH
+             from obdbs.OBOTGH
              where year ", years)
   mesh <- data.table::as.data.table(DBI::dbGetQuery(channel, mesh.qry))
   sql <- c(sql, mesh.qry)
@@ -113,7 +113,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
 
   #Convert weights
   convert.qry <- "select nespp4_obs, catdisp_code, drflag_code, cf_lndlb_livlb, cf_rptqty_lndlb
-                from obspecconv"
+                from obdbs.obspecconv"
   convert <- data.table::as.data.table(DBI::dbGetQuery(channel, convert.qry))
   sql <- c(sql, convert.qry)
 
@@ -136,7 +136,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
 
   #Grab PR flags
   prflag.qry <- "select NESPP4, cetacean, turtle, pinniped
-                from obspec"
+                from obdbs.obspec"
 
   prflag <- data.table::as.data.table(DBI::dbGetQuery(channel, prflag.qry))
   sql <- c(sql, prflag.qry)
@@ -162,11 +162,11 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   #drop extra columns NESPP4
   comdisc[, c('DRFLAG', 'CF_LNDLB_LIVLB', 'CF_RPTQTY_LNDLB', 'HAILWT', 'C.HAILWT',
               'NESPP4') := NULL]
-  
+
   #Convert number fields from chr to num
   numberCols <- c('YEAR', 'MONTH', 'NEGEAR', 'NESPP3', 'AREA', 'MKTCAT')
   comdisc[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols][]
-  
+
   return(list(comdisc = comdisc[],
               sql     = sql))
 }
