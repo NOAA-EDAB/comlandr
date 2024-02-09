@@ -14,7 +14,7 @@
 comland_herring <- function(channel,comland) {
 
   herr.qry <- "select year, month, stock_area, negear, gearname, keptmt, discmt
-             from maine_herring_catch"
+             from cfdbs.maine_herring_catch"
 
   herr.catch <- data.table::as.data.table(DBI::dbGetQuery(channel, herr.qry))
 
