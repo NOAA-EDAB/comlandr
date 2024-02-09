@@ -81,7 +81,7 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
                        c('Year', 'GearCode', 'Tonnage', 'Code', 'Divcode'),
                        c('YEAR', 'NAFOGEAR', 'TONCL1', 'NAFOSPP', 'AREA'))
 
-  spp <- data.table::as.data.table(DBI::dbGetQuery(channel, "select NAFOSPP, NESPP3 from CFSPP"))
+  spp <- data.table::as.data.table(DBI::dbGetQuery(channel, "select NAFOSPP, NESPP3 from cfdbs.CFSPP"))
   spp$NAFOSPP <- as.integer(spp$NAFOSPP)
   spp$NESPP3 <- as.integer(spp$NESPP3)
 
@@ -118,13 +118,13 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
 
   #Convert scallops to meat weight
   if(useLanded) nafoland[NESPP3 == 800, SPPLIVMT := SPPLIVMT / 8.33]
-  
+
   #Remove herring catch - if pulling using comlandr::get_herring_data()
   if(useHerringMaine) nafoland <- nafoland[NESPP3 != 168, ]
 
   #Gearcodes
 
-  gear <- data.table::as.data.table(DBI::dbGetQuery(channel, "select NEGEAR, NAFOGEAR from Gear"))
+  gear <- data.table::as.data.table(DBI::dbGetQuery(channel, "select NEGEAR, NAFOGEAR from cfdbs.Gear"))
   gear$NEGEAR <- as.integer(gear$NEGEAR)
   gear$NAFOGEAR <- as.integer(gear$NAFOGEAR)
 
