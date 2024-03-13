@@ -4,7 +4,7 @@
 \alias{get_locations}
 \title{Extract LOCATION information from CFDBS}
 \usage{
-get_locations(channel, sqlStatement = "select * from cfdbs.loc;")
+get_locations(channel, sqlStatement = "select * from cfdbs.loc")
 }
 \arguments{
 \item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
@@ -56,8 +56,8 @@ Other get functions:
 \code{\link{get_areas}()},
 \code{\link{get_gears}()},
 \code{\link{get_ports}()},
-\code{\link{get_species_itis}()},
 \code{\link{get_species}()},
+\code{\link{get_species_itis}()},
 \code{\link{get_vessels}()}
 }
 \concept{get functions}

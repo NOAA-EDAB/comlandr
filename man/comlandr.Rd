@@ -2,6 +2,7 @@
 % Please edit documentation in R/comlandr.R
 \docType{package}
 \name{comlandr}
+\alias{comlandr-package}
 \alias{comlandr}
 \title{comlandr: Pull and process commercial fisheries data}
 \description{
@@ -31,3 +32,20 @@ NAFO website: \url{https://www.nafo.int}
 #'To learn more about using \code{comlandr}, start with the vignette: \code{browseVignettes(package="comlandr")} or click the index below
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/NOAA-EDAB/comlandr}
+  \item Report bugs at \url{https://github.com/NOAA-EDAB/comlandr/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Sean Lucey \email{sean.lucey@noaa.gov}
+
+Authors:
+\itemize{
+  \item Andy Beet \email{andrew.beet@noaa.gov}
+}
+
+}

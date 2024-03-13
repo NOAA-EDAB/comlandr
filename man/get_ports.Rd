@@ -61,8 +61,8 @@ Other get functions:
 \code{\link{get_areas}()},
 \code{\link{get_gears}()},
 \code{\link{get_locations}()},
-\code{\link{get_species_itis}()},
 \code{\link{get_species}()},
+\code{\link{get_species_itis}()},
 \code{\link{get_vessels}()}
 }
 \concept{get functions}
