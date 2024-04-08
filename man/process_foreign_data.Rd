@@ -4,7 +4,7 @@
 \alias{process_foreign_data}
 \title{Processes NAFO data for comlandr use}
 \usage{
-process_foreign_data(channel, nafoland, useHerringMaine)
+process_foreign_data(channel, nafoland, useLanded = T, useHerringMaine = T)
 }
 \arguments{
 \item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect

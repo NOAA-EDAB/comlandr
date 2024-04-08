@@ -26,7 +26,7 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea,
 
   herr.qry <- paste0("select year, month, category, stock_area, negear, gearname,
                      keptmt, discmt
-                     from cfdbs.maine_herring_catch
+                     from NEFSC_GARFO.maine_herring_catch
                      where year ", years)
   if(!is.na(filterByArea[1])){
     herr.qry <- paste0(herr.qry, " and stock_area in (", survdat:::sqltext(filterByArea), ")
