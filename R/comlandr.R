@@ -24,6 +24,4 @@
 #'#'To learn more about using \code{comlandr}, start with the vignette: \code{browseVignettes(package="comlandr")} or click the index below
 #'
 #'
-#' @docType package
-#' @name comlandr
-NULL
+"_PACKAGE"

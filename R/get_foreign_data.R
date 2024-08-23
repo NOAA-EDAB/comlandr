@@ -33,15 +33,17 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-80-89.zip",
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-90-99.zip",
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-2000-09.zip",
-                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-18.zip"),
+                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-19.zip",
+                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2020-22.zip"),
                       filename = c("NAFO21B-60-69.txt",
                                    "NAFO21B-70-79.txt",
                                    "NAFO21B-80-89.txt",
                                    "NAFO21B-90-99.txt",
                                    "NAFO21B-2000-09.txt",
-                                   "NAFO-21B-2010-18/NAFO-21b-2010-18.txt"),
-                      startyr = c(1960,1970,1980,1990,2000,2010),
-                      endyr = c(1969,1979,1989,1999,2009,2018),
+                                   "NAFO-21B-2010-2019.txt",
+                                   "NAFO-21B-2020-2022.txt"),
+                      startyr = c(1960,1970,1980,1990,2000,2010,2020),
+                      endyr = c(1969,1979,1989,1999,2009,2019,2022),
                       stringsAsFactors = FALSE)
 
 
@@ -96,7 +98,7 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
     dataPart <- data.table::as.data.table(read.csv(unz(temp, files$filename[ifile])))
     base::unlink(temp)
 
-    # make all coumn names consistent over all years data
+    # make all column names consistent over all years data
     # 2010 + data have different column headers.
     # Use names from 1960
     if(any(names(dataPart)=="Gear")){ # found in more recent years

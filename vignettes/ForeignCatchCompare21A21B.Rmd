@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 ```{r setup, echo = F, eval = T, message=F}
 library(magrittr)
 library(patchwork)
+currentYear <- as.numeric(format(Sys.time(), "%Y"))
 NEUSDivs <- c(47, 51:56, 61:63)
 ############################################################################
 ## Read in supporting tables
@@ -25,15 +26,15 @@ NEUSDivs <- c(47, 51:56, 61:63)
 # Should really use latest decade for ALL supporting files, but the format is inconsistent!
 # species.txt is now bundled with the package since it contains additional species
 temp <- tempfile()
-download.file("https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-18.zip",destfile=temp,quiet=TRUE)
+download.file("https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-19.zip",destfile=temp,quiet=TRUE)
 
 # division codes. supporting table
-divCodes <- readr::read_csv(unz(temp,"NAFO-21B-2010-18/divisions.txt"),col_names = F,show_col_types = F) %>%
+divCodes <- readr::read_csv(unz(temp,"divisions.txt"),col_names = F,show_col_types = F) %>%
   magrittr::set_colnames(c("Divcode","Division"))
 
 # country codes. supporting table
 #countryCodes <- readr::read_csv(unz(temp, "nafo-21b-2010-16/country.txt")) %>%
-countryCodes <- readr::read_delim(unz(temp, "NAFO-21B-2010-18/country.txt"),delim = "\t",show_col_types = F) %>%
+countryCodes <- readr::read_delim(unz(temp, "country.txt"),delim = "\t",show_col_types = F) %>%
   dplyr::rename(Country = Description) %>%
   dplyr::mutate(dplyr::across(where(is.character), stringr::str_trim)) %>%
   dplyr::mutate(CountryName = paste0(toupper(Country)," - ",toupper(Abbreviation))) %>%
@@ -165,7 +166,6 @@ db21b <- db21b %>%
 
 ```{r plot21adiv, echo = F, eval = T, message = F}
 
-
 ## By Division
 ## aggregate over Division
 db21a %>%
@@ -176,7 +176,7 @@ db21a %>%
   ggplot2::geom_point(size=0.1) +
   ggplot2::facet_wrap(ggplot2::vars(Division),scales = "free") +
   ggplot2::ylab("Metric Tons (1000's)") +
-  ggplot2::scale_x_continuous(limits=c(1960, 2020)) 
+  ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
 ```
 
 ### 21B
@@ -192,7 +192,7 @@ db21b %>%
   ggplot2::geom_point(size=0.1) +
   ggplot2::facet_wrap(ggplot2::vars(Division),scales = "free") +
   ggplot2::ylab("Metric Tons (1000's)") +
-  ggplot2::scale_x_continuous(limits=c(1960, 2020)) 
+  ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
 
 ```
 
@@ -215,7 +215,7 @@ db21a %>%
   ggplot2::geom_point(size=0.1) +
   ggplot2::facet_wrap(ggplot2::vars(Country),scales = "free") +
   ggplot2::ylab("Metric Tons (1000's)") +
-  ggplot2::scale_x_continuous(limits=c(1960, 2020)) 
+  ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
 ```
 
 ### 21B
@@ -233,7 +233,7 @@ db21b %>%
   ggplot2::geom_point(size=0.1) +
   ggplot2::facet_wrap(ggplot2::vars(Country),scales = "free") +
   ggplot2::ylab("Metric Tons (1000's)") +
-    ggplot2::scale_x_continuous(limits=c(1960, 2020)) 
+    ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
 ```
 
 
@@ -266,7 +266,7 @@ for (ipage in 1:ceiling(length(unique(db21a$Speciesname))/npanels)) {
     ggplot2::geom_point(size=0.1) +
     ggforce::facet_wrap_paginate(ggplot2::vars(spCode),nrow=sqrt(npanels),ncol=sqrt(npanels),page=ipage,scales = "free") +
     ggplot2::ylab("Metric Tons (1000's)") +
-    ggplot2::scale_x_continuous(limits=c(1960, 2020)) 
+    ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
   print(p)
 }
 ```
@@ -296,7 +296,7 @@ for (ipage in 1:ceiling(length(unique(db21a$Speciesname))/npanels)) {
     ggplot2::geom_point(size=0.1) +
     ggforce::facet_wrap_paginate(ggplot2::vars(spCode),nrow=sqrt(npanels),ncol=sqrt(npanels),page=ipage,scales = "free") +
     ggplot2::ylab("Metric Tons (1000's)") +
-    ggplot2::scale_x_continuous(limits=c(1960, 2020)) 
+    ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
   plot(p)
 }
 ```

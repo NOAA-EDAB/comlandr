@@ -23,6 +23,7 @@ reference:
   - get_comland_data
   - get_comland_raw_data
   - get_foreign_data
+  - get_comdisc_data
   - get_comdisc_raw_data
   - get_species
   - get_species_itis
@@ -41,6 +42,7 @@ reference:
   - assign_area
   - assign_unknown
   - calc_DK
+  - calc_discards
   - process_foreign_data_skate_hake
 
 - title: "Plotting"
