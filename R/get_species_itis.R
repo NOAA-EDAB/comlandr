@@ -1,6 +1,6 @@
 #' Extract SPECIES information from CFDBS (SPECIES_ITIS_NE, table)
 #'
-#'Extract a list of species names, code, market category, etc from the NEFSC SPECIES_ITIS_NE table
+#'Extract a list of species names, code, market category, etc from the NEFSC_GARFO CFDBS_SPECIES_ITIS_NE table
 #'
 #'
 #' @param channel DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
@@ -71,9 +71,9 @@ get_species_itis <- function(channel,species="all",nameType="common_name"){
 
   # creates the sql based on user input
   if (toupper(nameType) == "NESPP4"){
-    sqlStatement <- dbutils::create_sql(species,fieldName="NESPP4",fieldName2=nameType,dataType="%04d",defaultSqlStatement="select * from cfdbs.species_itis_ne")
+    sqlStatement <- dbutils::create_sql(species,fieldName="NESPP4",fieldName2=nameType,dataType="%04d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_species_itis_ne")
   } else {
-    sqlStatement <- dbutils::create_sql(species,fieldName="species_itis",fieldName2=nameType,dataType="%06d",defaultSqlStatement="select * from cfdbs.species_itis_ne")
+    sqlStatement <- dbutils::create_sql(species,fieldName="species_itis",fieldName2=nameType,dataType="%06d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_species_itis_ne")
   }
 
   # strip ; and add additional content
