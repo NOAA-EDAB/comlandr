@@ -28,7 +28,7 @@ A list is returned:
 The default sql statement "\code{select * from cfdbs.SPECIES_ITIS_NE}" is used
 }
 \description{
-Extract a list of species names, code, market category, etc from the NEFSC SPECIES_ITIS_NE table
+Extract a list of species names, code, market category, etc from the NEFSC_GARFO CFDBS_SPECIES_ITIS_NE table
 }
 \section{Reference}{
 
