@@ -35,20 +35,20 @@ calc_discards <- function(comland, dk, areaDescription, fleetDescription) {
 
   #Grab landings data
   comdata <- data.table::copy(comland[[1]])
-  
+
   #calculate total landings
-  totland <- comdata[, .(SPPLIVMT = sum(SPPLIVMT, na.rm = T)), 
+  totland <- comdata[, .(SPPLIVMT = sum(SPPLIVMT, na.rm = T)),
                      by = c('YEAR', areaDescription, fleetDescription)]
-    
-  #Merge DK 
+
+  #Merge DK
   comdisc <- merge(totland, dk, by = c('YEAR', areaDescription, fleetDescription))
-  
+
   #expand dk ratio
   comdisc[, DISMT := SPPLIVMT * DK]
-    
+
   #Drop extra columns
   comdisc[, c('SPPLIVMT', 'DK') := NULL]
-  
+
   return(comdisc[])
 }
 
