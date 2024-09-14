@@ -1,34 +1,23 @@
-#' Calculate stratified mean
+#' Calculates total discard by species
 #'
-#' Calculates the stratified mean. Details of method found here ...
+#' Applies discard ratio to landings to obtain total discards by species
 #'
-#' @inheritParams strat_prep
-#' @inheritParams strat_mean
-#' @param tidy Boolean. Return output in long format (Default = F).
-#' @param returnPrepData Boolean. Return both \code{stratmeanData} and \code{prepData}
-#'   as a list object. The default (F) returns only the \code{stratmeanData} as a
-#'   \code{data.table}.
+#' @inheritParams get_comland_data
+#' @param comland Data frame. Internally calculated by \code{get_comdisc_data}
+#' @param dk dk. Need to find out
 #'
-#' @return
 #'
-#'@family survdat
+#' @return dk
+#'
+#'@family comdisc
 #'
 #' @examples
 #' \dontrun{
-#' # Pull data and apply conversion corrections
-#' data <- get_survdat_data(channel)
-#' # Calculate stratified mean for specific survey strata for the SPRING season
-#' calc_stratified_mean(surveyData=data$survdat, filterByArea=c(1220, 1240, 1260:1290,1360:1400),filterBySeason = "SPRING")
-#'
-#' # Calculate stratified mean for area defined by EPU regions, for all seasons ("SPRING", "FALL")
-#' # Read in EPU shapefile (loaded as part of the package)
-#' area <- sf::st_read(dsn = system.file("extdata","EPU.shp",package="survdat"),quiet=T)
-#' calc_stratified_mean(surveyData=data$survdat, areaPolygon=area, areaDescription="EPU", filterByArea="all",filterBySeason = "all")
-#'
 #' }
 #'
 #'
-#' @export
+#' Internal function
+#' @noRd
 
 
 calc_discards <- function(comland, dk, areaDescription, fleetDescription) {
