@@ -1,6 +1,6 @@
 #' Assign landing records to an aggregated area
 #'
-#' Takes the output from \code{get_comland_data} and further aggregates from NAFO 
+#' Takes the output from \code{get_comland_data} and further aggregates from NAFO
 #' statistical areas to a user defined area.  Allows for species to be assigned by
 #' proportions to more than two user defined areas from one stat area
 #'
@@ -9,33 +9,33 @@
 #'                 areas
 #'@param areaDescription Character. Name of column in userAreas that defines the new
 #'                       area.
-#'@param propDescription Character. Name of column in userAreas that defines the 
+#'@param propDescription Character. Name of column in userAreas that defines the
 #'                       proportions of landings assigned to new area.
 #'
-#'@export
+#'@noRd
 
 aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
-                           useForeign, channel, applyPropLand = T, 
+                           useForeign, channel, applyPropLand = T,
                            applyPropValue = T){
-  
+
   #Pulling data
   message("Aggregating Areas ...")
-  
+
   #Add message
   if(applyPropLand == F & applyPropValue == T){
     message("Can not apply proportions to Value and not Landings -- setting applyPropLand to F")
     applyPropLand <- F
   }
-  
+
   #Grab just the data
   comdata <- comData[[1]]
-  
+
   call <- dbutils::capture_function_call()
-  
+
   #Convert userAreas to data.table
   areas <- data.table::as.data.table(userAreas)
   data.table::setnames(areas, c(areaDescription, propDescription), c('newarea', 'prop'))
-  
+
   #Figure out NAFO divisions/weightings
   if(useForeign){
     #Pull NAFO divisions
@@ -46,10 +46,10 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     missing54 <- data.table::copy(missingNAFO)[, NAFDVCD := 54]
     missing56 <- data.table::copy(missingNAFO)[, NAFDVCD := 56]
     NAFOAreas <- data.table::rbindlist(list(NAFOAreas, missing54, missing56))
-    NAFOAreas <- NAFOAreas[, .(AREA = as.integer(AREA), 
+    NAFOAreas <- NAFOAreas[, .(AREA = as.integer(AREA),
                                NAFDVCD = as.integer(NAFDVCD))]
     areasNAFO <- merge(unique(areas[, c('AREA')]), NAFOAreas, by = 'AREA', all.x = T)
-    
+
     #Calc area weights
     #Pull area of stat areas
     sf::sf_use_s2(F) #Fixes an error with the stat area shapefile
@@ -59,62 +59,62 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
                                             area = sf::st_area(statarea))
     statarea.area[, area := as.numeric(area)]
     areasNAFO <- merge(areasNAFO, statarea.area, by = 'AREA', all.x = T)
-    
+
     #Get total per division
     areasNAFO[, divarea := sum(area, na.rm = T), by = NAFDVCD]
-    
+
     #Calculate strata weight
     areasNAFO[, weight := area / divarea]
-    
+
     #Drop extra columns
     areasNAFO[, c('area', 'divarea') := NULL]
-    
+
     #Calculate weighted proportions from Stat areas
     areas.weighted <- merge(areas, areasNAFO, by = 'AREA', all.x = T, allow.cartesian = T)
-    div.prop <- areas.weighted[, .(prop = sum(prop * weight, na.rm = T)), 
+    div.prop <- areas.weighted[, .(prop = sum(prop * weight, na.rm = T)),
                                by = c('NESPP3', 'NAFDVCD', 'newarea')]
     #Fix zeros
     div.prop[prop == 0, prop := 1]
-    
+
     #Get in the right format and merge
     data.table::setnames(div.prop, 'NAFDVCD', 'AREA')
     numberCols <- c('AREA', 'prop')
     div.prop[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols]
     areas <- data.table::rbindlist(list(areas, div.prop), use.names = T)
   }
-  
+
   #Merge new area descriptions to landings
   if(applyPropLand){
-    new.area <- merge(comdata, areas, by = c('NESPP3', 'AREA'), all.x = T, 
+    new.area <- merge(comdata, areas, by = c('NESPP3', 'AREA'), all.x = T,
                       allow.cartesian = T)
   } else {
     areas[, NESPP3 := NULL]
     new.area <- merge(comdata, areas, by = 'AREA', all.x = T, allow.cartesian = T)
   }
-  
+
   #If area is known but outside of aggregation set - set to "Other"
   new.area[AREA != 0 & is.na(newarea), newarea := 'Other']
-  
+
   #If no proportion assume 100% in
   new.area[is.na(prop), prop := 1]
-  
+
   #Proportion landings to new areas
   new.area[, newspplivmt := SPPLIVMT * prop]
   if(applyPropValue) new.area[, newsppvalue := SPPVALUE * prop]
-  
+
   #Drop extra columns and rename
   if(applyPropValue){
     new.area[, c('AREA', 'SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
-    data.table::setnames(new.area, c('newarea', 'newspplivmt', 'newsppvalue'), 
+    data.table::setnames(new.area, c('newarea', 'newspplivmt', 'newsppvalue'),
                          c(areaDescription, 'SPPLIVMT', 'SPPVALUE'))
   } else {
     new.area[, c('AREA', 'SPPLIVMT', 'prop') := NULL]
-    data.table::setnames(new.area, c('newarea', 'newspplivmt'), 
+    data.table::setnames(new.area, c('newarea', 'newspplivmt'),
                          c(areaDescription, 'SPPLIVMT'))
   }
 
   #Aggregate to new areas
-  catch.var <- names(new.area)[which(!names(new.area) %in% c('SPPLIVMT', 
+  catch.var <- names(new.area)[which(!names(new.area) %in% c('SPPLIVMT',
                                                              'SPPVALUE'))]
   #Discard data does not have value so need to ensure this runs on both
   if(length(which(names(new.area) == 'SPPVALUE')) > 0){
@@ -123,12 +123,12 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
   } else {
     new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT)), by = catch.var]
   }
-  
+
   #
   #Add changes back into comData
   comData[[1]] <- new.area[]
   comData$call <- c(comData$call, call)
   comData$userAreas <- userAreas
-  
+
   return(comData[])
-}                 
+}
