@@ -18,39 +18,57 @@ knitr::opts_chunk$set(
 library(comlandr)
 ```
 
+## Prerequisite
+
+You will need to have `ROracle` installed and configured on your machine
+
 ## Connect to the database
 
-Once you are granted permission to access the database and have Oracle's instant Client installed you can make a connection as follows:
+You can make a connection as follows:
 
 ```channel <- dbutils::connect_to_database(server="servername",uid="yourUsername")```
 
-`channel` is an object inherited from the DBIConnection-class. This object is passed as an argument to functions in `comnlandr`
+`channel` is an object inherited from the `ROracle` package. This object is passed as an argument to functions in `comlandr`
 
 ## Pull Raw Data
 
-Pulling the raw data takes up to 15 minutes to complete. see `get_comland_data` for details. To pull the commercial data with shellfish represented as meat weight (landed = "y")
+Pulling the raw data takes up to 15 minutes to complete. see [`get_comland_raw_data`](../reference/get_comland_raw_data.html) for details. 
+
+To pull the raw (unprocessed) commercial data for:
+
+* Years 1964 through 2023
+* With shellfish represented as landed weight (as opposed to live weight)
+* By Statistical Area
 
 ```
-data <- get_comland_data(channel,landed="y",endyear=2019,out.dir=here::here())
+data <- get_comland_raw_data(channel,filterByYear = 1964:2023)
 ```
 
-`data` is a data frame (see `?get_comland_data`) for more details
+The resulting `data` object is a list containing several fields. See [`get_comland_raw_data`](../reference/get_comland_raw_data.html) for details. 
 
-This data is considered the raw data and does not contain any corrections that stock assessment scientists may do. For example,  market categories representing parts of a fish are not removed.
+The data is considered the raw data and does not contain any corrections that stock assessment scientists may do. For example, some market categories representing parts of a fish are not removed.
 
-## Corrected Raw Data
+Note: Herring and Menhaden data are underrepresented in this raw data pull. Herring data is pulled separately from another database. Menhaden are excluded due to confidentiality concerns
 
-The raw data is processed to in several ways
+## Processed Raw Data
 
-* Fish parts are removed
-* Separate little and winter skate aggregate based on survey proportions
-* Separate silver hake and offshore hake based on survey proportions
-* Herring data are pulled from Maine database
-* catch with missing fields (AREA, Size, Gear) are assigned based on trips with similar characteristics (Palmer ????)
-* Additional Foreign landings are added from NAFO*
+To pull the processed raw data, use [`get_comland_data`](../reference/get_comland_data.html)
 
-To calculate the processed Raw data with default arguments:
+```
+data <- get_comland_data(channel,filterByYear = 1964:2023)
+```
 
-``` comland(channel) ```
+This will pull the raw data (above) then process it depending on the input arguments supplied.
 
+The options in the processing are:
 
+* Include Herring data
+* Remove fish parts
+* Include foreign landings from NAFO
+* Adjust species value based on a reference year
+* Separate skate and hake landings by species based on survey proportions
+* Aggregate landings by user defined groupings of Statistical areas
+* Aggregate gear codes based on user supplied fleets
+* Attempt to assign values to missing data
+
+See the articles section for in depth explanation of the components of `comlandr`

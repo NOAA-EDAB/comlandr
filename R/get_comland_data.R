@@ -2,7 +2,7 @@
 #'
 #' Connects to cfdbs and pulls fields from WOLANDS, WODETS, CFDETS
 #'
-#'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+#'@param channel an Object inherited from \code{ROracle}. This object is used to connect
 #' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
 #'@param filterByYear numeric vector
 #'@param filterByArea numeric vector
