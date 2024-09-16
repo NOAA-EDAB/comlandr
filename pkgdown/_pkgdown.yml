@@ -7,18 +7,10 @@ deploy:
   install_metadata: true
 
 reference:
-- title: "Commercial fishing data"
-  desc: "Standardizes commercial fishing data"
-- contents:
-  - comlandr
-- title: "Data"
-  desc: "Lazy loaded data"
-- contents:
-  - soeAreas
-  - mskeyAreas
-  - mskeyGears
-  - deflate
-  - EPUs
+# - title: "Commercial fishing data"
+#   desc: "Standardizes commercial fishing data"
+# - contents:
+#   - comlandr
 - title: "Get Data"
   desc: "Functions that pull data from the STOCKEFF/CAMS/CFDBS/NAFO databases"
 - contents:
@@ -34,6 +26,14 @@ reference:
   - get_locations
   - get_ports
   - get_vessels
+- title: "Data"
+  desc: "Lazy loaded data"
+- contents:
+  - soeAreas
+  - mskeyAreas
+  - mskeyGears
+  - deflate
+  - EPUs
 - title: "Helper Functions"
 - contents:
   - process_foreign_data

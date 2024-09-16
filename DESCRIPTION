@@ -1,8 +1,14 @@
 Package: comlandr
-Title: Pulls and processes commercial fishing data
+Title: Pulls and processes commercial fishing data from the Northeast US
 Version: 0.3.0
-Authors@R: c(person("Sean", "Lucey", email = "sean.lucey@noaa.gov", role = c("aut","cre")),
-    person("Andy", "Beet", email = "andrew.beet@noaa.gov", role = c("aut")))
+Authors@R: c(person(given = "Sean",
+                    family = "Lucey", 
+                    role = c("aut")),
+            person(given= "Andy",
+                   family= "Beet", 
+                   email = "andrew.beet@noaa.gov", 
+                   role = c("cre","aut"),
+                   comment = c(ORCID = "0000-0001-8270-7090")))
 Description: Pulls and processes commercial fishing data (US and NAFO)
 URL: https://github.com/NOAA-EDAB/comlandr
 BugReports: https://github.com/NOAA-EDAB/comlandr/issues
