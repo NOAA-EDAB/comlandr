@@ -10,15 +10,17 @@ reference:
 - title: "Commercial fishing data"
   desc: "Standardizes commercial fishing data"
 - contents:
-  - comland
   - comlandr
 - title: "Data"
   desc: "Lazy loaded data"
 - contents:
+  - soeAreas
+  - mskeyAreas
+  - mskeyGears
+  - deflate
   - EPUs
-  - GEARs
 - title: "Get Data"
-  desc: "Functions that pull data from the ADIOS/CFDBS/NAFO databases"
+  desc: "Functions that pull data from the STOCKEFF/CAMS/CFDBS/NAFO databases"
 - contents:
   - get_comland_data
   - get_comland_raw_data
@@ -35,16 +37,6 @@ reference:
 - title: "Helper Functions"
 - contents:
   - process_foreign_data
-- title: "Internal functions"
-- contents:
-  - aggregate_area
-  - aggregate_gear
-  - assign_area
-  - assign_unknown
-  - calc_DK
-  - calc_discards
-  - process_foreign_data_skate_hake
-
 - title: "Plotting"
   desc: "Basic plotting functions to visualize data"
 - contents:
