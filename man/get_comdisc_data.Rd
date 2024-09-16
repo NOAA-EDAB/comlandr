@@ -16,8 +16,23 @@ get_comdisc_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+
+\item{comland}{Data frame. Result of \code{get_comland_data}}
+
+\item{aggArea}{boolean}
+
+\item{areaDescription}{character string}
+
+\item{propDescription}{character string}
+
+\item{aggGear}{boolean}
+
+\item{fleetDescription}{character string}
+
+\item{extendsTS}{Boolean. Should the DK (Discard to kept) ratio be extended and applied
+to landings beyond observer coverage time period (Discards started in 1989). Default = T}
 }
 \value{
 Data frame (data.table) (n x 10)

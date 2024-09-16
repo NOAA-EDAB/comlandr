@@ -13,14 +13,16 @@ get_comland_raw_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
-\item{endyear}{Numeric Scalar. Final year of query.}
+\item{filterByYear}{numeric vector}
 
-\item{landed}{Character String. Use landed weight ("y" - meatwt) for scallops and clams instead of live weight ("n" - livewt).}
+\item{filterByArea}{numeric vector}
 
-\item{out.dir}{path to directory where final output will be saved}
+\item{useLanded}{boolean}
+
+\item{removeParts}{boolean}
 }
 \value{
 Data frame (data.table) (n x 10)
