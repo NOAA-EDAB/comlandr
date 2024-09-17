@@ -113,16 +113,19 @@ get_comland_data <- function(channel, filterByYear = NA,
                                                             filterByYear, filterByArea)
 
   #Aggregate areas
-  if(aggArea) comland <- comlandr::aggregate_area(comland, userAreas,
-                                                  areaDescription, propDescription,
-                                                  useForeign, channel,
-                                                  applyPropLand, applyPropValue)
-
+  if(aggArea) comland <- aggregate_area(comland,
+                                        userAreas,
+                                        areaDescription,
+                                        propDescription,
+                                        useForeign,
+                                        channel,
+                                        applyPropLand,
+                                        applyPropValue)
   #Aggregate gears
-  if(aggGear) comland <- comlandr::aggregate_gear(comland, userGears, fleetDescription)
+  if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
 
   #Impute unknown catch variables
-  if(!is.null(unkVar)) comland <- comlandr::assign_unknown(comland, unkVar, knStrata)
+  if(!is.null(unkVar)) comland <- assign_unknown(comland, unkVar, knStrata)
 
   comland$call <- call
 
