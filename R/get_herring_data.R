@@ -47,8 +47,12 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea,
   #Aggregate data
   data.table::setkey(herr.catch, YEAR, MONTH, CATEGORY, STOCK_AREA, NEGEAR)
 
+  # SKG Sept 2024
+  # This keeps kept and discarded separate in the herring object
+  # Discards are dropped below. Do we want to keep discards for later?
   herring <- herr.catch[, list(sum(KEPTMT, na.rm = T), sum(DISCMT, na.rm = T)),
                         by = key(herr.catch)]
+  
 
   data.table::setnames(herring, c('STOCK_AREA', 'V1', 'V2'),
                        c('AREA', 'SPPLIVMT', 'DISCMT'))
@@ -66,6 +70,8 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea,
   herring.comland <- comland[NESPP3 == 168, ]
 
   #Price from comland
+  # SKG there is no price before 1982--all values are 0
+  # because SPPVALUE is NA in StockEff before then?
   herring.price <- herring.comland[, (sum(SPPVALUE, na.rm = T) / sum(SPPLIVMT, na.rm = T)),
                                    by = c('YEAR', 'MONTH')]
 
@@ -73,6 +79,7 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea,
 
   herring <- merge(herring, herring.price, by = c('YEAR', 'MONTH'), all.x = T)
 
+  # SKG there is no price before 1982--all values are 0
   #Use 1964 prices for < 1964
   herring[YEAR < 1964, price := mean(herring[YEAR == 1964, price])]
   #Calculate SPPVALUE from price
