@@ -1,0 +1,37 @@
+---
+title: "Overview"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+We will attempt to summarise the data sources, methods, assumptions made, and the caveats of note in the `comlandr` package.
+
+## Data sources
+
+### Commercial landings 
+
+### Herring landings
+
+### Foreign landings
+
+
+## Processing steps
+
+## Discards
+
+## Caveats
+
+* Although US landings data (SPPLIVLB) pulled from STOCKEFF can be retrieved from as early as 1964, species value (SPPVALUE) is only available from 1982. Prior to this date the value can not be reliably validated.
+
+* Menhaden landings are not complete in the commercial database. 

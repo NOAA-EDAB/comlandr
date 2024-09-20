@@ -48,6 +48,8 @@ navbar:
   articles:
    text: Help
    menu:
+   - text: Overview of package
+     href: articles/Overview.html
    - text: Foreign Data (NAFO)
    - text: NAFO Data structure
      href: articles/ForeignCatch.html
