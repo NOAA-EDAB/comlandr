@@ -1,6 +1,7 @@
 #' Extracts commercial data from Database
 #'
-#' Connects to cfdbs and pulls fields from WOLANDS, WODETS, CFDETS
+#' Connects to Population dynamics Database STOCKEFF. This database contains the information
+#' from from WOLANDS, WODETS, CFDETS and CAMS.
 #'
 #'@inheritParams get_comland_data
 #'
@@ -10,12 +11,12 @@
 #'\item{YEAR}{Year of trip/tow}
 #'\item{MONTH}{Month of trip/tow}
 #'\item{NEGEAR}{Fishing gear used on trip/tow}
-#'\item{TONCL1}{Tonnage class of the fishing vessel}
+#'\item{TONCL2}{Two digit Tonnage class code of the fishing vessel}
 #'\item{NESPP3}{Species code (3 charachters)}
 #'\item{NESPP4}{Species code and market code (4 characters)}
 #'\item{AREA}{Statistical area in which species was reportly caught}
 #'\item{UTILCD}{Utilization code}
-#'\item{SPPLIVLB}{live weight (landed = "n") or landed weight (landed="y") in lbs}
+#'\item{SPPLIVMT}{live weight (landed = "n") or landed weight (landed="y") in lbs}
 #'\item{SPPVALUE}{The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.}
 #'
 #'@section File Creation:

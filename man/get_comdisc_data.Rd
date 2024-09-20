@@ -21,15 +21,15 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 
 \item{comland}{Data frame. Result of \code{get_comland_data}}
 
-\item{aggArea}{boolean}
+\item{aggArea}{boolean. Aggregate Statistical Areas into larger spatial units (Default = F)}
 
-\item{areaDescription}{character string}
+\item{areaDescription}{character string. Field name in \code{userAreas} denoting spatial unit. (Default = "EPU")}
 
-\item{propDescription}{character string}
+\item{propDescription}{character string. Field name in \code{userAreas} denoting the scaling factor. (Default = "MeanProp")}
 
-\item{aggGear}{boolean}
+\item{aggGear}{boolean. Aggregate NEGEAR codes to larger "fleets" (Default = F)}
 
-\item{fleetDescription}{character string}
+\item{fleetDescription}{character string. Field name in \code{userGears} denoting Fleet. (Default = "Fleet")}
 
 \item{extendsTS}{Boolean. Should the DK (Discard to kept) ratio be extended and applied
 to landings beyond observer coverage time period (Discards started in 1989). Default = T}

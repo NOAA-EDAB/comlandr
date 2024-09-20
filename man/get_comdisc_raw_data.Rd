@@ -10,7 +10,7 @@ get_comdisc_raw_data(channel, filterByYear)
 \item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
-\item{filterByYear}{numeric vector}
+\item{filterByYear}{numeric vector. Years to retrieve data for (Default = NA, pull all years)}
 }
 \value{
 Data frame (data.table) (n x 10)
