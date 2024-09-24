@@ -3,8 +3,7 @@
 #'Extract a list of species names, code, market category, etc from the NEFSC_GARFO CFDBS_SPECIES_ITIS_NE table
 #'
 #'
-#' @param channel DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-#' to communicate with the database engine. (see \code{\link{connect_to_database}})
+#' @inheritParams get_comland_data
 #' @param species A specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
 #' Numeric codes (SPECIES_ITIS, NESPP4) are converted to VARCHAR2 (6 and 4 characters respectively) when creating the sql statement.
 #' @param nameType Character string. Upper or lower case. Either "common_name" (default), "scientific_name" or "nespp4".
