@@ -29,7 +29,7 @@ get_comland_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{filterByYear}{numeric vector. Years to retrieve data for (Default = NA, pull all years)}
@@ -94,11 +94,6 @@ Connects to Population dynamics Database STOCKEFF to pull US landings data.
 Data is also pulled from NAFO (foreign landings) and the State of Maine (Herring).
 These sources of data are then aggregated, species value is adjusted to a user defined reference year,
 skate and hake landings (often reported as an unclassified category) are split based on bottom trawl survey,
-and missing values are imputed. For more information regarding these methods see the vignette \code{\url{../articles/Overview}}
+and missing values are imputed. For more information regarding these methods
+see \code{vignette("Overview", package = "comlandr")}
 }
-\section{File Creation}{
-
-
-A file containing the data.table above will also be saved to the users machine in the directory provided
-}
-

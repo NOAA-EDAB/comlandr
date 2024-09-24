@@ -2,7 +2,7 @@
 #'
 #'Herring Data comes from the state of Maine.
 #'
-#'@param channel DBI object. connection object for database access
+#' @inheritParams get_comland_data
 #'@param comland Data frame. master data frame containing species landings
 #'
 #'@return Processed Herring data added to comland

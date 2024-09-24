@@ -16,7 +16,7 @@ get_comdisc_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{comland}{Data frame. Result of \code{get_comland_data}}
@@ -53,9 +53,3 @@ Each row of the data.table represents a species record for a given tow/trip
 Connects to obdbs and pulls discard data, calculates discard to kept ratios,
 and applies to landings data obtained using \code{get_comland_data}.
 }
-\section{File Creation}{
-
-
-A file containing the data.table above will also be saved to the users machine in the directory provided
-}
-

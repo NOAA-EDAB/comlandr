@@ -7,7 +7,7 @@
 get_comdisc_raw_data(channel, filterByYear)
 }
 \arguments{
-\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{filterByYear}{numeric vector. Years to retrieve data for (Default = NA, pull all years)}
@@ -30,9 +30,3 @@ Each row of the data.table represents a species record for a given tow/trip
 \description{
 Connects to obdbs and pulls fields from OBSPP, OBINC, ASMSPP, and ASMINC
 }
-\section{File Creation}{
-
-
-A file containing the data.table above will also be saved to the users machine in the directory provided
-}
-

@@ -18,10 +18,6 @@
 #'\item{SPPLIVLB}{live weight (landed = "n") or landed weight (landed="y") in lbs}
 #'\item{SPPVALUE}{The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.}
 #'
-#'@section File Creation:
-#'
-#'A file containing the data.table above will also be saved to the users machine in the directory provided
-#'
 #'@export
 
 get_comdisc_raw_data <- function(channel, filterByYear){

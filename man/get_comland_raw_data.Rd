@@ -13,7 +13,7 @@ get_comland_raw_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{filterByYear}{numeric vector. Years to retrieve data for (Default = NA, pull all years)}
@@ -43,9 +43,3 @@ Each row of the data.table represents a species record for a given tow/trip
 Connects to Population dynamics Database STOCKEFF. This database contains the information
 from from WOLANDS, WODETS, CFDETS and CAMS.
 }
-\section{File Creation}{
-
-
-A file containing the data.table above will also be saved to the users machine in the directory provided
-}
-

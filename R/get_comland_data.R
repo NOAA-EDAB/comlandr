@@ -4,9 +4,10 @@
 #' Data is also pulled from NAFO (foreign landings) and the State of Maine (Herring).
 #' These sources of data are then aggregated, species value is adjusted to a user defined reference year,
 #' skate and hake landings (often reported as an unclassified category) are split based on bottom trawl survey,
-#' and missing values are imputed. For more information regarding these methods see the vignette \code{\url{../articles/Overview}}
+#' and missing values are imputed. For more information regarding these methods
+#' see \code{vignette("Overview", package = "comlandr")}
 #'
-#'@param channel an Object inherited from \code{ROracle}. This object is used to connect
+#'@param channel an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 #' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
 #'@param filterByYear numeric vector. Years to retrieve data for (Default = NA, pull all years)
 #'@param filterByArea numeric vector. Statistical Areas to retrieve data for (Default = NA, pull all areas)
@@ -44,11 +45,6 @@
 #'\item{US}{Landing from the USA vessels or foreign vessels}
 #'\item{SPPLIVMT}{Weight in metric tons.}
 #'\item{SPPVALUE}{The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.}
-#'
-#'@section File Creation:
-#'
-#'A file containing the data.table above will also be saved to the users machine in the directory provided
-#'
 #'
 #'@importFrom data.table ":="
 #'@importFrom magrittr "%>%"
