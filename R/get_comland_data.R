@@ -17,7 +17,7 @@
 #'@param useForeign boolean. Pull foreign data from NAFO. Default = T
 #'@param refYear numeric. Reference year to use when adjusting species value
 #'@param refMonth numeric. Reference month to use when adjusting species value
-#'@param disaggSkatesHakes boolean. Partition skates and hake unclassified landings into species (Default = T)
+#'@param disagSkatesHakes boolean. Partition skates and hake unclassified landings into species (Default = T)
 #'@param aggArea boolean. Aggregate Statistical Areas into larger spatial units (Default = F)
 #'@param userAreas data frame. Spatial units in which Statistical areas should be aggregated (eg. \code{\link{mskeyAreas}})
 #'@param areaDescription character string. Field name in \code{userAreas} denoting spatial unit. (Default = "EPU")
@@ -105,10 +105,10 @@ get_comland_data <- function(channel, filterByYear = NA,
 
 
   #Apply correction for inflation
-  if(!is.na(refYear)) comland <- comlandr::adjust_inflation(comland, refYear, refMonth)
+  if(!is.na(refYear)) comland <- adjust_inflation(comland, refYear, refMonth)
 
   #Disaggregate skates and hakes
-  if(disagSkatesHakes) comland <- comlandr::disaggregate_skates_hakes(comland,
+  if(disagSkatesHakes) comland <- disaggregate_skates_hakes(comland,
                                                                       channel,
                                                             filterByYear, filterByArea)
 

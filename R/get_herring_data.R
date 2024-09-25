@@ -1,6 +1,7 @@
-#' Processes herring data
+#' Pull Herring data
 #'
-#'Herring Data comes from the state of Maine.
+#' Herring Data comes from the state of Maine and replaces the herring data from StockEff (since
+#' it is incomplete). Pulled from NEFSC_GARFO.maine_herring_catch
 #'
 #' @inheritParams get_comland_data
 #'@param comland Data frame. master data frame containing species landings
@@ -9,7 +10,6 @@
 #'
 #'@importFrom data.table ":=" "key"
 #'
-#' @noRd
 #' @export
 
 get_herring_data <- function(channel, comland, filterByYear, filterByArea,

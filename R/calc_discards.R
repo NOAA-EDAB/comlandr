@@ -11,10 +11,6 @@
 #'
 #'@family comdisc
 #'
-#' @examples
-#' \dontrun{
-#' }
-#'
 #'
 #' Internal function
 #' @noRd

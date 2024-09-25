@@ -48,6 +48,8 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 
 \item{refMonth}{numeric. Reference month to use when adjusting species value}
 
+\item{disagSkatesHakes}{boolean. Partition skates and hake unclassified landings into species (Default = T)}
+
 \item{aggArea}{boolean. Aggregate Statistical Areas into larger spatial units (Default = F)}
 
 \item{userAreas}{data frame. Spatial units in which Statistical areas should be aggregated (eg. \code{\link{mskeyAreas}})}
@@ -69,8 +71,6 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 \item{unkVar}{character vector. Variables in the data, with have missing values, that you wish to assign a value to}
 
 \item{knStrata}{character vector. Variables in the data that you wish to use to use to assign values to \code{unkVar}}
-
-\item{disaggSkatesHakes}{boolean. Partition skates and hake unclassified landings into species (Default = T)}
 }
 \value{
 Data frame (data.table) (n x 12)

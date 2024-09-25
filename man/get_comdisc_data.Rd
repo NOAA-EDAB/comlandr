@@ -31,7 +31,7 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 
 \item{fleetDescription}{character string. Field name in \code{userGears} denoting Fleet. (Default = "Fleet")}
 
-\item{extendsTS}{Boolean. Should the DK (Discard to kept) ratio be extended and applied
+\item{extendTS}{Boolean. Should the DK (Discard to kept) ratio be extended and applied
 to landings beyond observer coverage time period (Discards started in 1989). Default = T}
 }
 \value{

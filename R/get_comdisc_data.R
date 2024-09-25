@@ -5,7 +5,7 @@
 #'
 #'@inheritParams get_comland_data
 #'@param comland Data frame. Result of \code{get_comland_data}
-#'@param extendsTS Boolean. Should the DK (Discard to kept) ratio be extended and applied
+#'@param extendTS Boolean. Should the DK (Discard to kept) ratio be extended and applied
 #'to landings beyond observer coverage time period (Discards started in 1989). Default = T
 #'
 #'
@@ -50,7 +50,7 @@ get_comdisc_data <- function(channel, comland,
   #Aggregate areas
   if(aggArea){
     userAreas <- comland$userAreas
-    comdisc.raw <- comlandr::aggregate_area(comdisc.raw, userAreas, areaDescription,
+    comdisc.raw <- aggregate_area(comdisc.raw, userAreas, areaDescription,
                                             propDescription, useForeign = F,
                                             applyPropValue = F)
   }
@@ -62,7 +62,7 @@ get_comdisc_data <- function(channel, comland,
   }
 
   #Calculate the discard to kept ratio
-  dk <- comlandr::calc_DK(comdisc.raw, areaDescription, fleetDescription)
+  dk <- calc_DK(comdisc.raw, areaDescription, fleetDescription)
 
   #Extend dk ratios beyond observer data
   if(extendTS){
@@ -90,7 +90,7 @@ get_comdisc_data <- function(channel, comland,
   }
 
   #Apply the discard to kept ratio
-  comdisc <- comlandr::calc_discards(comland, dk, areaDescription, fleetDescription)
+  comdisc <- calc_discards(comland, dk, areaDescription, fleetDescription)
 
   message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")
 

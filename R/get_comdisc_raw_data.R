@@ -32,7 +32,7 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   if(is.na(filterByYear[1])){
     years <- ">= 1989"
   }else{
-    years <- paste0("in (", comlandr:::sqltext(filterByYear), ")")
+    years <- paste0("in (", sqltext(filterByYear), ")")
   }
 
   ob.qry <- paste0("select year, month, area, negear, nespp4, hailwt, catdisp, drflag,

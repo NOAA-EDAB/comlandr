@@ -1,7 +1,6 @@
 #' Adjust species value for inflation
 #'
 #'Reads in data from Bureau of Labor statistics website and adjusts species value
-#'
 #'What data is fetched?
 #'
 #'
@@ -12,22 +11,21 @@
 #'@return comland data frame adjusted for inflation
 #'
 #'@noRd
-#'@export
 
 
 
 
 adjust_inflation <- function(comland, refYear, refMonth){
-  
+
   call <- c(comland$call, dbutils::capture_function_call())
-  
+
   #Pulling data
   message("Adjusting for inflation ...")
-  
+
   #pull out comland data
   sql <- comland$sql
   comland <- comland$comland
-  
+
   #This isn't working right now - using downloaded file
   # temp <- tempfile()
   # download.file("http://download.bls.gov/pub/time.series/wp/wp.data.3.ProcessedFoods", temp)
@@ -39,7 +37,7 @@ adjust_inflation <- function(comland, refYear, refMonth){
   # deflate[, MONTH := as.numeric(substr(period, 2, 3))]
   # data.table::setnames(deflate, c('year', 'value'), c('YEAR', 'PPI'))
   # deflate <- deflate[, list(YEAR, MONTH, PPI)]
-  
+
   #Set yearly deflator to 0 instead of 13 to match unknown month designation
   deflate <- comlandr::deflate
   deflate[MONTH == 13, MONTH := 0]
@@ -50,8 +48,8 @@ adjust_inflation <- function(comland, refYear, refMonth){
 
   #Remove extra column
   comland[, PPI := NULL]
-  
-  return(list(comland      = comland[], 
+
+  return(list(comland      = comland[],
               sql          = sql,
               pullDate     = date(),
               functionCall = call))
