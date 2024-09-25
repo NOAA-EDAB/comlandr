@@ -1,6 +1,6 @@
 #' Downloads all NAFO data
 #'
-#'Downloads, imports, aggregates NAFO data
+#' Downloads, imports, aggregates NAFO data from 21B data base
 #'
 #' @param filterByYear Numeric vector. Years for which data is required
 #' @param filterByArea Character vector. NAFO Areas for which data is required
@@ -21,6 +21,9 @@
 #'\item{NESPP3}{NEFSC species code}
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
+#'
+#'@seealso
+#' NAFO 21B website: \url{https://www.nafo.int/Data/Catch-Statistics-STATLANT-21B}
 #'
 #' @export
 

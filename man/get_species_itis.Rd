@@ -7,8 +7,8 @@
 get_species_itis(channel, species = "all", nameType = "common_name")
 }
 \arguments{
-\item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-to communicate with the database engine. (see \code{\link{connect_to_database}})}
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
+to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{species}{A specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
 Numeric codes (SPECIES_ITIS, NESPP4) are converted to VARCHAR2 (6 and 4 characters respectively) when creating the sql statement.}

@@ -11,8 +11,6 @@
 #' \item{areaDescription}{The name of the region (found in \code{areaPolygon})
 #'  that a record in \code{surveyData} is assigned to}
 #'
-#' @importFrom magrittr "%>%"
-#'
 #' @family comdisc
 #'
 #' Internal function

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_comland_data.R
 \name{get_comland_data}
 \alias{get_comland_data}
-\title{Extracts commercial data from Database}
+\title{Extracts and processes commercial data from Database}
 \usage{
 get_comland_data(
   channel,
@@ -29,48 +29,48 @@ get_comland_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
-\item{filterByYear}{numeric vector}
+\item{filterByYear}{numeric vector. Years to retrieve data for (Default = NA, pull all years)}
 
-\item{filterByArea}{numeric vector}
+\item{filterByArea}{numeric vector. Statistical Areas to retrieve data for (Default = NA, pull all areas)}
 
-\item{useLanded}{boolean}
+\item{useLanded}{boolean. Default = T}
 
-\item{removeParts}{boolean}
+\item{removeParts}{boolean. Remove species parts (Heads, wings, etc), Default = T}
 
-\item{useHerringMaine}{boolean}
+\item{useHerringMaine}{boolean. Pull data from Maine Herring database or use herring data in commercial landings database (Default = T)}
 
-\item{useForeign}{boolean}
+\item{useForeign}{boolean. Pull foreign data from NAFO. Default = T}
 
-\item{refYear}{numeric}
+\item{refYear}{numeric. Reference year to use when adjusting species value}
 
-\item{refMonth}{numeric}
+\item{refMonth}{numeric. Reference month to use when adjusting species value}
 
-\item{aggArea}{boolean}
+\item{disagSkatesHakes}{boolean. Partition skates and hake unclassified landings into species (Default = T)}
 
-\item{userAreas}{data frame}
+\item{aggArea}{boolean. Aggregate Statistical Areas into larger spatial units (Default = F)}
 
-\item{areaDescription}{character string}
+\item{userAreas}{data frame. Spatial units in which Statistical areas should be aggregated (eg. \code{\link{mskeyAreas}})}
 
-\item{propDescription}{character string}
+\item{areaDescription}{character string. Field name in \code{userAreas} denoting spatial unit. (Default = "EPU")}
 
-\item{applyPropLand}{boolean}
+\item{propDescription}{character string. Field name in \code{userAreas} denoting the scaling factor. (Default = "MeanProp")}
 
-\item{applyPropValue}{boolean}
+\item{applyPropLand}{boolean. Apply the proportions in userAreas to the landings (Default = F)}
 
-\item{aggGear}{boolean}
+\item{applyPropValue}{boolean. Apply the proportions in userAreas to the value (Default = F)}
 
-\item{userGears}{data frame}
+\item{aggGear}{boolean. Aggregate NEGEAR codes to larger "fleets" (Default = F)}
 
-\item{fleetDescription}{character string}
+\item{userGears}{data frame. Fleet designations in which NEGEAR codes should be grouped (eg.  \code{\link{mskeyGears}})}
 
-\item{unkVar}{character vector}
+\item{fleetDescription}{character string. Field name in \code{userGears} denoting Fleet. (Default = "Fleet")}
 
-\item{knStrata}{character vector}
+\item{unkVar}{character vector. Variables in the data, with have missing values, that you wish to assign a value to}
 
-\item{disaggSkatesHakes}{boolean}
+\item{knStrata}{character vector. Variables in the data that you wish to use to use to assign values to \code{unkVar}}
 }
 \value{
 Data frame (data.table) (n x 12)
@@ -78,7 +78,7 @@ Each row of the data.table represents a species record for a given tow/trip
 
 \item{YEAR}{Year of trip/tow}
 \item{MONTH}{Month of trip/tow}
-\item{NEGEAR}{Fishing gear used on trip/tow}
+\item{NEGEAR/Fleet}{Fishing gear used on trip/tow or aggregated to Fleet}
 \item{TONCL2}{Tonnage class of the fishing vessel (2 digit value)}
 \item{NESPP3}{Species code (3 charachters)}
 \item{MARKET_CODE}{market code (2 characters)}
@@ -86,15 +86,14 @@ Each row of the data.table represents a species record for a given tow/trip
 \item{AREA/EPU}{Statistical area/ Ecological Production Unit in which species was reportly caught}
 \item{UTILCD}{Utilization code}
 \item{US}{Landing from the USA vessels or foreign vessels}
-\item{SPPLIVLB}{live weight (landed = "n") or landed weight (landed="y") in lbs}
+\item{SPPLIVMT}{Weight in metric tons.}
 \item{SPPVALUE}{The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.}
 }
 \description{
-Connects to cfdbs and pulls fields from WOLANDS, WODETS, CFDETS
+Connects to Population dynamics Database STOCKEFF to pull US landings data.
+Data is also pulled from NAFO (foreign landings) and the State of Maine (Herring).
+These sources of data are then aggregated, species value is adjusted to a user defined reference year,
+skate and hake landings (often reported as an unclassified category) are split based on bottom trawl survey,
+and missing values are imputed. For more information regarding these methods
+see \code{vignette("Overview", package = "comlandr")}
 }
-\section{File Creation}{
-
-
-A file containing the data.table above will also be saved to the users machine in the directory provided
-}
-

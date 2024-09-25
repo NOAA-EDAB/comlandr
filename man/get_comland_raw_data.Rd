@@ -13,16 +13,16 @@ get_comland_raw_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
-\item{filterByYear}{numeric vector}
+\item{filterByYear}{numeric vector. Years to retrieve data for (Default = NA, pull all years)}
 
-\item{filterByArea}{numeric vector}
+\item{filterByArea}{numeric vector. Statistical Areas to retrieve data for (Default = NA, pull all areas)}
 
-\item{useLanded}{boolean}
+\item{useLanded}{boolean. Default = T}
 
-\item{removeParts}{boolean}
+\item{removeParts}{boolean. Remove species parts (Heads, wings, etc), Default = T}
 }
 \value{
 Data frame (data.table) (n x 10)
@@ -31,20 +31,15 @@ Each row of the data.table represents a species record for a given tow/trip
 \item{YEAR}{Year of trip/tow}
 \item{MONTH}{Month of trip/tow}
 \item{NEGEAR}{Fishing gear used on trip/tow}
-\item{TONCL1}{Tonnage class of the fishing vessel}
+\item{TONCL2}{Two digit Tonnage class code of the fishing vessel}
 \item{NESPP3}{Species code (3 charachters)}
 \item{NESPP4}{Species code and market code (4 characters)}
 \item{AREA}{Statistical area in which species was reportly caught}
 \item{UTILCD}{Utilization code}
-\item{SPPLIVLB}{live weight (landed = "n") or landed weight (landed="y") in lbs}
+\item{SPPLIVMT}{live weight (landed = "n") or landed weight (landed="y") in lbs}
 \item{SPPVALUE}{The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.}
 }
 \description{
-Connects to cfdbs and pulls fields from WOLANDS, WODETS, CFDETS
+Connects to Population dynamics Database STOCKEFF. This database contains the information
+from from WOLANDS, WODETS, CFDETS and CAMS.
 }
-\section{File Creation}{
-
-
-A file containing the data.table above will also be saved to the users machine in the directory provided
-}
-

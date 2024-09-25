@@ -35,5 +35,8 @@ Data frame: NAFO data
 \item{NESPP3}{NEFSC species code}
 }
 \description{
-Downloads, imports, aggregates NAFO data
+Downloads, imports, aggregates NAFO data from 21B data base
+}
+\seealso{
+NAFO 21B website: \url{https://www.nafo.int/Data/Catch-Statistics-STATLANT-21B}
 }

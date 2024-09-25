@@ -8,10 +8,8 @@
 #' Fills in missing data by including from 21A (SS EPU only)
 #'
 #'
-#'@param channel an Object inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-#' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
-#'@param nafoland Data frame. output from \code{\url{get_foreign_data}}
-#'@param EPUs Data frame. Currently a place holder
+#'@inheritParams get_comland_data
+#'@param nafoland Data frame. output from \code{\link{get_foreign_data}}
 #'
 #'
 #'@return Data frame: NAFO data

@@ -16,22 +16,22 @@ get_comdisc_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{ROracle}. This object is used to connect
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{comland}{Data frame. Result of \code{get_comland_data}}
 
-\item{aggArea}{boolean}
+\item{aggArea}{boolean. Aggregate Statistical Areas into larger spatial units (Default = F)}
 
-\item{areaDescription}{character string}
+\item{areaDescription}{character string. Field name in \code{userAreas} denoting spatial unit. (Default = "EPU")}
 
-\item{propDescription}{character string}
+\item{propDescription}{character string. Field name in \code{userAreas} denoting the scaling factor. (Default = "MeanProp")}
 
-\item{aggGear}{boolean}
+\item{aggGear}{boolean. Aggregate NEGEAR codes to larger "fleets" (Default = F)}
 
-\item{fleetDescription}{character string}
+\item{fleetDescription}{character string. Field name in \code{userGears} denoting Fleet. (Default = "Fleet")}
 
-\item{extendsTS}{Boolean. Should the DK (Discard to kept) ratio be extended and applied
+\item{extendTS}{Boolean. Should the DK (Discard to kept) ratio be extended and applied
 to landings beyond observer coverage time period (Discards started in 1989). Default = T}
 }
 \value{
@@ -53,9 +53,3 @@ Each row of the data.table represents a species record for a given tow/trip
 Connects to obdbs and pulls discard data, calculates discard to kept ratios,
 and applies to landings data obtained using \code{get_comland_data}.
 }
-\section{File Creation}{
-
-
-A file containing the data.table above will also be saved to the users machine in the directory provided
-}
-

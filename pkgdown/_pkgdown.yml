@@ -19,6 +19,7 @@ reference:
   - get_foreign_data
   - get_comdisc_data
   - get_comdisc_raw_data
+  - get_herring_data
   - get_species
   - get_species_itis
   - get_areas
@@ -48,6 +49,8 @@ navbar:
   articles:
    text: Help
    menu:
+   - text: Overview of package
+     href: articles/Overview.html
    - text: Foreign Data (NAFO)
    - text: NAFO Data structure
      href: articles/ForeignCatch.html

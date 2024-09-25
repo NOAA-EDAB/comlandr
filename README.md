@@ -1,4 +1,4 @@
-# comlandr
+# comlandr <img src="man/figures/logo.png" align="right" width="120" /> 
 
 [![gh-pages](https://github.com/NOAA-EDAB/comlandr/workflows/gh-pages/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions)
 
