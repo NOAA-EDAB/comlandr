@@ -51,14 +51,23 @@
 #'@export
 
 
-get_comland_data <- function(channel, filterByYear = NA,
-                             filterByArea = NA, useLanded = T, removeParts = T,
-                             useHerringMaine = T, useForeign = T, refYear = NA,
-                             refMonth = NA, disagSkatesHakes = T, aggArea = F,
+get_comland_data <- function(channel,
+                             filterByYear = NA,
+                             filterByArea = NA,
+                             useLanded = T,
+                             removeParts = T,
+                             useHerringMaine = T,
+                             useForeign = T,
+                             refYear = NA,
+                             refMonth = NA,
+                             disagSkatesHakes = T,
+                             aggArea = F,
                              userAreas = comlandr::mskeyAreas,
-                             areaDescription = 'EPU', propDescription = 'MeanProp',
+                             areaDescription = 'EPU',
+                             propDescription = 'MeanProp',
                              applyProp = F,
-                             aggGear = F, userGears = comlandr::mskeyGears,
+                             aggGear = F,
+                             userGears = comlandr::mskeyGears,
                              fleetDescription = 'Fleet',
                              unkVar = c('MONTH','NEGEAR','AREA'),
                              knStrata = c('HY', 'QY','MONTH','NEGEAR', 'TONCL2', 'AREA')) {
@@ -66,6 +75,20 @@ get_comland_data <- function(channel, filterByYear = NA,
 
 
   call <- dbutils::capture_function_call()
+
+
+  check_argument_validation(aggArea,
+                            userAreas,
+                            areaDescription,
+                            propDescription,
+                            applyProp,
+                            aggGear,
+                            userGears,
+                            fleetDescription,
+                            unkVar,
+                            knStrata
+                            )
+
 
   #Pull raw data
   comland <- comlandr::get_comland_raw_data(channel,
@@ -111,7 +134,6 @@ get_comland_data <- function(channel, filterByYear = NA,
                                                                       channel,
                                                             filterByYear, filterByArea)
 
-  saveRDS(comland,here::here("data_raw/data/64preagg.rds"))
   #Aggregate areas
   if(aggArea) comland <- aggregate_area(comland,
                                         userAreas,
@@ -120,9 +142,6 @@ get_comland_data <- function(channel, filterByYear = NA,
                                         useForeign,
                                         channel,
                                         applyProp)
-
-  saveRDS(comland,here::here("data-raw/data/64postagg.rds"))
-
 
   #Aggregate gears
   if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
