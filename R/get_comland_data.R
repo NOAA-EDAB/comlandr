@@ -22,8 +22,7 @@
 #'@param userAreas data frame. Spatial units in which Statistical areas should be aggregated (eg. \code{\link{mskeyAreas}})
 #'@param areaDescription character string. Field name in \code{userAreas} denoting spatial unit. (Default = "EPU")
 #'@param propDescription character string. Field name in \code{userAreas} denoting the scaling factor. (Default = "MeanProp")
-#'@param applyPropLand boolean. Apply the proportions in userAreas to the landings (Default = F)
-#'@param applyPropValue boolean. Apply the proportions in userAreas to the value (Default = F)
+#'@param applyProp boolean. Apply the proportions in userAreas to the landings and value (Default = T)
 #'@param aggGear boolean. Aggregate NEGEAR codes to larger "fleets" (Default = F)
 #'@param userGears data frame. Fleet designations in which NEGEAR codes should be grouped (eg.  \code{\link{mskeyGears}})
 #'@param fleetDescription character string. Field name in \code{userGears} denoting Fleet. (Default = "Fleet")
@@ -58,7 +57,7 @@ get_comland_data <- function(channel, filterByYear = NA,
                              refMonth = NA, disagSkatesHakes = T, aggArea = F,
                              userAreas = comlandr::mskeyAreas,
                              areaDescription = 'EPU', propDescription = 'MeanProp',
-                             applyPropLand = T, applyPropValue = T,
+                             applyProp = F,
                              aggGear = F, userGears = comlandr::mskeyGears,
                              fleetDescription = 'Fleet',
                              unkVar = c('MONTH','NEGEAR','AREA'),
@@ -112,6 +111,7 @@ get_comland_data <- function(channel, filterByYear = NA,
                                                                       channel,
                                                             filterByYear, filterByArea)
 
+  saveRDS(comland,here::here("data_raw/data/64preagg.rds"))
   #Aggregate areas
   if(aggArea) comland <- aggregate_area(comland,
                                         userAreas,
@@ -119,8 +119,11 @@ get_comland_data <- function(channel, filterByYear = NA,
                                         propDescription,
                                         useForeign,
                                         channel,
-                                        applyPropLand,
-                                        applyPropValue)
+                                        applyProp)
+
+  saveRDS(comland,here::here("data-raw/data/64postagg.rds"))
+
+
   #Aggregate gears
   if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
 

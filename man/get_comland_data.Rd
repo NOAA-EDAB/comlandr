@@ -19,8 +19,7 @@ get_comland_data(
   userAreas = comlandr::mskeyAreas,
   areaDescription = "EPU",
   propDescription = "MeanProp",
-  applyPropLand = T,
-  applyPropValue = T,
+  applyProp = T,
   aggGear = F,
   userGears = comlandr::mskeyGears,
   fleetDescription = "Fleet",
@@ -58,9 +57,7 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 
 \item{propDescription}{character string. Field name in \code{userAreas} denoting the scaling factor. (Default = "MeanProp")}
 
-\item{applyPropLand}{boolean. Apply the proportions in userAreas to the landings (Default = F)}
-
-\item{applyPropValue}{boolean. Apply the proportions in userAreas to the value (Default = F)}
+\item{applyProp}{boolean. Apply the proportions in userAreas to the landings and value (Default = T)}
 
 \item{aggGear}{boolean. Aggregate NEGEAR codes to larger "fleets" (Default = F)}
 
