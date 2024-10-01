@@ -94,3 +94,21 @@ skate and hake landings (often reported as an unclassified category) are split b
 and missing values are imputed. For more information regarding these methods
 see \code{vignette("Overview", package = "comlandr")}
 }
+\section{Argument choices}{
+
+
+Some of the arguments rely on the choice of others.
+
+If \code{aggArea = T} then the user must also supply a \code{userAreas} data frame
+and a \code{areaDescription} string to denote the field in \code{userArea} which
+maps the statistical area to the larger spatial unit.
+
+If \code{aggGear = T} then the user must also supply a \code{userGears} data frame
+and a \code{fleetDescription} string to denote the field in \code{userGears} which
+maps the NEGEAR codes to the fleet designation.
+
+If either \code{aggArea = T} or \code{aggGear = T} and the user wants to assign values to
+missing variables (i.e. if \code{unkVar} != NULL) then \code{unkVar} and \code{knStrata} need to
+include the values of \code{areaDescription} and \code{fleetDescription} respectively
+}
+
