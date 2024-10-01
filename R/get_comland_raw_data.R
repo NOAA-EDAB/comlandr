@@ -24,8 +24,9 @@
 get_comland_raw_data <- function(channel, filterByYear = NA, filterByArea = NA,
                                  useLanded = T, removeParts = T){
 
-  #If not specifying a year default to 1964 - 2019
-  if(is.na(filterByYear[1])) filterByYear <- 1964:2019
+  #If not specifying a year default to 1964 - current year
+  currentYear <- as.numeric(format(Sys.Date(),"%Y"))
+  if(is.na(filterByYear[1])) filterByYear <- 1964:currentYear
   filteryears <- sqltext(filterByYear)
 
   message(paste0("Pulling landings data from ",

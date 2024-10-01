@@ -19,7 +19,7 @@ get_comland_data(
   userAreas = comlandr::mskeyAreas,
   areaDescription = "EPU",
   propDescription = "MeanProp",
-  applyProp = T,
+  applyProp = F,
   aggGear = F,
   userGears = comlandr::mskeyGears,
   fleetDescription = "Fleet",
