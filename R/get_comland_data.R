@@ -147,8 +147,9 @@ get_comland_data <- function(channel,
 
   #Disaggregate skates and hakes
   if(disagSkatesHakes) comland <- disaggregate_skates_hakes(comland,
-                                                                      channel,
-                                                            filterByYear, filterByArea)
+                                                            channel,
+                                                            filterByYear,
+                                                            filterByArea)
 
   #Aggregate areas
   if(aggArea) comland <- aggregate_area(comland,
