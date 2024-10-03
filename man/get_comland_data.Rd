@@ -19,8 +19,7 @@ get_comland_data(
   userAreas = comlandr::mskeyAreas,
   areaDescription = "EPU",
   propDescription = "MeanProp",
-  applyPropLand = T,
-  applyPropValue = T,
+  applyProp = F,
   aggGear = F,
   userGears = comlandr::mskeyGears,
   fleetDescription = "Fleet",
@@ -58,9 +57,7 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 
 \item{propDescription}{character string. Field name in \code{userAreas} denoting the scaling factor. (Default = "MeanProp")}
 
-\item{applyPropLand}{boolean. Apply the proportions in userAreas to the landings (Default = F)}
-
-\item{applyPropValue}{boolean. Apply the proportions in userAreas to the value (Default = F)}
+\item{applyProp}{boolean. Apply the proportions in userAreas to the landings and value (Default = T)}
 
 \item{aggGear}{boolean. Aggregate NEGEAR codes to larger "fleets" (Default = F)}
 
@@ -97,3 +94,21 @@ skate and hake landings (often reported as an unclassified category) are split b
 and missing values are imputed. For more information regarding these methods
 see \code{vignette("Overview", package = "comlandr")}
 }
+\section{Argument choices}{
+
+
+Some of the arguments rely on the choice of others.
+
+If \code{aggArea = T} then the user must also supply a \code{userAreas} data frame
+and a \code{areaDescription} string to denote the field in \code{userArea} which
+maps the statistical area to the larger spatial unit.
+
+If \code{aggGear = T} then the user must also supply a \code{userGears} data frame
+and a \code{fleetDescription} string to denote the field in \code{userGears} which
+maps the NEGEAR codes to the fleet designation.
+
+If either \code{aggArea = T} or \code{aggGear = T} and the user wants to assign values to
+missing variables (i.e. if \code{unkVar} != NULL) then \code{unkVar} and \code{knStrata} need to
+include the values of \code{areaDescription} and \code{fleetDescription} respectively
+}
+

@@ -22,8 +22,7 @@
 #'@param userAreas data frame. Spatial units in which Statistical areas should be aggregated (eg. \code{\link{mskeyAreas}})
 #'@param areaDescription character string. Field name in \code{userAreas} denoting spatial unit. (Default = "EPU")
 #'@param propDescription character string. Field name in \code{userAreas} denoting the scaling factor. (Default = "MeanProp")
-#'@param applyPropLand boolean. Apply the proportions in userAreas to the landings (Default = F)
-#'@param applyPropValue boolean. Apply the proportions in userAreas to the value (Default = F)
+#'@param applyProp boolean. Apply the proportions in userAreas to the landings and value (Default = T)
 #'@param aggGear boolean. Aggregate NEGEAR codes to larger "fleets" (Default = F)
 #'@param userGears data frame. Fleet designations in which NEGEAR codes should be grouped (eg.  \code{\link{mskeyGears}})
 #'@param fleetDescription character string. Field name in \code{userGears} denoting Fleet. (Default = "Fleet")
@@ -49,17 +48,42 @@
 #'@importFrom data.table ":="
 #'@importFrom magrittr "%>%"
 #'
+#'@section Argument choices:
+#'
+#'Some of the arguments rely on the choice of others.
+#'
+#'If \code{aggArea = T} then the user must also supply a \code{userAreas} data frame
+#' and a \code{areaDescription} string to denote the field in \code{userArea} which
+#' maps the statistical area to the larger spatial unit.
+#'
+#'If \code{aggGear = T} then the user must also supply a \code{userGears} data frame
+#' and a \code{fleetDescription} string to denote the field in \code{userGears} which
+#' maps the NEGEAR codes to the fleet designation.
+#'
+#' If either \code{aggArea = T} or \code{aggGear = T} and the user wants to assign values to
+#' missing variables (i.e. if \code{unkVar} != NULL) then \code{unkVar} and \code{knStrata} need to
+#' include the values of \code{areaDescription} and \code{fleetDescription} respectively
+#'
 #'@export
 
 
-get_comland_data <- function(channel, filterByYear = NA,
-                             filterByArea = NA, useLanded = T, removeParts = T,
-                             useHerringMaine = T, useForeign = T, refYear = NA,
-                             refMonth = NA, disagSkatesHakes = T, aggArea = F,
+get_comland_data <- function(channel,
+                             filterByYear = NA,
+                             filterByArea = NA,
+                             useLanded = T,
+                             removeParts = T,
+                             useHerringMaine = T,
+                             useForeign = T,
+                             refYear = NA,
+                             refMonth = NA,
+                             disagSkatesHakes = T,
+                             aggArea = F,
                              userAreas = comlandr::mskeyAreas,
-                             areaDescription = 'EPU', propDescription = 'MeanProp',
-                             applyPropLand = T, applyPropValue = T,
-                             aggGear = F, userGears = comlandr::mskeyGears,
+                             areaDescription = 'EPU',
+                             propDescription = 'MeanProp',
+                             applyProp = F,
+                             aggGear = F,
+                             userGears = comlandr::mskeyGears,
                              fleetDescription = 'Fleet',
                              unkVar = c('MONTH','NEGEAR','AREA'),
                              knStrata = c('HY', 'QY','MONTH','NEGEAR', 'TONCL2', 'AREA')) {
@@ -67,6 +91,20 @@ get_comland_data <- function(channel, filterByYear = NA,
 
 
   call <- dbutils::capture_function_call()
+
+
+  check_argument_validation(aggArea,
+                            userAreas,
+                            areaDescription,
+                            propDescription,
+                            applyProp,
+                            aggGear,
+                            userGears,
+                            fleetDescription,
+                            unkVar,
+                            knStrata
+                            )
+
 
   #Pull raw data
   comland <- comlandr::get_comland_raw_data(channel,
@@ -109,8 +147,9 @@ get_comland_data <- function(channel, filterByYear = NA,
 
   #Disaggregate skates and hakes
   if(disagSkatesHakes) comland <- disaggregate_skates_hakes(comland,
-                                                                      channel,
-                                                            filterByYear, filterByArea)
+                                                            channel,
+                                                            filterByYear,
+                                                            filterByArea)
 
   #Aggregate areas
   if(aggArea) comland <- aggregate_area(comland,
@@ -119,8 +158,8 @@ get_comland_data <- function(channel, filterByYear = NA,
                                         propDescription,
                                         useForeign,
                                         channel,
-                                        applyPropLand,
-                                        applyPropValue)
+                                        applyProp)
+
   #Aggregate gears
   if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
 
