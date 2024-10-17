@@ -74,18 +74,18 @@ check_argument_validation <- function(aggArea,
 
   # checks for filling in missing values (assign_unknowns)
   # Depending on the flags above will determine how the arguments unkVar and knStrata are defined
-  if (aggArea) {
-    if (!(areaDescription %in% unkVar) | !(areaDescription %in% knStrata)) {
-      stop(paste0("To assign unknowns when using 'aggArea = T', then you need to replace
-           'AREA' with '" ,areaDescription,"' in both 'unkVar' and 'knStrata' arguments"))
-    }
-  } else {
-    if (!("AREA" %in% unkVar) | !("AREA" %in% knStrata)) {
-      stop(paste0("To assign unknowns when using 'aggArea = F', then you need to use
-           'AREA' in both 'unkVar' and 'knStrata' arguments"))
-    }
-
-  }
+  # if (aggArea) {
+  #   if (!(areaDescription %in% unkVar) | !(areaDescription %in% knStrata)) {
+  #     stop(paste0("To assign unknowns when using 'aggArea = T', then you need to replace
+  #          'AREA' with '" ,areaDescription,"' in both 'unkVar' and 'knStrata' arguments"))
+  #   }
+  # } else {
+  #   if (!("AREA" %in% unkVar) | !("AREA" %in% knStrata)) {
+  #     stop(paste0("To assign unknowns when using 'aggArea = F', then you need to use
+  #          'AREA' in both 'unkVar' and 'knStrata' arguments"))
+  #   }
+  #
+  # }
 
   if (aggGear) {
     if (!(fleetDescription %in% unkVar) | !(fleetDescription %in% knStrata)) {
