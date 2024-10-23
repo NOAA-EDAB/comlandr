@@ -87,17 +87,17 @@ check_argument_validation <- function(aggArea,
   #
   # }
 
-  if (aggGear) {
-    if (!(fleetDescription %in% unkVar) | !(fleetDescription %in% knStrata)) {
-      stop(paste0("To assign unknowns when using 'aggGear = T', then you need to replace
-                'NEGEAR' with '" ,fleetDescription,"' in both 'unkVar' and 'knStrata' arguments"))
-    }
-  } else {
-    if (!("NEGEAR" %in% unkVar) | !("NEGEAR" %in% knStrata)) {
-      stop(paste0("To assign unknowns when using 'aggGear = F', then you need to use
-           'NEGEAR' in both 'unkVar' and 'knStrata' arguments"))
-    }
-  }
+  # if (aggGear) {
+  #   if (!(fleetDescription %in% unkVar) | !(fleetDescription %in% knStrata)) {
+  #     stop(paste0("To assign unknowns when using 'aggGear = T', then you need to replace
+  #               'NEGEAR' with '" ,fleetDescription,"' in both 'unkVar' and 'knStrata' arguments"))
+  #   }
+  # } else {
+  #   if (!("NEGEAR" %in% unkVar) | !("NEGEAR" %in% knStrata)) {
+  #     stop(paste0("To assign unknowns when using 'aggGear = F', then you need to use
+  #          'NEGEAR' in both 'unkVar' and 'knStrata' arguments"))
+  #   }
+  # }
 
 
 
