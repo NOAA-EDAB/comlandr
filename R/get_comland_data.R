@@ -89,10 +89,10 @@ get_comland_data <- function(channel,
                              knStrata = c('HY', 'QY','MONTH','NEGEAR', 'TONCL2', 'AREA')) {
 
 
-
+  # saves initial the function call and returns it with the data pull
   call <- dbutils::capture_function_call()
 
-
+  # checks to make sure argument values are aligned
   check_argument_validation(aggArea,
                             userAreas,
                             areaDescription,
@@ -110,6 +110,10 @@ get_comland_data <- function(channel,
   comland <- comlandr::get_comland_raw_data(channel,
                                             filterByYear, filterByArea,
                                             useLanded, removeParts)
+
+  #Impute unknown catch variables
+  if(!is.null(unkVar)) comland <- assign_unknown(comland, unkVar, knStrata)
+
 
   #Pull herring data from the state of Maine
   if(useHerringMaine){
@@ -162,9 +166,6 @@ get_comland_data <- function(channel,
 
   #Aggregate gears
   if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
-
-  #Impute unknown catch variables
-  if(!is.null(unkVar)) comland <- assign_unknown(comland, unkVar, knStrata)
 
   comland$call <- call
 

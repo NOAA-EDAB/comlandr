@@ -40,10 +40,8 @@ Imports:
     tibble,
     ggplot2,
     gtools,
-    dbutils,
     survdat
 Remotes:
-    andybeet/dbutils,
     NOAA-EDAB/survdat,
     NEFSC/NEFSC-Spatial
 Config/testthat/edition: 3

@@ -41,18 +41,23 @@ get_comdisc_data <- function(channel, comland,
 
   call <- dbutils::capture_function_call()
 
-  #Use data from comland object
-  filterByYear <- range(comland[[1]][, YEAR])[1]:range(comland[[1]][, YEAR])[2]
+  #Use data from comland object to determine time range in which to calculate discards
+  filterByYear <- min(comland$comland$YEAR):max(comland$comland$YEAR)
+
+  #filterByYear <- range(comland[[1]][, YEAR])[1]:range(comland[[1]][, YEAR])[2]
 
   #Pull raw data
-  comdisc.raw <- comlandr::get_comdisc_raw_data(channel, filterByYear)#, filterByArea)
+  comdisc.raw <- get_comdisc_raw_data(channel, filterByYear)#, filterByArea)
+
+  message("Observer data pulled ...")
+
 
   #Aggregate areas
   if(aggArea){
     userAreas <- comland$userAreas
     comdisc.raw <- aggregate_area(comdisc.raw, userAreas, areaDescription,
                                             propDescription, useForeign = F,
-                                            applyPropValue = F)
+                                            applyProp = F)
   }
 
   #Aggregate gears
@@ -61,11 +66,13 @@ get_comdisc_data <- function(channel, comland,
     comdisc.raw <- aggregate_gear(comdisc.raw, userGears, fleetDescription)
   }
 
+  message("Calculating DK ratios ...")
   #Calculate the discard to kept ratio
   dk <- calc_DK(comdisc.raw, areaDescription, fleetDescription)
 
   #Extend dk ratios beyond observer data
   if(extendTS){
+    message("Extend DK ratio back in time ...")
     dk.mean <- dk[, .(meanDK = mean(DK, na.rm = T)),
                   by = c('NESPP3', areaDescription, fleetDescription)]
 
@@ -89,6 +96,7 @@ get_comdisc_data <- function(channel, comland,
     dk[, meanDK := NULL]
   }
 
+  message("Apply DK ratio ...")
   #Apply the discard to kept ratio
   comdisc <- calc_discards(comland, dk, areaDescription, fleetDescription)
 
