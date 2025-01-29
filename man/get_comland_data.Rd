@@ -65,7 +65,7 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 
 \item{fleetDescription}{character string. Field name in \code{userGears} denoting Fleet. (Default = "Fleet")}
 
-\item{unkVar}{character vector. Variables in the data, with have missing values, that you wish to assign a value to}
+\item{unkVar}{character vector. Variables in the data, with have missing values, that you wish to assign a value to. (unkVar = NULL skips assigning unknowns)}
 
 \item{knStrata}{character vector. Variables in the data that you wish to use to use to assign values to \code{unkVar}}
 }

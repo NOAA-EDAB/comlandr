@@ -26,7 +26,7 @@
 #'@param aggGear boolean. Aggregate NEGEAR codes to larger "fleets" (Default = F)
 #'@param userGears data frame. Fleet designations in which NEGEAR codes should be grouped (eg.  \code{\link{mskeyGears}})
 #'@param fleetDescription character string. Field name in \code{userGears} denoting Fleet. (Default = "Fleet")
-#'@param unkVar character vector. Variables in the data, with have missing values, that you wish to assign a value to
+#'@param unkVar character vector. Variables in the data, with have missing values, that you wish to assign a value to. (unkVar = NULL skips assigning unknowns)
 #'@param knStrata character vector. Variables in the data that you wish to use to use to assign values to \code{unkVar}
 #'
 #'@return Data frame (data.table) (n x 12)
