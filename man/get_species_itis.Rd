@@ -71,7 +71,7 @@ get_species_itis(channel,species= c("164712","168559"))
 
 }
 \seealso{
-\code{\link{connect_to_database}}
+\code{\link[dbutils]{connect_to_database}}
 
 Other get functions: 
 \code{\link{get_areas}()},

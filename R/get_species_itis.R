@@ -24,7 +24,7 @@
 #'
 #'@family get functions
 #'
-#' @seealso \code{\link{connect_to_database}}
+#' @seealso \code{\link[dbutils]{connect_to_database}}
 #'
 #' @examples
 #' \dontrun{

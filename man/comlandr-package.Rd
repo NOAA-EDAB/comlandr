@@ -36,6 +36,7 @@ To learn more about using \code{comlandr}, visit \url{https://noaa-edab.github.i
 Useful links:
 \itemize{
   \item \url{https://github.com/NOAA-EDAB/comlandr}
+  \item \url{https://noaa-edab.github.io/comlandr/}
   \item Report bugs at \url{https://github.com/NOAA-EDAB/comlandr/issues}
 }
 
