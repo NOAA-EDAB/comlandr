@@ -10,7 +10,7 @@ Authors@R: c(person(given = "Sean",
                    role = c("cre","aut"),
                    comment = c(ORCID = "0000-0001-8270-7090")))
 Description: Pulls and processes commercial fishing data (US and NAFO).
-URL: https://github.com/NOAA-EDAB/comlandr
+URL: https://github.com/NOAA-EDAB/comlandr, https://noaa-edab.github.io/comlandr/
 BugReports: https://github.com/NOAA-EDAB/comlandr/issues
 License: file LICENSE
 Encoding: UTF-8
