@@ -1,13 +1,12 @@
-pandoc: 2.7.3
-pkgdown: 1.6.1
+pandoc: 3.1.11
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  comlandr: comlandr.html
   ForeignCatch: ForeignCatch.html
   ForeignCatchCompare21A21B: ForeignCatchCompare21A21B.html
-  Notes: Notes.html
-  comlandr: comlandr.html
-last_built: 2021-11-19T20:05Z
+  Overview: Overview.html
+last_built: 2025-02-18T19:17Z
 urls:
-  reference: https://noaa-edab.github.io/comlandr//reference
-  article: https://noaa-edab.github.io/comlandr//articles
-
+  reference: https://noaa-edab.github.io/comlandr/reference
+  article: https://noaa-edab.github.io/comlandr/articles

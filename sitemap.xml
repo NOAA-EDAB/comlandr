@@ -1,66 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//index.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/EPUs.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/GEARs.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/comland.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/comlandr.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_areas.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_comland_data.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_foreign_data.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_gears.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_locations.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_ports.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_species.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_species_itis.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/get_vessels.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/plot_comland.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/process_foreign_data.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//reference/process_foreign_data_skate_hake.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//articles/ForeignCatch.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//articles/ForeignCatchCompare21A21B.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//articles/Notes.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/comlandr//articles/comlandr.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://noaa-edab.github.io/comlandr/404.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/LICENSE-text.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/ForeignCatch.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/ForeignCatchCompare21A21B.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/Overview.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/comlandr.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/authors.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/news/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/EPUs.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/comlandr-package.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/deflate.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_areas.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_comdisc_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_comdisc_raw_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_comland_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_comland_raw_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_foreign_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_gears.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_herring_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_locations.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_ports.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_species.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_species_itis.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_vessels.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/mskeyAreas.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/mskeyGears.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/plot_comland.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/process_foreign_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/soeAreas.html</loc></url>
 </urlset>
+
