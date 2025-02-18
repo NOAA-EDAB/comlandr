@@ -1,21 +1,25 @@
 url: https://noaa-edab.github.io/comlandr/
 
+template:
+ bootstrap: 5
+
+deploy:
+  install_metadata: true
+
 reference:
-- title: "Commercial fishing data"
-  desc: "Standardizes commercial fishing data"
-- contents:
-  - comland
-  - comlandr
-- title: "Data"
-  desc: "Lazy loaded data"
-- contents:
-  - EPUs
-  - GEARs
+# - title: "Commercial fishing data"
+#   desc: "Standardizes commercial fishing data"
+# - contents:
+#   - comlandr
 - title: "Get Data"
-  desc: "Functions that pull data from the ADIOS/CFDBS/NAFO databases"
+  desc: "Functions that pull data from the STOCKEFF/CAMS/CFDBS/NAFO databases"
 - contents:
   - get_comland_data
+  - get_comland_raw_data
   - get_foreign_data
+  - get_comdisc_data
+  - get_comdisc_raw_data
+  - get_herring_data
   - get_species
   - get_species_itis
   - get_areas
@@ -23,6 +27,14 @@ reference:
   - get_locations
   - get_ports
   - get_vessels
+- title: "Data"
+  desc: "Lazy loaded data"
+- contents:
+  - soeAreas
+  - mskeyAreas
+  - mskeyGears
+  - deflate
+  - EPUs
 - title: "Helper Functions"
 - contents:
   - process_foreign_data
@@ -32,4 +44,15 @@ reference:
   - plot_comland
 
 
-
+navbar:
+ components:
+  articles:
+   text: Help
+   menu:
+   - text: Overview of package
+     href: articles/Overview.html
+   - text: Foreign Data (NAFO)
+   - text: NAFO Data structure
+     href: articles/ForeignCatch.html
+   - text: Comparison of 21A and 21B data
+     href: articles/ForeignCatchCompare21A21B.html

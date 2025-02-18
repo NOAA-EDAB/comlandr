@@ -1,6 +1,8 @@
 #' Processes NAFO data to fix skates and hakes
 #'
 #' Apportions skates and hakes in the same way commercial data is handled - using survey
+#' NOT CURRENTLY IMPLEMENTED
+#'
 #'
 #' @param nafoland Data frame. output from \code{\url{process_foreign_data}}
 #'
@@ -11,7 +13,7 @@
 #'@importFrom data.table ":="
 #'@importFrom magrittr "%>%"
 #'
-#'@export
+#'@noRd
 
 process_foreign_data_skate_hake <- function(nafoland){
 

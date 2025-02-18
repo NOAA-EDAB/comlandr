@@ -1,70 +1,72 @@
-#' Processes herring data
+#' Pull Herring data
 #'
-#'Herring Data comes from the state of Maine.
+#' Herring Data comes from the state of Maine and replaces the herring data from StockEff (since
+#' it is incomplete). Pulled from NEFSC_GARFO.maine_herring_catch
 #'
-#'@param channel DBI object. connection object for database access
+#' @inheritParams get_comland_data
 #'@param comland Data frame. master data frame containing species landings
 #'
 #'@return Processed Herring data added to comland
 #'
 #'@importFrom data.table ":=" "key"
 #'
-#' @noRd
 #' @export
 
-get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
-  
+get_herring_data <- function(channel, comland, filterByYear, filterByArea,
+                             useForeign) {
+
   #Pulling data
   message("Pulling Atlantic herring data from maine_herring_catch ...")
-  
+
   if(is.na(filterByYear[1])){
     years <- ">= 1963"
   }else{
     years <- paste0("in (", survdat:::sqltext(filterByYear), ")")
   }
-  
-  herr.qry <- paste0("select year, month, stock_area, negear, gearname, keptmt, discmt
-                     from maine_herring_catch
+
+  herr.qry <- paste0("select year, month, category, stock_area, negear, gearname,
+                     keptmt, discmt
+                     from NEFSC_GARFO.maine_herring_catch
                      where year ", years)
   if(!is.na(filterByArea[1])){
     herr.qry <- paste0(herr.qry, " and stock_area in (", survdat:::sqltext(filterByArea), ")
                                order by stock_area")
   }
-  
+
   sql <- c(comland$sql, herr.qry)
-  
+
   #pull out comland data
   comland <- comland$comland
 
   herr.catch <- data.table::as.data.table(DBI::dbGetQuery(channel, herr.qry))
-  
+
   #Convert number fields from chr to num
   numberCols <- c('YEAR', 'MONTH', 'STOCK_AREA', 'NEGEAR', 'GEARNAME')
   herr.catch[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols]
 
   #Aggregate data
-  data.table::setkey(herr.catch, YEAR, MONTH, STOCK_AREA, NEGEAR)
+  data.table::setkey(herr.catch, YEAR, MONTH, CATEGORY, STOCK_AREA, NEGEAR)
 
-  herring <- herr.catch[, list(sum(KEPTMT, na.rm = T), sum(DISCMT, na.rm = T)), 
+  herring <- herr.catch[, list(sum(KEPTMT, na.rm = T), sum(DISCMT, na.rm = T)),
                         by = key(herr.catch)]
 
   data.table::setnames(herring, c('STOCK_AREA', 'V1', 'V2'),
                        c('AREA', 'SPPLIVMT', 'DISCMT'))
 
   #Using averages from comland to fill in categories
-  herring[, MKTCAT := 5]
+  herring[, MARKET_CODE := 'UN']
 
-  herring[, TONCL1 := 3]
+  herring[, TONCL2 := 30]
 
   herring[, UTILCD := 0]
-  
+
   herring[, MESHCAT := 'LG']
 
   #compute price/utilization from CF tables
   herring.comland <- comland[NESPP3 == 168, ]
 
   #Price from comland
-  herring.price <- herring.comland[, (sum(SPPVALUE, na.rm = T) / sum(SPPLIVMT, na.rm = T)), 
+  herring.price <- herring.comland[, (sum(SPPVALUE, na.rm = T) / sum(SPPLIVMT, na.rm = T)),
                                    by = c('YEAR', 'MONTH')]
 
   data.table::setnames(herring.price, 'V1', 'price')
@@ -114,13 +116,20 @@ get_herring_data <- function(channel, comland, filterByYear, filterByArea) {
   herring[, c('Total', 'Prop', 'cum.prop', 'price', 'DISCMT') := NULL]
   herring[, NESPP3 := 168]
 
+  #Add Nationality Flag
+  herring[, US := T]
+  herring[CATEGORY == 'NAFO', US := F]
+  herring[, CATEGORY := NULL]
+
   data.table::setcolorder(herring, names(comland))
 
   #remove herring from data pull and add in Maine numbers
   comland <- data.table::rbindlist(list(comland[NESPP3 != 168, ], herring))
 
+  #If not grabbing foreign data - remove from data set
+  if(!useForeign) comland <- comland[US == T, ]
 
-  return(list(comland = comland[], 
+  return(list(comland = comland[],
               sql     = sql))
 
 }

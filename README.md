@@ -1,4 +1,4 @@
-# comlandr
+# comlandr <img src="man/figures/logo.png" align="right" width="120" /> 
 
 [![gh-pages](https://github.com/NOAA-EDAB/comlandr/workflows/gh-pages/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions)
 
@@ -9,16 +9,17 @@ Pull and process fishing data
 To use this package you will need:
 
 1. To be behind the NEFSC firewall
-2. Permissions to access the required server : a username and password.
-3. Permission to access the required database
-4. Oracle's instant Client installed
+2. Permissions to access the required server/database : a username and password.
+3. Oracle's instant Client installed
+4. Oracle's R package `ROracle` installed
 
 ## Usage
 
 ### Installation
 
-```remotes::install_github("NOAA-EDAB/comlandr",build_vignettes = TRUE)```
+```remotes::install_github("NOAA-EDAB/comlandr")```
 
+Note: If you don't have Oracle's instant client AND ROracle installed you wont be able to install this package
 
 ## Developers (in alphabetical order)
 

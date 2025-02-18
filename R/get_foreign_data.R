@@ -1,7 +1,9 @@
 #' Downloads all NAFO data
 #'
-#'Downloads, imports, aggregates NAFO data
+#' Downloads, imports, aggregates NAFO data from 21B data base
 #'
+#' @param filterByYear Numeric vector. Years for which data is required
+#' @param filterByArea Character vector. NAFO Areas for which data is required
 #'@param removeUSA Boolean. Should USA landings be removed from data set (Default = T, remove)
 #'@param aggregateCountry Boolean. Should all catch be aggregated over country codes? (Default = T)
 #'
@@ -20,9 +22,12 @@
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
+#'@seealso
+#' NAFO 21B website: \url{https://www.nafo.int/Data/Catch-Statistics-STATLANT-21B}
+#'
 #' @export
 
-get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
+get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggregateCountry = T){
   #Note - NAFO landings by division only so not available in sum.by = "stat.area"
   #Add NAFO foreign landings - Data from http://www.nafo.int/data/frames/data.html
 
@@ -31,19 +36,44 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-80-89.zip",
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-90-99.zip",
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-2000-09.zip",
-                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-16.zip"),
+                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-19.zip",
+                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2020-22.zip"),
                       filename = c("NAFO21B-60-69.txt",
                                    "NAFO21B-70-79.txt",
                                    "NAFO21B-80-89.txt",
                                    "NAFO21B-90-99.txt",
                                    "NAFO21B-2000-09.txt",
-                                   "nafo-21b-2010-16/NAFO-21B-2010-16.txt"),
+                                   "NAFO-21B-2010-2019.txt",
+                                   "NAFO-21B-2020-2022.txt"),
+                      startyr = c(1960,1970,1980,1990,2000,2010,2020),
+                      endyr = c(1969,1979,1989,1999,2009,2019,2022),
                       stringsAsFactors = FALSE)
 
 
+  # Only read in files for the years requested
+  if (any(is.na(filterByYear))){
+    filesToReadStart <- 1 # read in all
+    filesToReadEnd <- nrow(files)
+  } else {
+    st <- (min(filterByYear) >= files$startyr) & (min(filterByYear) <= files$endyr)
+    fin <- (max(filterByYear) >= files$startyr) & (max(filterByYear) <= files$endyr)
+
+    if (all(st == F)) {
+      filesToReadStart <- 1
+    } else {
+      filesToReadStart <- which(as.logical(st))
+    }
+
+    if (all(fin == F)) {
+      filesToReadEnd <- nrow(files)
+    } else {
+      filesToReadEnd <- which(as.logical(fin))
+    }
+  }
+
   # get file, catch error for missing file
   nafo <- NULL
-  for (ifile in 1:nrow(files)) {
+  for (ifile in filesToReadStart:filesToReadEnd) {
     result <- tryCatch(
       {
         stringParts <- stringr::str_split(files$url[ifile],"/")
@@ -71,7 +101,7 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
     dataPart <- data.table::as.data.table(read.csv(unz(temp, files$filename[ifile])))
     base::unlink(temp)
 
-    # make all coumn names consistent over all years data
+    # make all column names consistent over all years data
     # 2010 + data have different column headers.
     # Use names from 1960
     if(any(names(dataPart)=="Gear")){ # found in more recent years
@@ -124,17 +154,42 @@ get_foreign_data <- function(removeUSA = T, aggregateCountry = T){
   nafoland[MONTH %in% 10:12, QY := 4]
   nafoland[MONTH == 0,       QY := 1] # Catches for Unknown MONTH
 
-  # aggregate over country
-  if (aggregateCountry) {
-    nafoland <- nafoland %>%
-      dplyr::group_by(Year,GearCode,Tonnage,Divcode,Code,MONTH,QY) %>%
-      dplyr::summarise(SPPLIVMT=sum(SPPLIVMT),.groups="drop") %>%
-      data.table::as.data.table(.)
-  }
+  # convert weight from character to integer.
+  # Filter out nonsense values inherent in dataset
+  nafoland <- nafoland %>%
+    dplyr::mutate(TEMP = dplyr::case_when(grepl("[^e]-",SPPLIVMT) ~ as.integer(NA),
+                                       SPPLIVMT == "" ~ as.integer(NA),
+                                       is.na(SPPLIVMT) ~ as.integer(NA),
+                                       TRUE ~ as.integer(1))) %>%
+    dplyr::filter(!is.na(TEMP)) %>%
+    dplyr::select(-TEMP) %>%
+    dplyr::mutate(SPPLIVMT = as.integer(SPPLIVMT)) %>%
+    data.table::as.data.table()
 
   # set NA's in monthly catch to zero
   nafoland[is.na(SPPLIVMT), SPPLIVMT := 0]
 
 
-  return(nafoland)
+  # aggregate over country
+  if (aggregateCountry) {
+    nafoland <- nafoland %>%
+      dplyr::group_by(Year,GearCode,Tonnage,Divcode,Code,MONTH,QY) %>%
+      dplyr::summarise(SPPLIVMT=sum(as.numeric(SPPLIVMT)),.groups="drop") %>%
+      data.table::as.data.table(.)
+  }
+
+
+  # Filter data pull based on user inputs, years, areas
+  if (all(!is.na(filterByYear))) {
+    nafoland <- nafoland %>%
+      dplyr::filter(Year %in% filterByYear)
+  }
+  if (all(!is.na(filterByArea))) {
+    nafoland <- nafoland %>%
+      dplyr::filter(Divcode %in% filterByArea)
+  }
+
+
+
+  return(nafoland[])
 }

@@ -7,7 +7,7 @@
 get_ports(channel, ports = "all")
 }
 \arguments{
-\item{channel}{DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
+\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
 to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
 \item{ports}{a specific port code or set of codes. Either numeric or character vector. Defaults to "all" ports.
@@ -61,8 +61,8 @@ Other get functions:
 \code{\link{get_areas}()},
 \code{\link{get_gears}()},
 \code{\link{get_locations}()},
-\code{\link{get_species_itis}()},
 \code{\link{get_species}()},
+\code{\link{get_species_itis}()},
 \code{\link{get_vessels}()}
 }
 \concept{get functions}

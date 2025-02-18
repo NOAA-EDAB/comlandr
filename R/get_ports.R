@@ -2,9 +2,7 @@
 #'
 #'Extract a list of port names, and location info for vessel landings from the NEFSC "Port" supporting table
 #'
-#'
-#' @param channel DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-#' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
+#' @inheritParams get_comland_data
 #' @param ports a specific port code or set of codes. Either numeric or character vector. Defaults to "all" ports.
 #' Numeric codes are converted to VARCHAR2(6 BYTE) when creating the sql statement. Character codes are short character strings referencing PORTNM field.
 #'
@@ -60,7 +58,7 @@ get_ports <- function(channel,ports="all"){
 
   #save(species,file="data/speciesDefinitions.RData")
   # get column names
-  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'PORT' and owner='CFDBS';"
+  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'PORT' and owner='CFDBS'"
   colNames <- t(DBI::dbGetQuery(channel,sqlcolName))
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))

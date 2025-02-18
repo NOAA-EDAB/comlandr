@@ -3,8 +3,7 @@
 #'Extract a list of vessell ID's, tonnage, crew size, home port, etc from the NEFSC "Mstrvess" supporting table
 #'
 #'
-#' @param channel DBI Object. Inherited from \link[DBI]{DBIConnection-class}. This object is used to connect
-#' to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
+#' @inheritParams get_comland_data
 #' @param sqlStatement an sql statement (optional)
 #' @param where text string appending where clause to sql
 #'
@@ -49,7 +48,7 @@ get_vessels <- function(channel,sqlStatement="select * from cfdbs.mstrvess",wher
 
   #appends where
   if (!is.null(where)) {
-    sqlStatement <- paste(sqlStatement,"where",where,";")
+    sqlStatement <- paste(sqlStatement,"where",where)
   }
 
   query <- DBI::dbGetQuery(channel,sqlStatement)
@@ -59,7 +58,7 @@ get_vessels <- function(channel,sqlStatement="select * from cfdbs.mstrvess",wher
   #save(species,file="data/speciesDefinitions.RData")
 
   # get column names
-  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'MSTRVESS' and owner='CFDBS';"
+  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'MSTRVESS' and owner='CFDBS'"
   colNames <- DBI::dbGetQuery(channel,sqlcolName)
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
