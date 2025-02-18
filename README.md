@@ -1,7 +1,7 @@
 # comlandr <img src="man/figures/logo.png" align="right" width="120" /> 
 
 [![gh-pages](https://github.com/NOAA-EDAB/comlandr/workflows/gh-pages/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions)
-
+[![R-CMD-check](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml)
 [![gitleaks](https://github.com/NOAA-EDAB/comlandr/workflows/gitleaks/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions)
 
 Pull and process fishing data
