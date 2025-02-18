@@ -40,7 +40,7 @@ Imports:
     ggplot2,
     gtools,
     survdat,
-    NEFSCspatial
+    NEFSCspatial = NEFSC/NEFSC-Spatial
 Remotes:
     NOAA-EDAB/survdat,
     NEFSC/NEFSC-Spatial
