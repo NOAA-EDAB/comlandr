@@ -2,9 +2,9 @@
 
 [![pkgdown](https://github.com/NOAA-EDAB/comlandr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/pkgdown.yaml)
 [![R-CMD-check](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml)
-[![gitleaks](https://github.com/NOAA-EDAB/comlandr/actions/workflows/secretScan.yml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/secretScan.yml)
+[![gitleaks](https://github.com/NOAA-EDAB/comlandr/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/gitleaks.yml)
 
-Pull and process fishing data
+`comlandr` allows users to pull and process commercial fishing data from the Northeast USA. Northwest Atlantic Fisheries Organization ([NAFO](https://www.nafo.int/)) data is included to capture landings by non US fleets in US waters.
 
 To use this package you will need:
 
@@ -19,7 +19,6 @@ To use this package you will need:
 
 ```remotes::install_github("NOAA-EDAB/comlandr")```
 
-Note: If you don't have Oracle's instant client AND ROracle installed you wont be able to install this package
 
 ## Developers (in alphabetical order)
 
