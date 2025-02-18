@@ -43,5 +43,5 @@ Imports:
     NEFSCspatial
 Remotes:
     NOAA-EDAB/survdat,
-    NEFSCspatial = NEFSC/NEFSC-Spatial
+    NEFSCspatial=NEFSC/NEFSC-Spatial
 Config/testthat/edition: 3
