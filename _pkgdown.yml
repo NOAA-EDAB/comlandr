@@ -1,7 +1,6 @@
 url: https://noaa-edab.github.io/comlandr/
-
 template:
- bootstrap: 5
+  bootstrap: 5
 
 deploy:
   install_metadata: true
