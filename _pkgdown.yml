@@ -37,10 +37,7 @@ reference:
 - title: "Helper Functions"
 - contents:
   - process_foreign_data
-- title: "Plotting"
-  desc: "Basic plotting functions to visualize data"
-- contents:
-  - plot_comland
+
 
 
 navbar:
