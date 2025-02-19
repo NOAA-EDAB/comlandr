@@ -7,9 +7,9 @@
 \format{
 A Data frame
 \describe{
-    \item{NEGEAR2}{NEFSC 2 digit Gear code}
-    \item{MESHCAT}{Category of mesh size, SM, LG}
-    \item{Fleet}{Name of Fleet}
+\item{NEGEAR2}{NEFSC 2 digit Gear code}
+\item{MESHCAT}{Category of mesh size, SM, LG}
+\item{Fleet}{Name of Fleet}
 }
 }
 \usage{

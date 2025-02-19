@@ -16,8 +16,8 @@ get_comdisc_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+\item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
+to communicate with the database engine. (see \code{dbutils::connect_to_database})}
 
 \item{comland}{Data frame. Result of \code{get_comland_data}}
 

@@ -11,8 +11,8 @@ get_vessels(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+\item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
+to communicate with the database engine. (see \code{dbutils::connect_to_database})}
 
 \item{sqlStatement}{an sql statement (optional)}
 
@@ -21,11 +21,11 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 \value{
 A list is returned:
 
-  \item{data}{containing the result of the executed \code{sqlStatement} }
+\item{data}{containing the result of the executed \code{sqlStatement} }
 
-  \item{sql}{containing the \code{sqlStatement} itself}
+\item{sql}{containing the \code{sqlStatement} itself}
 
- \item{colNames}{a vector of the table's column names}
+\item{colNames}{a vector of the table's column names}
 
 If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.mstrvess}" is used
 }
@@ -44,12 +44,10 @@ channel <- connect_to_database(server="name_of_server",uid="individuals_username
 get_vessels(channel)
 
 # extracts vessel ID, crew size, and home port on custom sql statement
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 sqlStatement <- "select vessel, crew, homeport from cfdbs.mstrvess;"
 get_vessels(channel,sqlStatement)
 
 # extracts all vessel info for vessels lengths < 50ft based on custom sql statement
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 sqlStatement <- "select * from cfdbs.mstrvess where vesslen <29;"
 get_vessels(channel,sqlStatement)
 }
