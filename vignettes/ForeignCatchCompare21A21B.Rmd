@@ -399,6 +399,9 @@ Displayed are the percentage of the total catch that are reported in unknown Div
 ### For 21A
 
 ```{r unknown21a, echo = F, eval = T,message=F}
+
+matrixYr <- expand.grid(Year = unique(db21a$Year))
+
 # read in 21a data all divisions
 alldb21a <- readr::read_csv(system.file("extdata","21A.csv",package="comlandr"),show_col_types = F) %>%
   dplyr::rename(Speciesname = `Species Name`) %>%
@@ -419,14 +422,14 @@ all21a <- alldb21a %>%
   dplyr::summarise(totCatch=sum(MetricTonnes),.groups = "drop") %>%
   dplyr::filter(Year %in% unique(unknown$Year)) %>% 
   dplyr::left_join(.,unknown, by = "Year") %>% 
-  dplyr::mutate(proportion21a = totCatch.y/totCatch.x) %>% 
+  dplyr::mutate(proportion21a = totCatch.y/totCatch.x)
+
+matrixYr %>% 
+  dplyr::left_join(.,all21a, by = "Year") %>%
   ggplot2::ggplot(data = .,ggplot2::aes(x=Year,y=proportion21a,group=1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.5) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.5) +
   ggplot2::ylab("Proporion of catch")
-
-
-all21a
 
 ```
 
@@ -451,13 +454,16 @@ all21b <- db21b %>%
   dplyr::summarise(totCatch=sum(SPPLIVMT),.groups = "drop") %>%
   dplyr::filter(Year %in% unique(unknown$Year)) %>%
   dplyr::left_join(.,unknown, by= "Year") %>%
-  dplyr::mutate(proportion21b = totCatch.y/totCatch.x) %>%
+  dplyr::mutate(proportion21b = totCatch.y/totCatch.x) 
+
+matrixYr %>%
+  dplyr::left_join(.,all21b, by = "Year") %>%
   ggplot2::ggplot(data = .,ggplot2::aes(x=Year,y=proportion21b,group=1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.5) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.5) +
   ggplot2::ylab("Proporion of catch")
 
-all21b
+
 
 
 ```
