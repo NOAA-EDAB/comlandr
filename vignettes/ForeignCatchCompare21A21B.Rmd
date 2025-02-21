@@ -194,7 +194,7 @@ db <- db21b %>%
   dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") 
 
 p <- matrixYrDiv %>%
-  dplyr::left_join(da, by = c("Year","Division")) %>% 
+  dplyr::left_join(db, by = c("Year","Division")) %>% 
   ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group = 1)) +
   ggplot2::geom_line(na.rm = T) +
   ggplot2::geom_point(na.rm = T,size=0.1) +
