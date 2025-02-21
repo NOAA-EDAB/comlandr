@@ -31,15 +31,12 @@
 #' get_areas(channel)
 #'
 #' # extracts a subset of area data based on selected areas 100,500 (numeric)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_areas(channel,areas=c(100,500))
 #'
 #' # extracts a subset of area data based on selected areas 100,500 (character)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_areas(channel,areas=c("100","500"))
 #'
 #' # extracts a subset of area data based on areanm's containing "GG" (Androscoggin River etc)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_areas(channel,"GG")
 
 #'

@@ -32,15 +32,12 @@
 #' get_gears(channel)
 #'
 #' # extracts info based on gear types (5,6) (numeric)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_gears(channel,gears=c(5,6))
 #'
 #' # extracts info based on gear types (5,6) (character)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_gears(channel,gears=c("05","06"))
 #'
 #' # extracts info for "Seines"
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_gears(channel,"seines")
 #'
 #'}

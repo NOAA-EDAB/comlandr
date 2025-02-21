@@ -7,16 +7,16 @@
 get_herring_data(channel, comland, filterByYear, filterByArea, useForeign)
 }
 \arguments{
-\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+\item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
+to communicate with the database engine. (see \code{dbutils::connect_to_database})}
 
 \item{comland}{Data frame. master data frame containing species landings}
 
-\item{filterByYear}{numeric vector. Years to retrieve data for (Default = NA, pull all years)}
+\item{filterByYear}{numeric vector. Years to be retrieved (Default = NA, pull all years)}
 
-\item{filterByArea}{numeric vector. Statistical Areas to retrieve data for (Default = NA, pull all areas)}
+\item{filterByArea}{numeric vector. Statistical Areas to be retrieved (Default = NA, pull all areas)}
 
-\item{useForeign}{boolean. Pull foreign data from NAFO. Default = T}
+\item{useForeign}{boolean. Pull foreign data from NAFO. (Default = T)}
 }
 \value{
 Processed Herring data added to comland

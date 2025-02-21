@@ -7,8 +7,8 @@
 get_species(channel, species = "all")
 }
 \arguments{
-\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+\item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
+to communicate with the database engine. (see \code{dbutils::connect_to_database})}
 
 \item{species}{a specific species code or set of codes. Either numeric or character vector. (NESPP3 codes)
 Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement.
@@ -17,11 +17,11 @@ A Species common name can also be supplied. The character string is used to pull
 \value{
 A list is returned:
 
-  \item{data}{containing the result of the executed \code{$sql} statement}
+\item{data}{containing the result of the executed \code{$sql} statement}
 
-  \item{sql}{containing the sql call}
+\item{sql}{containing the sql call}
 
-  \item{colNames}{a vector of the table's column names}
+\item{colNames}{a vector of the table's column names}
 
 The default sql statement "\code{select * from cfdbs.cfspp}" is used
 }
@@ -31,7 +31,7 @@ Extract a list of speices names, code, market category, etc from the NEFSC cfspp
 \section{Reference}{
 
 Use the data dictionary for field name explanations.
-Note: species codes (nespp3) are stored in the database as VARCHAR2(3 BYTE)
+Note: species codes (NESPP3) are stored in the database as VARCHAR2(3 BYTE)
 }
 
 \examples{
@@ -41,18 +41,15 @@ channel <- connect_to_database(server="name_of_server",uid="individuals_username
 get_species(channel)
 
 # extracts info for cod (081)
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_species(channel,species=81)
 
 # extracts info for cod ("COD")
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_species(channel,"cod")
 get_species(channel,"co")
 get_species(channel,"COD")
 
 
 # extracts info for cod (081)  and bluefish (023)
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 sqlStatement <- "select * from cfdbs.cfspp"
 get_species(channel,species= c("081","023"))
 }

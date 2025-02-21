@@ -4,7 +4,7 @@
 #'
 #' @param filterByYear Numeric vector. Years for which data is required
 #' @param filterByArea Character vector. NAFO Areas for which data is required
-#'@param removeUSA Boolean. Should USA landings be removed from data set (Default = T, remove)
+#'@param removeUSA Boolean. Should USA landings be removed from data set? (Default = T, remove)
 #'@param aggregateCountry Boolean. Should all catch be aggregated over country codes? (Default = T)
 #'
 #'@return Data frame: NAFO data
@@ -15,15 +15,18 @@
 #'\item{GearCode}{NAFO gear code}
 #'\item{Tonnage}{Size class of vessel}
 #'\item{DivCode}{Division code in which vessel reported catch}
-#'\item{NAFOCode}{NAFO species code of landed fish}
+#'\item{Code}{NAFO species code of landed fish}
 #'\item{SPPLIVMT}{catch in Metric tons}
 #'\item{Country}{Reporting country - only if \code{aggregateCounty = F}}
-#'\item{NESPP3}{NEFSC species code}
 #'
 #'@importFrom data.table ":=" "key" "setcolorder" "as.data.table"
 #'
 #'@seealso
 #' NAFO 21B website: \url{https://www.nafo.int/Data/Catch-Statistics-STATLANT-21B}
+#'
+#'@examples
+#'nafoData <- get_foreign_data(filterByYear = 2000)
+#'head(nafoData)
 #'
 #' @export
 
@@ -37,16 +40,16 @@ get_foreign_data <- function(filterByYear=NA,filterByArea=NA,removeUSA = T, aggr
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-90-99.zip",
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-2000-09.zip",
                               "https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-19.zip",
-                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2020-22.zip"),
+                              "https://www.nafo.int/Portals/0/Stats/nafo-21b-2020-23.zip"),
                       filename = c("NAFO21B-60-69.txt",
                                    "NAFO21B-70-79.txt",
                                    "NAFO21B-80-89.txt",
                                    "NAFO21B-90-99.txt",
                                    "NAFO21B-2000-09.txt",
                                    "NAFO-21B-2010-2019.txt",
-                                   "NAFO-21B-2020-2022.txt"),
+                                   "NAFO-21B-2020-2023.txt"),
                       startyr = c(1960,1970,1980,1990,2000,2010,2020),
-                      endyr = c(1969,1979,1989,1999,2009,2019,2022),
+                      endyr = c(1969,1979,1989,1999,2009,2019,2023),
                       stringsAsFactors = FALSE)
 
 

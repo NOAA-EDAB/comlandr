@@ -31,12 +31,10 @@
 #' get_vessels(channel)
 #'
 #' # extracts vessel ID, crew size, and home port on custom sql statement
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' sqlStatement <- "select vessel, crew, homeport from cfdbs.mstrvess;"
 #' get_vessels(channel,sqlStatement)
 #'
 #' # extracts all vessel info for vessels lengths < 50ft based on custom sql statement
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' sqlStatement <- "select * from cfdbs.mstrvess where vesslen <29;"
 #' get_vessels(channel,sqlStatement)
 #'}

@@ -7,8 +7,8 @@
 get_species_itis(channel, species = "all", nameType = "common_name")
 }
 \arguments{
-\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+\item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
+to communicate with the database engine. (see \code{dbutils::connect_to_database})}
 
 \item{species}{A specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
 Numeric codes (SPECIES_ITIS, NESPP4) are converted to VARCHAR2 (6 and 4 characters respectively) when creating the sql statement.}
@@ -19,11 +19,11 @@ Determines which type of name to search under.}
 \value{
 A list is returned:
 
-  \item{data}{containing the result of the executed \code{$sql} statement}
+\item{data}{containing the result of the executed \code{$sql} statement}
 
-  \item{sql}{containing the sql call}
+\item{sql}{containing the sql call}
 
-  \item{colNames}{a vector of the table's column names}
+\item{colNames}{a vector of the table's column names}
 
 The default sql statement "\code{select * from cfdbs.SPECIES_ITIS_NE}" is used
 }
@@ -42,29 +42,24 @@ channel <- connect_to_database(server="name_of_server",uid="individuals_username
 get_species_itis(channel)
 
 # extracts info for cod (164712)
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_species_itis(channel,species=164712)
 
 # extracts info for cod ("COD")
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_species_itis(channel,"cod") #o r
 get_species_itis(channel,"co") # or (note also return cockles, calico scallop etc.)
 get_species_itis(channel,"COD")
 
 # extracts info for cod ("gadus")
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_species_itis(channel,"gadus",nameType="scientific_name") #o r
 get_species_itis(channel,"morh",nameType="scientific_name") #o r
 get_species_itis(channel,"GADUS",nameType="scientific_name") #o r
 
 #' # extracts info for cod ("0814") market category 4
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_species_itis(channel,"0814",nameType="NESPP4") #o r
 get_species_itis(channel,814,nameType="NESPP4")
 
 
 # extracts info for cod (164712)  and bluefish (168559)
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 sqlStatement <- "select * from cfdbs.species_itis_ne"
 get_species_itis(channel,species= c("164712","168559"))
 }

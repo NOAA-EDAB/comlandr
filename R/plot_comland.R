@@ -35,7 +35,7 @@ theme_comland <- function(...){
 #'@importFrom data.table "setnames"
 #'
 #'
-#'@export
+#'@noRd
 
 
 plot_comland <- function(data, by, type = 'landings', range = NA, free.y = T) {

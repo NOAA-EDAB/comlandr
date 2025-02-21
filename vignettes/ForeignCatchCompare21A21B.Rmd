@@ -166,14 +166,19 @@ db21b <- db21b %>%
 
 ```{r plot21adiv, echo = F, eval = T, message = F}
 
+matrixYrDiv <- expand.grid(Year = unique(db21a$Year),Division=unique(db21a$Division))
+
 ## By Division
 ## aggregate over Division
-db21a %>%
+da <- db21a %>%
   dplyr::group_by(Year,Division) %>%
-  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") 
+
+matrixYrDiv |> 
+  dplyr::left_join(da, by = c("Year","Division")) %>% 
   ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group = 1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.1) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.1) +
   ggplot2::facet_wrap(ggplot2::vars(Division),scales = "free") +
   ggplot2::ylab("Metric Tons (1000's)") +
   ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
@@ -184,15 +189,20 @@ db21a %>%
 ```{r plot21bdiv, echo = F, eval = T, message = F}
 ### 21B
 
-db21b %>%
+db <- db21b %>%
   dplyr::group_by(Year,Division) %>%
-  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") 
+
+p <- matrixYrDiv %>%
+  dplyr::left_join(db, by = c("Year","Division")) %>% 
   ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group = 1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.1) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.1) +
   ggplot2::facet_wrap(ggplot2::vars(Division),scales = "free") +
   ggplot2::ylab("Metric Tons (1000's)") +
   ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
+
+p
 
 ```
 
@@ -205,14 +215,20 @@ Aggregated over species and division
 ```{r plot21acountry, echo = F, eval = T, message = F}
 ## By Division
 ## aggregate over Division
-db21a %>%
+
+da <- db21a %>%
   dplyr::mutate(Country = dplyr::case_when(grepl("CANADA",Country) ~ "CANADA",
                                            !grepl("CANADA",Country) ~ Country)) %>%
   dplyr::group_by(Year,Country) %>%
-  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") 
+
+matrixYrCountry <- expand.grid(Year = unique(db21a$Year),Country=unique(da$Country))
+
+matrixYrCountry %>%
+  dplyr::left_join(.,da,by = c("Year","Country")) %>%
   ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group = 1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.1) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.1) +
   ggplot2::facet_wrap(ggplot2::vars(Country),scales = "free") +
   ggplot2::ylab("Metric Tons (1000's)") +
   ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
@@ -223,14 +239,20 @@ db21a %>%
 ```{r plot21bcountry, echo = F, eval = T, message = F}
 ### 21B
 
-db21b %>%
+db <- db21b %>%
   dplyr::mutate(Country = dplyr::case_when(grepl("CANADA",Country) ~ "CANADA",
                                            !grepl("CANADA",Country) ~ Country)) %>%
   dplyr::group_by(Year,Country) %>%
-  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") 
+
+matrixYrCountry <- expand.grid(Year = unique(db21a$Year),Country=unique(db$Country))
+
+
+matrixYrCountry %>%
+  dplyr::left_join(.,db,by = c("Year","Country")) %>%
   ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group =1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.1) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.1) +
   ggplot2::facet_wrap(ggplot2::vars(Country),scales = "free") +
   ggplot2::ylab("Metric Tons (1000's)") +
     ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
@@ -255,15 +277,23 @@ sp %>%
 ```
 
 ```{r plot21aspecies, echo = F, eval = T, message = F}
-npanels <- 16
-for (ipage in 1:ceiling(length(unique(db21a$Speciesname))/npanels)) {
-  p <- db21a %>%
+das <- db21a %>%
     tidyr::separate(.,col=Speciesname,into=c("spName","spCode"),sep=" - ") %>%
     dplyr::group_by(Year,spCode) %>%
-    dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+    dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop")
+
+
+matrixYrSpecies <- expand.grid(Year = unique(db21a$Year),spCode=unique(das$spCode))
+
+da <- matrixYrSpecies %>%
+  dplyr::left_join(.,das,by = c("Year","spCode"))
+
+npanels <- 16
+for (ipage in 1:ceiling(length(unique(db21a$Speciesname))/npanels)) {
+  p <- da  %>%
     ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group=1)) +
-    ggplot2::geom_line() +
-    ggplot2::geom_point(size=0.1) +
+    ggplot2::geom_line(na.rm = T) +
+    ggplot2::geom_point(na.rm = T,size=0.1) +
     ggforce::facet_wrap_paginate(ggplot2::vars(spCode),nrow=sqrt(npanels),ncol=sqrt(npanels),page=ipage,scales = "free") +
     ggplot2::ylab("Metric Tons (1000's)") +
     ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
@@ -284,16 +314,26 @@ sp %>%
 ```
 
 ```{r plot21bspecies, echo = F, eval = T, message = F}
+dbs <- db21b %>%
+    tidyr::separate(.,col=Speciesname,into=c("spName","spCode"),sep=" - ") %>%
+    dplyr::group_by(Year,spCode) %>%
+    dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop")
+
+
+matrixYrSpecies <- expand.grid(Year = unique(db21a$Year),spCode=unique(dbs$spCode))
+
+db <- matrixYrSpecies %>%
+  dplyr::left_join(.,dbs,by = c("Year","spCode"))
+
+
+
 npanels <- 16
 ### 21B
 for (ipage in 1:ceiling(length(unique(db21a$Speciesname))/npanels)) {
-  p <- db21b %>%
-    tidyr::separate(.,col=Speciesname,into=c("spName","spCode"),sep=" - ") %>%
-    dplyr::group_by(Year,spCode) %>%
-    dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  p <-  db %>%
     ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group=1)) +
-    ggplot2::geom_line() +
-    ggplot2::geom_point(size=0.1) +
+    ggplot2::geom_line(na.rm = T) +
+    ggplot2::geom_point(na.rm = T,size=0.1) +
     ggforce::facet_wrap_paginate(ggplot2::vars(spCode),nrow=sqrt(npanels),ncol=sqrt(npanels),page=ipage,scales = "free") +
     ggplot2::ylab("Metric Tons (1000's)") +
     ggplot2::scale_x_continuous(limits=c(1960, currentYear)) 
@@ -311,12 +351,18 @@ Aggregated catch over division, country, and species
 Years with missing data: `r setdiff(min(db21a$Year):max(db21a$Year), unique(db21a$Year))`
 
 ```{r plot21atime, echo = F, eval = T, message = F}
-db21a %>%
+
+matrixYr <- expand.grid(Year = unique(db21a$Year))
+
+da <- db21a %>%
   dplyr::group_by(Year) %>%
-  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop")
+
+matrixYr %>% 
+  dplyr::left_join(.,da, by = "Year") %>%
   ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group=1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.5) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.5) +
   ggplot2::ylab("Metric Tons (1000's)")
 
 ```
@@ -329,12 +375,18 @@ Years with missing data: `r setdiff(min(db21b$Year):max(db21b$Year), unique(db21
 
 ```{r plot21btime, echo = F, eval = T, message = F}
 ### 21B
-db21b %>%
+
+matrixYr <- expand.grid(Year = unique(db21a$Year))
+
+db <- db21b %>%
   dplyr::group_by(Year) %>%
-  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") %>%
+  dplyr::summarise(Mt = sum(MetricTonnes),.groups="drop") 
+
+matrixYr %>% 
+  dplyr::left_join(.,db, by = "Year") %>%
   ggplot2::ggplot(.,ggplot2::aes(x = Year, y=Mt/1000,group=1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.5) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.5) +
   ggplot2::ylab("Metric Tons (1000's)")
 
 ```
@@ -347,6 +399,9 @@ Displayed are the percentage of the total catch that are reported in unknown Div
 ### For 21A
 
 ```{r unknown21a, echo = F, eval = T,message=F}
+
+matrixYr <- expand.grid(Year = unique(db21a$Year))
+
 # read in 21a data all divisions
 alldb21a <- readr::read_csv(system.file("extdata","21A.csv",package="comlandr"),show_col_types = F) %>%
   dplyr::rename(Speciesname = `Species Name`) %>%
@@ -367,14 +422,14 @@ all21a <- alldb21a %>%
   dplyr::summarise(totCatch=sum(MetricTonnes),.groups = "drop") %>%
   dplyr::filter(Year %in% unique(unknown$Year)) %>% 
   dplyr::left_join(.,unknown, by = "Year") %>% 
-  dplyr::mutate(proportion21a = totCatch.y/totCatch.x) %>% 
+  dplyr::mutate(proportion21a = totCatch.y/totCatch.x)
+
+matrixYr %>% 
+  dplyr::left_join(.,all21a, by = "Year") %>%
   ggplot2::ggplot(data = .,ggplot2::aes(x=Year,y=proportion21a,group=1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.5) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.5) +
   ggplot2::ylab("Proporion of catch")
-
-
-all21a
 
 ```
 
@@ -399,13 +454,16 @@ all21b <- db21b %>%
   dplyr::summarise(totCatch=sum(SPPLIVMT),.groups = "drop") %>%
   dplyr::filter(Year %in% unique(unknown$Year)) %>%
   dplyr::left_join(.,unknown, by= "Year") %>%
-  dplyr::mutate(proportion21b = totCatch.y/totCatch.x) %>%
+  dplyr::mutate(proportion21b = totCatch.y/totCatch.x) 
+
+matrixYr %>%
+  dplyr::left_join(.,all21b, by = "Year") %>%
   ggplot2::ggplot(data = .,ggplot2::aes(x=Year,y=proportion21b,group=1)) +
-  ggplot2::geom_line() +
-  ggplot2::geom_point(size=0.5) +
+  ggplot2::geom_line(na.rm = T) +
+  ggplot2::geom_point(na.rm = T,size=0.5) +
   ggplot2::ylab("Proporion of catch")
 
-all21b
+
 
 
 ```

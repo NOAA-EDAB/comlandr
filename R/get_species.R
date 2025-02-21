@@ -20,7 +20,7 @@
 #'
 #'@section Reference:
 #'Use the data dictionary for field name explanations.
-#'Note: species codes (nespp3) are stored in the database as VARCHAR2(3 BYTE)
+#'Note: species codes (NESPP3) are stored in the database as VARCHAR2(3 BYTE)
 #'
 #'@family get functions
 #'
@@ -33,18 +33,15 @@
 #' get_species(channel)
 #'
 #' # extracts info for cod (081)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_species(channel,species=81)
 #'
 #' # extracts info for cod ("COD")
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_species(channel,"cod")
 #' get_species(channel,"co")
 #' get_species(channel,"COD")
 #'
 #'
 #' # extracts info for cod (081)  and bluefish (023)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' sqlStatement <- "select * from cfdbs.cfspp"
 #' get_species(channel,species= c("081","023"))
 #'}

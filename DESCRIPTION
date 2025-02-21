@@ -29,6 +29,7 @@ Suggests:
     ggforce
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
+Roxygen: list(markdown = TRUE)
 Imports: 
     data.table,
     sf,

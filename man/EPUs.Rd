@@ -7,10 +7,10 @@
 \format{
 A list of lists
 \describe{
-    \item{GB}{Georges Bank EPU}
-    \item{GOM}{Gulf of Maine EPU}
-    \item{MAB}{Mid Atlantic Bight EPU}
-    \item{SS}{Scotian Shelf EPU}
+\item{GB}{Georges Bank EPU}
+\item{GOM}{Gulf of Maine EPU}
+\item{MAB}{Mid Atlantic Bight EPU}
+\item{SS}{Scotian Shelf EPU}
 }
 }
 \usage{
@@ -25,8 +25,8 @@ Lists the four EPUs (Georges Bank (GB), Gulf of Maine (GOM), Mid Atlantic Bight 
 Each list item is a list itself containg the following elements:
 
 \describe{
-   \item{statAreas}{statistical areas that comprise the EPU}
-   \item{area}{area in km^2 of toal EPU}
+\item{statAreas}{statistical areas that comprise the EPU}
+\item{area}{area in km^2 of toal EPU}
 }
 }
 

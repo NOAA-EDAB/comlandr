@@ -7,8 +7,8 @@
 get_areas(channel, areas = "all")
 }
 \arguments{
-\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+\item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
+to communicate with the database engine. (see \code{dbutils::connect_to_database})}
 
 \item{areas}{a specific area code or set of codes. Either numeric or character vector. Defaults to "all" areas
 Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement. Character codes are short character strings to reference the AREANM field.}
@@ -16,11 +16,11 @@ Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement.
 \value{
 A list is returned:
 
-   \item{data}{containing the result of the executed \code{sqlStatement}}
+\item{data}{containing the result of the executed \code{sqlStatement}}
 
-   \item{sql}{containing the sql call}
+\item{sql}{containing the sql call}
 
-   \item{colNames}{ a vector of the table's column names}
+\item{colNames}{ a vector of the table's column names}
 
 The default sql statement "\code{select * from cfdbs.area}" is used
 }
@@ -39,15 +39,12 @@ channel <- connect_to_database(server="name_of_server",uid="individuals_username
 get_areas(channel)
 
 # extracts a subset of area data based on selected areas 100,500 (numeric)
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_areas(channel,areas=c(100,500))
 
 # extracts a subset of area data based on selected areas 100,500 (character)
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_areas(channel,areas=c("100","500"))
 
 # extracts a subset of area data based on areanm's containing "GG" (Androscoggin River etc)
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_areas(channel,"GG")
 
 }

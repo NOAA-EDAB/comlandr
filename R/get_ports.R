@@ -30,15 +30,12 @@
 #' get_ports(channel)
 #'
 #' # extracts port details based on ports 224309 , 224409 (numeric)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_ports(channel,ports = c(224309,224409))
 #'
 #' # extracts port details based on ports 224309 , 224409 (character)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_ports(channel,ports = c("224309","224409"))
 #'
 #' # extracts port details based on port name (character)
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_ports(channel,ports = "Fairfield")
 #' get_ports(channel,ports = "Fair")
 #'
