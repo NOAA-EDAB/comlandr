@@ -73,3 +73,7 @@ navbar:
      href: articles/ForeignCatch.html
    - text: Comparison of 21A and 21B data
      href: articles/ForeignCatchCompare21A21B.html
+   - text: Supplemental
+   - text: Fish part codes
+     href: articles/fishPartsRemoved.html
+
