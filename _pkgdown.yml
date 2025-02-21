@@ -48,6 +48,26 @@ navbar:
    menu:
    - text: Overview of package
      href: articles/Overview.html
+   - text: Processing steps
+   - text: Pulling US data
+     href: articles/landingsUs.html
+   - text: Missing data
+     href: articles/missingData.html
+   - text: Pulling Herring data
+     href: articles/landingsHerring.html
+   - text: Pulling Foreign data
+     href: articles/landingsNafo.html
+   - text: Calculate Value
+     href: articles/speciesValue.html
+   - text: Separate species aggregates
+     href: articles/disaggregate.html
+   - text: Aggregate statistical areas
+     href: articles/aggregateAreas.html
+   - text: Aggregate fishing gears
+     href: articles/aggregateGears.html
+   - text: Discarding
+   - text: Calculate Discards
+     href: articles/discarding.html
    - text: Foreign Data (NAFO)
    - text: NAFO Data structure
      href: articles/ForeignCatch.html

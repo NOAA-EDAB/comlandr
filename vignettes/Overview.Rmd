@@ -48,9 +48,20 @@ For detailed information regarding NAFO data please review the `vignette("Foreig
 
 ## Processing steps
 
+* Pull US landings from commercial database (`vignette("landingsUs")`)
+* Identify and assign values to missing data (`vignette("missingData")`)
+* Pull Herring data from State of Maine (`vignette("landingsHerring")`)
+* Pull Foreign vessel landings from NAFO (`vignette("landingsNafo")`)
+* Calculate species value (`vignette("speciesValue")`)
+* Differentiate species reported as a group (skates, hakes) (`vignette("disaggregate")`)
+* Aggregate statistical areas to a defined spatial region (`vignette("aggregateAreas")`)
+* Aggregate fishing gears to defined fleets (`vignette("aggregateGears")`)
+
 ## Discards
 
-The reporting of discarding is not legally required. However estimates are required for management. `comlandr` uses 
+The reporting of discarding is not legally required. However estimates are required for management. `comlandr` uses data from the [Observer program](https://www.fisheries.noaa.gov/new-england-mid-atlantic/fisheries-observers/northeast-fisheries-observer-program) to help estimate discards.
+
+See `vignette("discarding")`
 
 ## Caveats
 
