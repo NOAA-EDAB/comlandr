@@ -7,6 +7,7 @@ articles:
   comlandr: comlandr.html
   disaggregate: disaggregate.html
   discarding: discarding.html
+  fishPartsRemoved: fishPartsRemoved.html
   ForeignCatch: ForeignCatch.html
   ForeignCatchCompare21A21B: ForeignCatchCompare21A21B.html
   landingsHerring: landingsHerring.html
@@ -15,7 +16,7 @@ articles:
   missingData: missingData.html
   Overview: Overview.html
   speciesValue: speciesValue.html
-last_built: 2025-02-21T17:35Z
+last_built: 2025-02-21T21:54Z
 urls:
   reference: https://noaa-edab.github.io/comlandr/reference
   article: https://noaa-edab.github.io/comlandr/articles
