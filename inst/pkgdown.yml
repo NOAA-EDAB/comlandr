@@ -2,11 +2,20 @@ pandoc: 3.1.11
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
+  aggregateAreas: aggregateAreas.html
+  aggregateGears: aggregateGears.html
   comlandr: comlandr.html
+  disaggregate: disaggregate.html
+  discarding: discarding.html
   ForeignCatch: ForeignCatch.html
   ForeignCatchCompare21A21B: ForeignCatchCompare21A21B.html
+  landingsHerring: landingsHerring.html
+  landingsNafo: landingsNafo.html
+  landingsUs: landingsUs.html
+  missingData: missingData.html
   Overview: Overview.html
-last_built: 2025-02-21T01:18Z
+  speciesValue: speciesValue.html
+last_built: 2025-02-21T17:35Z
 urls:
   reference: https://noaa-edab.github.io/comlandr/reference
   article: https://noaa-edab.github.io/comlandr/articles
