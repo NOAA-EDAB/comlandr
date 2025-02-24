@@ -21,7 +21,7 @@ We will attempt to summarise the data sources, methods, assumptions made, and th
 
 Data are used from various sources to compile the resulting data pull
 
-* Commercial landings are pulled from the Stock Efficiency Initiative [(STOCKEFF)](https://apps-st.fisheries.noaa.gov/confluence/spaces/STOCKEFFDOC/pages/246776079/StockEff+for+NEFSC+Users). A product created and maintained by the NEFSC population dynamics branch.
+* Commercial landings are pulled from the Stock Efficiency Initiative [(STOCKEFF)](https://apps-st.fisheries.noaa.gov/confluence/spaces/STOCKEFFDOC/pages/246776079/StockEff+for+NEFSC+Users) commercial landings module. A product created and maintained by the NEFSC population dynamics branch.
 * Herring data comes from the State of Maine. The data is updated periodically by the stock assessment scientist
 * Catch by international (non US) vessels are reported to Northwest Atlantic Fisheries Organization [(NAFO)](https://www.nafo.int/). This data is pulled directly from their website.
 * Observer data from the NEFSC is used to aid in the estimation of discards
