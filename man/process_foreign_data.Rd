@@ -7,12 +7,12 @@
 process_foreign_data(channel, nafoland, useLanded = T, useHerringMaine = T)
 }
 \arguments{
-\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+\item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
+to communicate with the database engine. (see \code{dbutils::connect_to_database})}
 
 \item{nafoland}{Data frame. output from \code{\link{get_foreign_data}}}
 
-\item{useLanded}{boolean. Default = T}
+\item{useLanded}{boolean. Use landed or live weight for shellfish (Default = T, landed)}
 
 \item{useHerringMaine}{boolean. Pull data from Maine Herring database or use herring data in commercial landings database (Default = T)}
 }

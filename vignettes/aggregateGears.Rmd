@@ -1,0 +1,24 @@
+---
+title: "Aggregate gears codes to fleets "
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{aggregateGears}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(comlandr)
+```
+
+Specifying the arguments `aggGear = T` (in `get_comland_data()`) and supplying a data frame, `userGears`, fishing fleets are returned by aggregating the landings over gear types.
+  * `NEGEAR2` gear codes are aggregated to fleets as defined in `userGears`
+  
+For a list of `NEGEAR2` codes see `get_gears()`

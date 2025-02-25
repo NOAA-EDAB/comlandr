@@ -19,16 +19,49 @@ We will attempt to summarise the data sources, methods, assumptions made, and th
 
 ## Data sources
 
+Data are used from various sources to compile the resulting data pull
+
+* Commercial landings are pulled from the Stock Efficiency Initiative [(STOCKEFF)](https://apps-st.fisheries.noaa.gov/confluence/spaces/STOCKEFFDOC/pages/246776079/StockEff+for+NEFSC+Users) commercial landings module. A product created and maintained by the NEFSC population dynamics branch.
+* Herring data comes from the State of Maine. The data is updated periodically by the stock assessment scientist
+* Catch by international (non US) vessels are reported to Northwest Atlantic Fisheries Organization [(NAFO)](https://www.nafo.int/). This data is pulled directly from their website.
+* Observer data from the NEFSC is used to aid in the estimation of discards
+
 ### Commercial landings 
+
+Commercial landings data resides in the Catch Accounting and Monitoring System [(CAMS)](https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/cams/cams_documentation/) a database maintained by the Greater Atlantic Regional Fisheries Office [(GARFO)](https://www.fisheries.noaa.gov/about/greater-atlantic-regional-fisheries-office). This system was officially launched in 2022. Prior to this time landings data was more fragmented and "snapshots" of the data (housed at GARFO) was stored at the NEFSC. This was the source data for all stock assessments.
+
+The Stock Efficiency Initiative was created (prior to the adoption of CAMS) with the goal of consolidating the landings data into a more digestible form for use in stock assessments (amongst many other things). STOCKEFF now incorporates CAMS data (post 2022) and legacy data to serve up a product for stock assessments.
+
+`comlandr` uses the STOCKEFF product exclusively for all landings data.
+
+The reason for this is to align the scientific products created by the Ecosystem Dynamics and Assessment Branch (EDAB) with stock assessments undertaken by Population Dynamics Branch by using the same underlying data source.
 
 ### Herring landings
 
+Herring data comes from the State of Maine and is not fully integrated into CAMS (and therefore STOCKEFF). In `comlandr`, the Herring data is pulled from a separate source managed independently from STOCKEFF.
+
 ### Foreign landings
 
+Landings by non US fishing vessels (foreign landings) within the Northwest Atlantic waters are managed by the Northwest Atlantic Fisheries Organization [(NAFO)](https://www.nafo.int/). `comlandr` pulls this data from the NAFO website and merges it with US landings data
+
+For detailed information regarding NAFO data please review the `vignette("ForeignCatch")` and `vignette("ForeignCatchCompare21A21B")`
 
 ## Processing steps
 
+* Pull US landings from commercial database (`vignette("landingsUs")`)
+* Identify and assign values to missing data (`vignette("missingData")`)
+* Pull Herring data from State of Maine (`vignette("landingsHerring")`)
+* Pull Foreign vessel landings from NAFO (`vignette("landingsNafo")`)
+* Calculate species value (`vignette("speciesValue")`)
+* Differentiate species reported as a group (skates, hakes) (`vignette("disaggregate")`)
+* Aggregate statistical areas to a defined spatial region (`vignette("aggregateAreas")`)
+* Aggregate fishing gears to defined fleets (`vignette("aggregateGears")`)
+
 ## Discards
+
+The reporting of discarding is not legally required. However estimates are required for management. `comlandr` uses data from the [Observer program](https://www.fisheries.noaa.gov/new-england-mid-atlantic/fisheries-observers/northeast-fisheries-observer-program) to help estimate discards.
+
+See `vignette("discarding")`
 
 ## Caveats
 
