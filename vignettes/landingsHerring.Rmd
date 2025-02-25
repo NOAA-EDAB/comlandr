@@ -1,5 +1,5 @@
 ---
-title: "landingsHerring"
+title: "Pull Herring data from State of Maine"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{landingsHerring}

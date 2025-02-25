@@ -1,5 +1,5 @@
 ---
-title: "aggregateAreas"
+title: "Aggregate landings to another footprint "
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{aggregateAreas}

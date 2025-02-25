@@ -1,5 +1,5 @@
 ---
-title: "aggregateGears"
+title: "Aggregate gears codes to fleets "
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{aggregateGears}

@@ -1,5 +1,5 @@
 ---
-title: "disaggregate"
+title: "Tease apart unclassified groups of species"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{disaggregate}
