@@ -7,9 +7,9 @@
 \format{
 A Data frame
 \describe{
-    \item{YEAR}{Year of index}
-    \item{MONTH}{Month of index}
-    \item{PPI}{Price Index}
+\item{YEAR}{Year of index}
+\item{MONTH}{Month of index}
+\item{PPI}{Price Index}
 }
 }
 \usage{

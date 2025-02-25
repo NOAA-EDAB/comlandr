@@ -19,6 +19,9 @@ reference:
   - get_comdisc_data
   - get_comdisc_raw_data
   - get_herring_data
+- title: "Supporting Functions"
+  desc: "Functions that pull lookup tables from CFDBS"
+- contents:
   - get_species
   - get_species_itis
   - get_areas
@@ -37,11 +40,9 @@ reference:
 - title: "Helper Functions"
 - contents:
   - process_foreign_data
-- title: "Plotting"
-  desc: "Basic plotting functions to visualize data"
+- title: "Package Overview"
 - contents:
-  - plot_comland
-
+  - comlandr-package
 
 navbar:
  components:
@@ -50,8 +51,32 @@ navbar:
    menu:
    - text: Overview of package
      href: articles/Overview.html
+   - text: Processing steps
+   - text: Pulling US data
+     href: articles/landingsUs.html
+   - text: Missing data
+     href: articles/missingData.html
+   - text: Pulling Herring data
+     href: articles/landingsHerring.html
+   - text: Pulling Foreign data
+     href: articles/landingsNafo.html
+   - text: Calculate Value
+     href: articles/speciesValue.html
+   - text: Separate species aggregates
+     href: articles/disaggregate.html
+   - text: Aggregate statistical areas
+     href: articles/aggregateAreas.html
+   - text: Aggregate fishing gears
+     href: articles/aggregateGears.html
+   - text: Discarding
+   - text: Calculate Discards
+     href: articles/discarding.html
    - text: Foreign Data (NAFO)
    - text: NAFO Data structure
      href: articles/ForeignCatch.html
    - text: Comparison of 21A and 21B data
      href: articles/ForeignCatchCompare21A21B.html
+   - text: Supplemental
+   - text: Fish part codes
+     href: articles/fishPartsRemoved.html
+

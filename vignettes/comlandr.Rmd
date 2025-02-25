@@ -20,7 +20,9 @@ library(comlandr)
 
 ## Prerequisite
 
-You will need to have `ROracle` installed and configured on your machine
+* You will need to have `ROracle` installed and configured on your machine.
+* While it is certainly possible to define your own connection to the database it is much easier using the package [`dbutils`](https://github.com/andybeet/dbutils).
+* Permissions to the `STOCKEFF` schema
 
 ## Connect to the database
 
@@ -34,11 +36,7 @@ You can make a connection as follows:
 
 Pulling the raw data takes up to 15 minutes to complete. see [`get_comland_raw_data`](../reference/get_comland_raw_data.html) for details. 
 
-To pull the raw (unprocessed) commercial data for:
-
-* Years 1964 through 2023
-* With shellfish represented as landed weight (as opposed to live weight)
-* By Statistical Area
+To pull the raw (unprocessed) commercial data for from 1964 through 2023
 
 ```
 data <- get_comland_raw_data(channel,filterByYear = 1964:2023)
@@ -46,7 +44,9 @@ data <- get_comland_raw_data(channel,filterByYear = 1964:2023)
 
 The resulting `data` object is a list containing several fields. See [`get_comland_raw_data`](../reference/get_comland_raw_data.html) for details. 
 
-The data is considered the raw data and does not contain any corrections that stock assessment scientists may do. For example, some market categories representing parts of a fish are not removed.
+* The removal of fish parts are optional but are removed by default.
+* Shellfish are represented as landed weight by default (as opposed to live weight)
+* Footprint of returned data is by [Statistical Area](https://www.fisheries.noaa.gov/resource/map/greater-atlantic-region-statistical-areas)
 
 Note: Herring and Menhaden data are underrepresented in this raw data pull. Herring data is pulled separately from another database. Menhaden are excluded due to confidentiality concerns
 

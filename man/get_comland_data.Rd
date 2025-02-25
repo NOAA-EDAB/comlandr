@@ -28,20 +28,20 @@ get_comland_data(
 )
 }
 \arguments{
-\item{channel}{an Object inherited from \code{\link[ROracle]{Oracle}}. This object is used to connect
-to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+\item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
+to communicate with the database engine. (see \code{dbutils::connect_to_database})}
 
-\item{filterByYear}{numeric vector. Years to retrieve data for (Default = NA, pull all years)}
+\item{filterByYear}{numeric vector. Years to be retrieved (Default = NA, pull all years)}
 
-\item{filterByArea}{numeric vector. Statistical Areas to retrieve data for (Default = NA, pull all areas)}
+\item{filterByArea}{numeric vector. Statistical Areas to be retrieved (Default = NA, pull all areas)}
 
-\item{useLanded}{boolean. Default = T}
+\item{useLanded}{boolean. Use landed or live weight for shellfish (Default = T, landed)}
 
 \item{removeParts}{boolean. Remove species parts (Heads, wings, etc), Default = T}
 
 \item{useHerringMaine}{boolean. Pull data from Maine Herring database or use herring data in commercial landings database (Default = T)}
 
-\item{useForeign}{boolean. Pull foreign data from NAFO. Default = T}
+\item{useForeign}{boolean. Pull foreign data from NAFO. (Default = T)}
 
 \item{refYear}{numeric. Reference year to use when adjusting species value}
 
@@ -70,21 +70,36 @@ to communicate with the database engine. (see \code{\link[dbutils]{connect_to_da
 \item{knStrata}{character vector. Variables in the data that you wish to use to use to assign values to \code{unkVar}}
 }
 \value{
-Data frame (data.table) (n x 12)
-Each row of the data.table represents a species record for a given tow/trip
+A list of 3 objects
+\itemize{
+\item Data frame (data.table) (n x 12)
+}
 
-\item{YEAR}{Year of trip/tow}
-\item{MONTH}{Month of trip/tow}
-\item{NEGEAR/Fleet}{Fishing gear used on trip/tow or aggregated to Fleet}
+\item{comland}{Each row of the data.table defines a group of trips fishing in the same YEAR, MONTH, AREA using the same NEGEAR and MESH, on the same sized vessel, TONCL2, catching species (NESPP3) with
+MARKET_CODE for the same purpose (UTILCD). The sum of the landings and value are returned for each 'group'}
+
+\item{YEAR}{Year of trips}
+\item{MONTH}{Month of trips}
+\item{NEGEAR/Fleet}{Fishing gear used on trips or aggregated to Fleet}
 \item{TONCL2}{Tonnage class of the fishing vessel (2 digit value)}
-\item{NESPP3}{Species code (3 charachters)}
-\item{MARKET_CODE}{market code (2 characters)}
+\item{NESPP3}{Species code (3 characters)}
+\item{MARKET_CODE}{Market code or species caught (2 characters)}
 \item{MESHCAT}{Code to describe the mesh size for a trawl vessel}
 \item{AREA/EPU}{Statistical area/ Ecological Production Unit in which species was reportly caught}
-\item{UTILCD}{Utilization code}
+\item{UTILCD}{Utilization code. Eg. The utilization code: 0=food fish or unknown; 2=aquaculture; 3=canned pet food (1984+); 4=Biomedical (2002+); 5=animal food (1984+); 7=bait; 8=industrial, other (2002+); 9=industrial, reduction.}
 \item{US}{Landing from the USA vessels or foreign vessels}
 \item{SPPLIVMT}{Weight in metric tons.}
 \item{SPPVALUE}{The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.}
+\itemize{
+\item Character string
+}
+
+\item{sql}{Defines the SQL query used to pull the data}
+\itemize{
+\item Function call
+}
+
+\item{call}{The function call used to create the data}
 }
 \description{
 Connects to Population dynamics Database STOCKEFF to pull US landings data.
@@ -92,7 +107,7 @@ Data is also pulled from NAFO (foreign landings) and the State of Maine (Herring
 These sources of data are then aggregated, species value is adjusted to a user defined reference year,
 skate and hake landings (often reported as an unclassified category) are split based on bottom trawl survey,
 and missing values are imputed. For more information regarding these methods
-see \code{vignette("Overview", package = "comlandr")}
+see \code{vignette("Overview")}
 }
 \section{Argument choices}{
 
@@ -106,9 +121,5 @@ maps the statistical area to the larger spatial unit.
 If \code{aggGear = T} then the user must also supply a \code{userGears} data frame
 and a \code{fleetDescription} string to denote the field in \code{userGears} which
 maps the NEGEAR codes to the fleet designation.
-
-If either \code{aggArea = T} or \code{aggGear = T} and the user wants to assign values to
-missing variables (i.e. if \code{unkVar} != NULL) then \code{unkVar} and \code{knStrata} need to
-include the values of \code{areaDescription} and \code{fleetDescription} respectively
 }
 

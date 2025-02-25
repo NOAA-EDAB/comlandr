@@ -1,0 +1,32 @@
+---
+title: "Pull Herring data from State of Maine"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{landingsHerring}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(comlandr)
+```
+
+Herring data found in STOCKEFF is incomplete. In `comlandr` the herring data is replaced with a separate data pull from the State of Maine. See `get_herring_data()`.
+
+* Since the database has different (or missing) field names that are present in the data pull from STOCKEFF (`get_comland_raw_data()`) several fields are added with default values:
+  * MARKET_CODE = "UN"
+  * TONCL2 = 30
+  * MESHCAT = "LG"
+
+* The state of Maine herring data does not include species value (`SPPVALUE`). However STOCKEFF does. `comlandr` uses the species value in the incomplete STOCKEFF data to calculate the value per metric ton for each `YEAR`, `MONTH`. This value is then applied to the true landed herring to estimate the value.
+
+* A similar process is undertaken to assign utility codes `UTILCD` to landings by `YEAR`,`MONTH` in the state of Maine data. Herring is caught and processed for multiple uses as defined by `UTILCD` in STOCKEFF. The proportions of landings by utility code in STOCKEFF are applied to the true landings.
+
+* Landings from the State of Maine include a field to denote if the landings are from US vessels or non US vessels. This is used to create a boolean field, `US`

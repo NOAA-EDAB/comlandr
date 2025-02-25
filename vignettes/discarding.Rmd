@@ -1,0 +1,23 @@
+---
+title: "Estimating discard"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{discarding}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(comlandr)
+```
+
+Since the reporting of discarding is not required by law, estimates are required to account for all mortality. 
+
+**THIS IS UNDER REVIEW**
