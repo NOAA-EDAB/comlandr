@@ -1,5 +1,5 @@
 ---
-title: "discarding"
+title: "Estimating discard"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{discarding}
@@ -17,3 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(comlandr)
 ```
+
+Since the reporting of discarding is not required by law, estimates are required to account for all mortality. 
+
+**THIS IS UNDER REVIEW**
