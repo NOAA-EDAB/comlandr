@@ -17,3 +17,8 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(comlandr)
 ```
+
+Specifying the arguments `aggGear = T` (in `get_comland_data()`) and supplying a data frame, `userGears`, fishing fleets are returned by aggregating the landings over gear types.
+  * `NEGEAR2` gear codes are aggregated to fleets as defined in `userGears`
+  
+For a list of `NEGEAR2` codes see `get_gears()`
