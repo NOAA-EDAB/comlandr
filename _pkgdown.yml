@@ -19,6 +19,9 @@ reference:
   - get_comdisc_data
   - get_comdisc_raw_data
   - get_herring_data
+- title: "Supporting Functions"
+  desc: "Functions that pull lookup tables from CFDBS"
+- contents:
   - get_species
   - get_species_itis
   - get_areas
