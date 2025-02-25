@@ -1,0 +1,29 @@
+---
+title: "Pull US landings data from STOCKEFF"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{landingsUs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(comlandr)
+```
+
+US landings by trip are pulled from STOCKEFF via `get_comland_raw_data()` and grouped by year, month, negear, toncl2, nespp3, nespp4, area, utilcd, mesh, market_code from which spplivlb, sppvalue, and spplndlb are summed.
+
+* Mesh category (`MESHCAT`) is then defined as either `SM` (<= 3 inches) or `LG` (> 3 inches) depending on whether a trip reported a mesh size
+
+* Depending on the value of the argument `useLanded`, meat weight or live weight is used for shellfish species (NESPP3 codes for shellfish are 743:800). Use `get_species()` or `get_species_itis()` to associate common or scientific names to these shellfish codes
+
+* Fish parts are removed. For a list of removed fish part codes, see `vignette("fishPartsRemoved")`
+
+* All weight is converted from lbs to metric tons

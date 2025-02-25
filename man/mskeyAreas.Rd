@@ -7,10 +7,10 @@
 \format{
 A Data frame
 \describe{
-    \item{AREA}{Statistical Area}
-    \item{NESPP3}{Gulf of Maine EPU}
-    \item{MeanProp}{Proportion of Statistical area to attribute to EPU}
-    \item{EPU}{Ecological Production Unit}
+\item{AREA}{Statistical Area}
+\item{NESPP3}{Gulf of Maine EPU}
+\item{MeanProp}{Proportion of Statistical area to attribute to EPU}
+\item{EPU}{Ecological Production Unit}
 }
 }
 \usage{

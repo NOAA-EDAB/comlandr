@@ -1,0 +1,46 @@
+---
+title: "Landings by foreign vessels in US waters"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{landingsNafo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(comlandr)
+```
+
+Landings in US waters by foreign vessels are reported to NAFO. This data is obtained directly from NAFOs website using `get_foreign_data()`. 
+
+* Details regarding the types of data available see `vignette("ForeignCatch")`.
+* For details regarding the reporting areas, the countries reporting and the species caught see `vignette("ForeignCatchCompare21A21B")`
+
+Data from NAFO require considerable processing and several assumptions are made before merging with the US landings data from STOCKEFF. 
+
+* The spatial domain for reporting does not fully overlap with the statistical areas in which US data is reported.
+* Species codes and names differ between the two data sets
+
+## Processing steps
+
+* US data is removed
+* Data with missing `MONTH` field are assigned, `MONTH` = 0 and `QY`= 1 
+* Data is aggregated over country codes
+* Data is filtered to keep only Division codes = c(47, 51:56, 61:63) (See `vignette("ForeignCatchCompare21A21B")`)
+* Missing data from 21B data is substituted with 21A and assigned `MONTH` = 0 and `QY`= 1 
+* `cfdbs.CFSPP` lookup table is used to match NAFO species codes with `NESPP3` codes
+  * Codes present in the NAFO data but not defined in lookup tables are matched manually
+  * NAFO species codes used as catch alls, for example Groundfish (Not specified), are assigned to corresponding `NESPP3` codes
+* All shellfish are reported as live weight. A conversion to meat weight is applied if `useLanded` is supplied.
+* Herring data is removed (since the State of Maine database account for ALL Herring landings, see `vignette("landingsHerring")`)
+* `cfdbs.GEAR` lookup table is used to match NAFO gears with `NEGEAR` codes
+  * Mismatched codes are then manually adjusted
+* Vessel tonnage class codes in NAFO data are matched to `TONCL2` codes.
+* Additional missing fields (`SPPVALUE`,`UTILCD`, `MESHCAT`,`MARKET_CODE`) are set to missing
