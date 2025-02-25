@@ -4,12 +4,12 @@ Data is also pulled from NAFO (foreign landings) and the State of Maine (Herring
 These sources of data are then aggregated, species value is adjusted to a user defined reference year,
 skate and hake landings (often reported as an unclassified category) are split based on bottom trawl survey,
 and missing values are imputed. For more information regarding these methods
-see vignette("Overview", package = "comlandr")'><meta property="og:description" content='Connects to Population dynamics Database STOCKEFF to pull US landings data.
+see vignette("Overview")'><meta property="og:description" content='Connects to Population dynamics Database STOCKEFF to pull US landings data.
 Data is also pulled from NAFO (foreign landings) and the State of Maine (Herring).
 These sources of data are then aggregated, species value is adjusted to a user defined reference year,
 skate and hake landings (often reported as an unclassified category) are split based on bottom trawl survey,
 and missing values are imputed. For more information regarding these methods
-see vignette("Overview", package = "comlandr")'><meta property="og:image" content="https://noaa-edab.github.io/comlandr/logo.png"></head><body>
+see vignette("Overview")'><meta property="og:image" content="https://noaa-edab.github.io/comlandr/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -30,9 +30,22 @@ see vignette("Overview", package = "comlandr")'><meta property="og:image" conten
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-help" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Help</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-help"><li><a class="dropdown-item" href="../articles/Overview.html">Overview of package</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Processing steps</h6></li>
+    <li><a class="dropdown-item" href="../articles/landingsUs.html">Pulling US data</a></li>
+    <li><a class="dropdown-item" href="../articles/missingData.html">Missing data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsHerring.html">Pulling Herring data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsNafo.html">Pulling Foreign data</a></li>
+    <li><a class="dropdown-item" href="../articles/speciesValue.html">Calculate Value</a></li>
+    <li><a class="dropdown-item" href="../articles/disaggregate.html">Separate species aggregates</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateAreas.html">Aggregate statistical areas</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateGears.html">Aggregate fishing gears</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Discarding</h6></li>
+    <li><a class="dropdown-item" href="../articles/discarding.html">Calculate Discards</a></li>
     <li><h6 class="dropdown-header" data-toc-skip>Foreign Data (NAFO)</h6></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatch.html">NAFO Data structure</a></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatchCompare21A21B.html">Comparison of 21A and 21B data</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Supplemental</h6></li>
+    <li><a class="dropdown-item" href="../articles/fishPartsRemoved.html">Fish part codes</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -46,7 +59,7 @@ see vignette("Overview", package = "comlandr")'><meta property="og:image" conten
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Extracts and processes commercial data from Database</h1>
-      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/v1.0.0/R/get_comland_data.R" class="external-link"><code>R/get_comland_data.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/main/R/get_comland_data.R" class="external-link"><code>R/get_comland_data.R</code></a></small>
       <div class="d-none name"><code>get_comland_data.Rd</code></div>
     </div>
 
@@ -56,7 +69,7 @@ Data is also pulled from NAFO (foreign landings) and the State of Maine (Herring
 These sources of data are then aggregated, species value is adjusted to a user defined reference year,
 skate and hake landings (often reported as an unclassified category) are split based on bottom trawl survey,
 and missing values are imputed. For more information regarding these methods
-see <code><a href="../articles/Overview.html">vignette("Overview", package = "comlandr")</a></code></p>
+see <code><a href="../articles/Overview.html">vignette("Overview")</a></code></p>
     </div>
 
     <div class="section level2">
@@ -90,20 +103,20 @@ see <code><a href="../articles/Overview.html">vignette("Overview", package = "co
 
 
 <dl><dt id="arg-channel">channel<a class="anchor" aria-label="anchor" href="#arg-channel"></a></dt>
-<dd><p>an Object inherited from <code>Oracle</code>. This object is used to connect
-to communicate with the database engine. (see <code>connect_to_database</code>)</p></dd>
+<dd><p>an Object inherited from <code>ROracle::Oracle</code>. This object is used to connect
+to communicate with the database engine. (see <code>dbutils::connect_to_database</code>)</p></dd>
 
 
 <dt id="arg-filterbyyear">filterByYear<a class="anchor" aria-label="anchor" href="#arg-filterbyyear"></a></dt>
-<dd><p>numeric vector. Years to retrieve data for (Default = NA, pull all years)</p></dd>
+<dd><p>numeric vector. Years to be retrieved (Default = NA, pull all years)</p></dd>
 
 
 <dt id="arg-filterbyarea">filterByArea<a class="anchor" aria-label="anchor" href="#arg-filterbyarea"></a></dt>
-<dd><p>numeric vector. Statistical Areas to retrieve data for (Default = NA, pull all areas)</p></dd>
+<dd><p>numeric vector. Statistical Areas to be retrieved (Default = NA, pull all areas)</p></dd>
 
 
 <dt id="arg-uselanded">useLanded<a class="anchor" aria-label="anchor" href="#arg-uselanded"></a></dt>
-<dd><p>boolean. Default = T</p></dd>
+<dd><p>boolean. Use landed or live weight for shellfish (Default = T, landed)</p></dd>
 
 
 <dt id="arg-removeparts">removeParts<a class="anchor" aria-label="anchor" href="#arg-removeparts"></a></dt>
@@ -115,7 +128,7 @@ to communicate with the database engine. (see <code>connect_to_database</code>)<
 
 
 <dt id="arg-useforeign">useForeign<a class="anchor" aria-label="anchor" href="#arg-useforeign"></a></dt>
-<dd><p>boolean. Pull foreign data from NAFO. Default = T</p></dd>
+<dd><p>boolean. Pull foreign data from NAFO. (Default = T)</p></dd>
 
 
 <dt id="arg-refyear">refYear<a class="anchor" aria-label="anchor" href="#arg-refyear"></a></dt>
@@ -172,25 +185,29 @@ to communicate with the database engine. (see <code>connect_to_database</code>)<
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Data frame (data.table) (n x 12)
-Each row of the data.table represents a species record for a given tow/trip</p>
-<dl><dt>YEAR</dt>
-<dd><p>Year of trip/tow</p></dd>
+    <p>A list of 3 objects</p><ul><li><p>Data frame (data.table) (n x 12)</p></li>
+</ul><dl><dt>comland</dt>
+<dd><p>Each row of the data.table defines a group of trips fishing in the same YEAR, MONTH, AREA using the same NEGEAR and MESH, on the same sized vessel, TONCL2, catching species (NESPP3) with
+MARKET_CODE for the same purpose (UTILCD). The sum of the landings and value are returned for each 'group'</p></dd>
+
+
+<dt>YEAR</dt>
+<dd><p>Year of trips</p></dd>
 
 <dt>MONTH</dt>
-<dd><p>Month of trip/tow</p></dd>
+<dd><p>Month of trips</p></dd>
 
 <dt>NEGEAR/Fleet</dt>
-<dd><p>Fishing gear used on trip/tow or aggregated to Fleet</p></dd>
+<dd><p>Fishing gear used on trips or aggregated to Fleet</p></dd>
 
 <dt>TONCL2</dt>
 <dd><p>Tonnage class of the fishing vessel (2 digit value)</p></dd>
 
 <dt>NESPP3</dt>
-<dd><p>Species code (3 charachters)</p></dd>
+<dd><p>Species code (3 characters)</p></dd>
 
 <dt>MARKET_CODE</dt>
-<dd><p>market code (2 characters)</p></dd>
+<dd><p>Market code or species caught (2 characters)</p></dd>
 
 <dt>MESHCAT</dt>
 <dd><p>Code to describe the mesh size for a trawl vessel</p></dd>
@@ -199,7 +216,7 @@ Each row of the data.table represents a species record for a given tow/trip</p>
 <dd><p>Statistical area/ Ecological Production Unit in which species was reportly caught</p></dd>
 
 <dt>UTILCD</dt>
-<dd><p>Utilization code</p></dd>
+<dd><p>Utilization code. Eg. The utilization code: 0=food fish or unknown; 2=aquaculture; 3=canned pet food (1984+); 4=Biomedical (2002+); 5=animal food (1984+); 7=bait; 8=industrial, other (2002+); 9=industrial, reduction.</p></dd>
 
 <dt>US</dt>
 <dd><p>Landing from the USA vessels or foreign vessels</p></dd>
@@ -209,6 +226,14 @@ Each row of the data.table represents a species record for a given tow/trip</p>
 
 <dt>SPPVALUE</dt>
 <dd><p>The value of landed catch to the nearest dollar (U.S.), paid to fisherman by dealer, for a given species.</p></dd>
+
+</dl><ul><li><p>Character string</p></li>
+</ul><dl><dt>sql</dt>
+<dd><p>Defines the SQL query used to pull the data</p></dd>
+
+</dl><ul><li><p>Function call</p></li>
+</ul><dl><dt>call</dt>
+<dd><p>The function call used to create the data</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -223,9 +248,6 @@ maps the statistical area to the larger spatial unit.</p>
 <p>If <code>aggGear = T</code> then the user must also supply a <code>userGears</code> data frame
 and a <code>fleetDescription</code> string to denote the field in <code>userGears</code> which
 maps the NEGEAR codes to the fleet designation.</p>
-<p>If either <code>aggArea = T</code> or <code>aggGear = T</code> and the user wants to assign values to
-missing variables (i.e. if <code>unkVar</code> != NULL) then <code>unkVar</code> and <code>knStrata</code> need to
-include the values of <code>areaDescription</code> and <code>fleetDescription</code> respectively</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

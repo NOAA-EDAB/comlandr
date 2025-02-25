@@ -22,9 +22,22 @@ helper function to pull lookup tables"><meta property="og:image" content="https:
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-help" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Help</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-help"><li><a class="dropdown-item" href="../articles/Overview.html">Overview of package</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Processing steps</h6></li>
+    <li><a class="dropdown-item" href="../articles/landingsUs.html">Pulling US data</a></li>
+    <li><a class="dropdown-item" href="../articles/missingData.html">Missing data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsHerring.html">Pulling Herring data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsNafo.html">Pulling Foreign data</a></li>
+    <li><a class="dropdown-item" href="../articles/speciesValue.html">Calculate Value</a></li>
+    <li><a class="dropdown-item" href="../articles/disaggregate.html">Separate species aggregates</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateAreas.html">Aggregate statistical areas</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateGears.html">Aggregate fishing gears</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Discarding</h6></li>
+    <li><a class="dropdown-item" href="../articles/discarding.html">Calculate Discards</a></li>
     <li><h6 class="dropdown-header" data-toc-skip>Foreign Data (NAFO)</h6></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatch.html">NAFO Data structure</a></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatchCompare21A21B.html">Comparison of 21A and 21B data</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Supplemental</h6></li>
+    <li><a class="dropdown-item" href="../articles/fishPartsRemoved.html">Fish part codes</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -38,7 +51,7 @@ helper function to pull lookup tables"><meta property="og:image" content="https:
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>comlandr: Pull and process commercial fisheries data</h1>
-      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/v1.0.0/R/comlandr.R" class="external-link"><code>R/comlandr.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/main/R/comlandr.R" class="external-link"><code>R/comlandr.R</code></a></small>
       <div class="d-none name"><code>comlandr-package.Rd</code></div>
     </div>
 
@@ -51,24 +64,24 @@ helper function to pull lookup tables</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<ul><li><p>Pulls data from StockEff: by area, gear, species, year, month</p></li>
-<li><p>pulls Herring data from state of Maine database</p></li>
+<ul><li><p>Pulls data from StockEff</p></li>
+<li><p>Pulls Herring data from state of Maine database</p></li>
 <li><p>Defines fleet structure and assigns fleets to gear types</p></li>
 <li><p>Define geographic areas and assigns statistical areas to geographic areas</p></li>
-<li><p>Assigns landings to unknown gear, area, quarter/half year, size based on similar trips (based on M Palmer, ????)</p></li>
+<li><p>Assigns landings to unknown gear, area, quarter/half year, size based on similar trips (based on M Palmer, 2008 Working paper)</p></li>
 <li><p>Pulls and processes NAFO (Northwest Atlantic Fisheries Organization) data</p></li>
 <li><p>Uses survey data to apportion hake complex into species</p></li>
 <li><p>Uses survey data to apportion skate complex into species</p></li>
-<li><p>Ajusts species value to specified date</p></li>
+<li><p>Uses observer data to estimate discards</p></li>
+<li><p>Adjusts species value to specified date</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
 
 
 
-<p>Palmer, M (????) Working doc reference and title</p>
+<p>Palmer, M (2008). <strong>A method to apportion landings with unknown area, month and unspecified market categories among landings with similar region and fleet characteristics</strong> Working paper</p>
 <p>NAFO website: <a href="https://www.nafo.int" class="external-link">https://www.nafo.int</a></p>
-<p>To learn more about using <code>comlandr</code>, visit <a href="https://noaa-edab.github.io/comlandr/articles/comlandr.html">https://noaa-edab.github.io/comlandr/articles/comlandr.html</a> or click the index below</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

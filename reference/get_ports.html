@@ -20,9 +20,22 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-help" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Help</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-help"><li><a class="dropdown-item" href="../articles/Overview.html">Overview of package</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Processing steps</h6></li>
+    <li><a class="dropdown-item" href="../articles/landingsUs.html">Pulling US data</a></li>
+    <li><a class="dropdown-item" href="../articles/missingData.html">Missing data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsHerring.html">Pulling Herring data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsNafo.html">Pulling Foreign data</a></li>
+    <li><a class="dropdown-item" href="../articles/speciesValue.html">Calculate Value</a></li>
+    <li><a class="dropdown-item" href="../articles/disaggregate.html">Separate species aggregates</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateAreas.html">Aggregate statistical areas</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateGears.html">Aggregate fishing gears</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Discarding</h6></li>
+    <li><a class="dropdown-item" href="../articles/discarding.html">Calculate Discards</a></li>
     <li><h6 class="dropdown-header" data-toc-skip>Foreign Data (NAFO)</h6></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatch.html">NAFO Data structure</a></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatchCompare21A21B.html">Comparison of 21A and 21B data</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Supplemental</h6></li>
+    <li><a class="dropdown-item" href="../articles/fishPartsRemoved.html">Fish part codes</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -36,7 +49,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Extract PORT location information from CFDBS</h1>
-      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/v1.0.0/R/get_ports.R" class="external-link"><code>R/get_ports.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/main/R/get_ports.R" class="external-link"><code>R/get_ports.R</code></a></small>
       <div class="d-none name"><code>get_ports.Rd</code></div>
     </div>
 
@@ -54,8 +67,8 @@
 
 
 <dl><dt id="arg-channel">channel<a class="anchor" aria-label="anchor" href="#arg-channel"></a></dt>
-<dd><p>an Object inherited from <code>Oracle</code>. This object is used to connect
-to communicate with the database engine. (see <code>connect_to_database</code>)</p></dd>
+<dd><p>an Object inherited from <code>ROracle::Oracle</code>. This object is used to connect
+to communicate with the database engine. (see <code>dbutils::connect_to_database</code>)</p></dd>
 
 
 <dt id="arg-ports">ports<a class="anchor" aria-label="anchor" href="#arg-ports"></a></dt>
@@ -66,16 +79,15 @@ Numeric codes are converted to VARCHAR2(6 BYTE) when creating the sql statement.
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list is returned:</p>
-<p></p>
 <dl><dt>data</dt>
 <dd><p>containing the result of the executed <code>sqlStatement</code></p></dd>
 
 
-   <dt>sql</dt>
+<dt>sql</dt>
 <dd><p>containing the sql call</p></dd>
 
 
-  <dt>colNames</dt>
+<dt>colNames</dt>
 <dd><p>a vector of the table's column names</p></dd>
 
 
@@ -107,15 +119,12 @@ Numeric codes are converted to VARCHAR2(6 BYTE) when creating the sql statement.
 <span class="r-in"><span><span class="fu">get_ports</span><span class="op">(</span><span class="va">channel</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># extracts port details based on ports 224309 , 224409 (numeric)</span></span></span>
-<span class="r-in"><span><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">connect_to_database</span><span class="op">(</span>server<span class="op">=</span><span class="st">"name_of_server"</span>,uid<span class="op">=</span><span class="st">"individuals_username"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_ports</span><span class="op">(</span><span class="va">channel</span>,ports <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">224309</span>,<span class="fl">224409</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># extracts port details based on ports 224309 , 224409 (character)</span></span></span>
-<span class="r-in"><span><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">connect_to_database</span><span class="op">(</span>server<span class="op">=</span><span class="st">"name_of_server"</span>,uid<span class="op">=</span><span class="st">"individuals_username"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_ports</span><span class="op">(</span><span class="va">channel</span>,ports <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"224309"</span>,<span class="st">"224409"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># extracts port details based on port name (character)</span></span></span>
-<span class="r-in"><span><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">connect_to_database</span><span class="op">(</span>server<span class="op">=</span><span class="st">"name_of_server"</span>,uid<span class="op">=</span><span class="st">"individuals_username"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_ports</span><span class="op">(</span><span class="va">channel</span>,ports <span class="op">=</span> <span class="st">"Fairfield"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_ports</span><span class="op">(</span><span class="va">channel</span>,ports <span class="op">=</span> <span class="st">"Fair"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>

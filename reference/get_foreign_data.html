@@ -20,9 +20,22 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-help" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Help</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-help"><li><a class="dropdown-item" href="../articles/Overview.html">Overview of package</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Processing steps</h6></li>
+    <li><a class="dropdown-item" href="../articles/landingsUs.html">Pulling US data</a></li>
+    <li><a class="dropdown-item" href="../articles/missingData.html">Missing data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsHerring.html">Pulling Herring data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsNafo.html">Pulling Foreign data</a></li>
+    <li><a class="dropdown-item" href="../articles/speciesValue.html">Calculate Value</a></li>
+    <li><a class="dropdown-item" href="../articles/disaggregate.html">Separate species aggregates</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateAreas.html">Aggregate statistical areas</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateGears.html">Aggregate fishing gears</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Discarding</h6></li>
+    <li><a class="dropdown-item" href="../articles/discarding.html">Calculate Discards</a></li>
     <li><h6 class="dropdown-header" data-toc-skip>Foreign Data (NAFO)</h6></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatch.html">NAFO Data structure</a></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatchCompare21A21B.html">Comparison of 21A and 21B data</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Supplemental</h6></li>
+    <li><a class="dropdown-item" href="../articles/fishPartsRemoved.html">Fish part codes</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -36,7 +49,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Downloads all NAFO data</h1>
-      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/v1.0.0/R/get_foreign_data.R" class="external-link"><code>R/get_foreign_data.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/main/R/get_foreign_data.R" class="external-link"><code>R/get_foreign_data.R</code></a></small>
       <div class="d-none name"><code>get_foreign_data.Rd</code></div>
     </div>
 
@@ -67,7 +80,7 @@
 
 
 <dt id="arg-removeusa">removeUSA<a class="anchor" aria-label="anchor" href="#arg-removeusa"></a></dt>
-<dd><p>Boolean. Should USA landings be removed from data set (Default = T, remove)</p></dd>
+<dd><p>Boolean. Should USA landings be removed from data set? (Default = T, remove)</p></dd>
 
 
 <dt id="arg-aggregatecountry">aggregateCountry<a class="anchor" aria-label="anchor" href="#arg-aggregatecountry"></a></dt>
@@ -95,7 +108,7 @@
 <dt>DivCode</dt>
 <dd><p>Division code in which vessel reported catch</p></dd>
 
-<dt>NAFOCode</dt>
+<dt>Code</dt>
 <dd><p>NAFO species code of landed fish</p></dd>
 
 <dt>SPPLIVMT</dt>
@@ -104,15 +117,28 @@
 <dt>Country</dt>
 <dd><p>Reporting country - only if <code>aggregateCounty = F</code></p></dd>
 
-<dt>NESPP3</dt>
-<dd><p>NEFSC species code</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>NAFO 21B website: <a href="https://www.nafo.int/Data/Catch-Statistics-STATLANT-21B" class="external-link">https://www.nafo.int/Data/Catch-Statistics-STATLANT-21B</a></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">nafoData</span> <span class="op">&lt;-</span> <span class="fu">get_foreign_data</span><span class="op">(</span>filterByYear <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Reading file: nafo-21b-2000-09.zip</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nafoData</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Year GearCode Tonnage Divcode  Code MONTH    QY SPPLIVMT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    &lt;int&gt;    &lt;int&gt;   &lt;int&gt;   &lt;int&gt; &lt;int&gt; &lt;num&gt; &lt;num&gt;    &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  2000        8       5      32   632     0     1        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  2000        8       5      32   632     1     1        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:  2000        8       5      32   632     2     1        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:  2000        8       5      32   632     3     1        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5:  2000        8       5      32   632     4     2        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6:  2000        8       5      32   632     5     2        0</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

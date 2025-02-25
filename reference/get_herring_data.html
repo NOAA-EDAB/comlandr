@@ -22,9 +22,22 @@ it is incomplete). Pulled from NEFSC_GARFO.maine_herring_catch"><meta property="
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-help" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Help</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-help"><li><a class="dropdown-item" href="../articles/Overview.html">Overview of package</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Processing steps</h6></li>
+    <li><a class="dropdown-item" href="../articles/landingsUs.html">Pulling US data</a></li>
+    <li><a class="dropdown-item" href="../articles/missingData.html">Missing data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsHerring.html">Pulling Herring data</a></li>
+    <li><a class="dropdown-item" href="../articles/landingsNafo.html">Pulling Foreign data</a></li>
+    <li><a class="dropdown-item" href="../articles/speciesValue.html">Calculate Value</a></li>
+    <li><a class="dropdown-item" href="../articles/disaggregate.html">Separate species aggregates</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateAreas.html">Aggregate statistical areas</a></li>
+    <li><a class="dropdown-item" href="../articles/aggregateGears.html">Aggregate fishing gears</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Discarding</h6></li>
+    <li><a class="dropdown-item" href="../articles/discarding.html">Calculate Discards</a></li>
     <li><h6 class="dropdown-header" data-toc-skip>Foreign Data (NAFO)</h6></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatch.html">NAFO Data structure</a></li>
     <li><a class="dropdown-item" href="../articles/ForeignCatchCompare21A21B.html">Comparison of 21A and 21B data</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Supplemental</h6></li>
+    <li><a class="dropdown-item" href="../articles/fishPartsRemoved.html">Fish part codes</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -38,7 +51,7 @@ it is incomplete). Pulled from NEFSC_GARFO.maine_herring_catch"><meta property="
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Pull Herring data</h1>
-      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/v1.0.0/R/get_herring_data.R" class="external-link"><code>R/get_herring_data.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/main/R/get_herring_data.R" class="external-link"><code>R/get_herring_data.R</code></a></small>
       <div class="d-none name"><code>get_herring_data.Rd</code></div>
     </div>
 
@@ -57,8 +70,8 @@ it is incomplete). Pulled from NEFSC_GARFO.maine_herring_catch</p>
 
 
 <dl><dt id="arg-channel">channel<a class="anchor" aria-label="anchor" href="#arg-channel"></a></dt>
-<dd><p>an Object inherited from <code>Oracle</code>. This object is used to connect
-to communicate with the database engine. (see <code>connect_to_database</code>)</p></dd>
+<dd><p>an Object inherited from <code>ROracle::Oracle</code>. This object is used to connect
+to communicate with the database engine. (see <code>dbutils::connect_to_database</code>)</p></dd>
 
 
 <dt id="arg-comland">comland<a class="anchor" aria-label="anchor" href="#arg-comland"></a></dt>
@@ -66,15 +79,15 @@ to communicate with the database engine. (see <code>connect_to_database</code>)<
 
 
 <dt id="arg-filterbyyear">filterByYear<a class="anchor" aria-label="anchor" href="#arg-filterbyyear"></a></dt>
-<dd><p>numeric vector. Years to retrieve data for (Default = NA, pull all years)</p></dd>
+<dd><p>numeric vector. Years to be retrieved (Default = NA, pull all years)</p></dd>
 
 
 <dt id="arg-filterbyarea">filterByArea<a class="anchor" aria-label="anchor" href="#arg-filterbyarea"></a></dt>
-<dd><p>numeric vector. Statistical Areas to retrieve data for (Default = NA, pull all areas)</p></dd>
+<dd><p>numeric vector. Statistical Areas to be retrieved (Default = NA, pull all areas)</p></dd>
 
 
 <dt id="arg-useforeign">useForeign<a class="anchor" aria-label="anchor" href="#arg-useforeign"></a></dt>
-<dd><p>boolean. Pull foreign data from NAFO. Default = T</p></dd>
+<dd><p>boolean. Pull foreign data from NAFO. (Default = T)</p></dd>
 
 </dl></div>
     <div class="section level2">

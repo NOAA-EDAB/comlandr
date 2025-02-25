@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>comlandr • comlandr</title>
+<title>Pull Herring data from State of Maine • comlandr</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="comlandr">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Pull Herring data from State of Maine">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -35,9 +35,9 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item"><a class="nav-link" href="../articles/comlandr.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/comlandr.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-help" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Help</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-help">
 <li><a class="dropdown-item" href="../articles/Overview.html">Overview of package</a></li>
@@ -78,86 +78,48 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>comlandr</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Pull Herring data from State of Maine</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/main/vignettes/comlandr.Rmd" class="external-link"><code>vignettes/comlandr.Rmd</code></a></small>
-      <div class="d-none name"><code>comlandr.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/comlandr/blob/main/vignettes/landingsHerring.Rmd" class="external-link"><code>vignettes/landingsHerring.Rmd</code></a></small>
+      <div class="d-none name"><code>landingsHerring.Rmd</code></div>
     </div>
 
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/NOAA-EDAB/comlandr" class="external-link">comlandr</a></span><span class="op">)</span></span></code></pre></div>
-<div class="section level2">
-<h2 id="prerequisite">Prerequisite<a class="anchor" aria-label="anchor" href="#prerequisite"></a>
-</h2>
+<p>Herring data found in STOCKEFF is incomplete. In
+<code>comlandr</code> the herring data is replaced with a separate data
+pull from the State of Maine. See <code><a href="../reference/get_herring_data.html">get_herring_data()</a></code>.</p>
 <ul>
-<li>You will need to have <code>ROracle</code> installed and configured
-on your machine.</li>
-<li>While it is certainly possible to define your own connection to the
-database it is much easier using the package <a href="https://github.com/andybeet/dbutils" class="external-link"><code>dbutils</code></a>.</li>
-<li>Permissions to the <code>STOCKEFF</code> schema</li>
+<li>
+<p>Since the database has different (or missing) field names that
+are present in the data pull from STOCKEFF
+(<code><a href="../reference/get_comland_raw_data.html">get_comland_raw_data()</a></code>) several fields are added with
+default values:</p>
+<ul>
+<li>MARKET_CODE = “UN”</li>
+<li>TONCL2 = 30</li>
+<li>MESHCAT = “LG”</li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="connect-to-the-database">Connect to the database<a class="anchor" aria-label="anchor" href="#connect-to-the-database"></a>
-</h2>
-<p>You can make a connection as follows:</p>
-<p><code>channel &lt;- dbutils::connect_to_database(server="servername",uid="yourUsername")</code></p>
-<p><code>channel</code> is an object inherited from the
-<code>ROracle</code> package. This object is passed as an argument to
-functions in <code>comlandr</code></p>
-</div>
-<div class="section level2">
-<h2 id="pull-raw-data">Pull Raw Data<a class="anchor" aria-label="anchor" href="#pull-raw-data"></a>
-</h2>
-<p>Pulling the raw data takes up to 15 minutes to complete. see <a href="../reference/get_comland_raw_data.html"><code>get_comland_raw_data</code></a>
-for details.</p>
-<p>To pull the raw (unprocessed) commercial data for from 1964 through
-2023</p>
-<pre><code><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_comland_raw_data.html">get_comland_raw_data</a></span><span class="op">(</span><span class="va">channel</span>,filterByYear <span class="op">=</span> <span class="fl">1964</span><span class="op">:</span><span class="fl">2023</span><span class="op">)</span></span></code></pre>
-<p>The resulting <code>data</code> object is a list containing several
-fields. See <a href="../reference/get_comland_raw_data.html"><code>get_comland_raw_data</code></a>
-for details.</p>
-<ul>
-<li>The removal of fish parts are optional but are removed by
-default.</li>
-<li>Shellfish are represented as landed weight by default (as opposed to
-live weight)</li>
-<li>Footprint of returned data is by <a href="https://www.fisheries.noaa.gov/resource/map/greater-atlantic-region-statistical-areas" class="external-link">Statistical
-Area</a>
 </li>
-</ul>
-<p>Note: Herring and Menhaden data are underrepresented in this raw data
-pull. Herring data is pulled separately from another database. Menhaden
-are excluded due to confidentiality concerns</p>
-</div>
-<div class="section level2">
-<h2 id="processed-raw-data">Processed Raw Data<a class="anchor" aria-label="anchor" href="#processed-raw-data"></a>
-</h2>
-<p>To pull the processed raw data, use <a href="../reference/get_comland_data.html"><code>get_comland_data</code></a></p>
-<pre><code><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_comland_data.html">get_comland_data</a></span><span class="op">(</span><span class="va">channel</span>,filterByYear <span class="op">=</span> <span class="fl">1964</span><span class="op">:</span><span class="fl">2023</span><span class="op">)</span></span></code></pre>
-<p>This will pull the raw data (above) then process it depending on the
-input arguments supplied.</p>
-<p>The options in the processing are:</p>
-<ul>
-<li>Include Herring data</li>
-<li>Remove fish parts</li>
-<li>Include foreign landings from NAFO</li>
-<li>Adjust species value based on a reference year</li>
-<li>Separate skate and hake landings by species based on survey
-proportions</li>
-<li>Aggregate landings by user defined groupings of Statistical
-areas</li>
-<li>Aggregate gear codes based on user supplied fleets</li>
-<li>Attempt to assign values to missing data</li>
-</ul>
-<p>See the articles section for in depth explanation of the components
-of <code>comlandr</code></p>
-</div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside>
+<li><p>The state of Maine herring data does not include species value
+(<code>SPPVALUE</code>). However STOCKEFF does. <code>comlandr</code>
+uses the species value in the incomplete STOCKEFF data to calculate the
+value per metric ton for each <code>YEAR</code>, <code>MONTH</code>.
+This value is then applied to the true landed herring to estimate the
+value.</p></li>
+<li><p>A similar process is undertaken to assign utility codes
+<code>UTILCD</code> to landings by <code>YEAR</code>,<code>MONTH</code>
+in the state of Maine data. Herring is caught and processed for multiple
+uses as defined by <code>UTILCD</code> in STOCKEFF. The proportions of
+landings by utility code in STOCKEFF are applied to the true
+landings.</p></li>
+<li><p>Landings from the State of Maine include a field to denote if the
+landings are from US vessels or non US vessels. This is used to create a
+boolean field, <code>US</code></p></li>
+</ul></main>
 </div>
 
 

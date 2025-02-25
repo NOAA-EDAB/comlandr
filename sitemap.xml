@@ -4,8 +4,18 @@
 <url><loc>https://noaa-edab.github.io/comlandr/articles/ForeignCatch.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/articles/ForeignCatchCompare21A21B.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/articles/Overview.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/aggregateAreas.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/aggregateGears.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/articles/comlandr.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/disaggregate.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/discarding.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/fishPartsRemoved.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/articles/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/landingsHerring.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/landingsNafo.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/landingsUs.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/missingData.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/speciesValue.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/authors.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/index.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/news/index.html</loc></url>
@@ -28,7 +38,6 @@
 <url><loc>https://noaa-edab.github.io/comlandr/reference/index.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/mskeyAreas.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/mskeyGears.html</loc></url>
-<url><loc>https://noaa-edab.github.io/comlandr/reference/plot_comland.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/process_foreign_data.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/soeAreas.html</loc></url>
 </urlset>
