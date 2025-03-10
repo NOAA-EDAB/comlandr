@@ -58,9 +58,7 @@ jobs:
          API_KEY: ${{ secrets.FREDAPI }}
       # reads in data from inst/extdata/fred
         run: |
-          print(here::here())
-          print(getwd())
-          source("data-raw/get_fred.r")
+          source(here::here("data-raw/get_fred.R"))
         shell: Rscript {0}
 
 #       - name: Pull stocksmart data
