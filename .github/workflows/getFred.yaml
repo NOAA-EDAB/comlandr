@@ -51,7 +51,6 @@ jobs:
 
         run: |
           install.packages(c("pak","fredr", "here"))
-          pak::pak("NOAA-EDAB/comlandr")
         shell: Rscript {0}
 
       - name: Read, pull, save current & new data
