@@ -50,8 +50,8 @@ jobs:
       #          "usethis","gt","rmarkdown","rlang"))
 
         run: |
-          install.packages(c("remotes","fredr", "here"))
-          remotes::install_github("NOAA-EDAB/comlandr")
+          install.packages(c("pak","fredr", "here"))
+          pak::pak("NOAA-EDAB/comlandr")
         shell: Rscript {0}
 
       - name: Read, pull, save current & new data
