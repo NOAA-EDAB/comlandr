@@ -2,7 +2,7 @@
 #'
 #' From Jan 1981. Data is quarterly
 
-get_fred <- functon() {
+get_fred <- function() {
   FRED_key <-  Sys.getenv("API_KEY")
   fredr::fredr_set_key(FRED_key)
   deflators <- fredr::fredr(

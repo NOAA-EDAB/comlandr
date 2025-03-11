@@ -59,8 +59,11 @@ jobs:
       # reads in data from inst/extdata/fred
         run: |
           source(here::here("data-raw/get_fred.R"))
-          formattedData <- get_fred()
-          print(formattedData)
+          newFred <- get_fred()
+          saveRDS(newFred,"data-raw/newfred.rds")
+          oldFred <- readRDS(system.file("extdata/fred/fred.rds",package = "comlandr"))
+          all.equal(newFred,oldFred)
+
         shell: Rscript {0}
 
 #       - name: Pull stocksmart data
