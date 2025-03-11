@@ -67,6 +67,9 @@ jobs:
           comp <- compare_fred_data(oldFred,newFred)
           print(comp)
 
+          rmarkdown::render(here::here("data-raw/sendAsEmail.Rmd"),
+                        params = comp)
+
 
         shell: Rscript {0}
 
@@ -101,25 +104,25 @@ jobs:
 #       #- name: Find differences
 #       # Create text explaining differences and append to news.md and release notes
 #
-#       # Send email indicating if anything has changed
-#       - name: Send email
-#         uses: dawidd6/action-send-mail@v3
-#
-#         with:
-#           server_address: smtp.gmail.com
-#           server_port: 465
-#
-#           username: ${{ secrets.MAIL_USERNAME }}
-#           password: ${{ secrets.MAIL_PASSWORD }}
-#
-#           subject: Github Actions job result
-#           to: andrew.beet@noaa.gov
-#
-#           from: Stocksmart GitHub
-#
-#           #body: file://${{github.workspace}}/data-raw/datapull.txt
-#
-#           html_body: file://${{github.workspace}}/data-raw/sendAsEmail.html
+      # Send email indicating if anything has changed
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3
+
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+
+          subject: Github Actions job result
+          to: andrew.beet@noaa.gov
+
+          from: comlandr FRED update
+
+          #body: file://${{github.workspace}}/data-raw/datapull.txt
+
+          html_body: file://${{github.workspace}}/data-raw/sendAsEmail.html
 #
 #           #attachments: ./data-raw/sendAsEmail.html
 #
