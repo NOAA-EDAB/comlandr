@@ -50,10 +50,10 @@ jobs:
       #          "usethis","gt","rmarkdown","rlang"))
 
         run: |
-          install.packages(c("pak","fredr", "here"))
+          install.packages(c("pak","fredr", "here","dplyr"))
         shell: Rscript {0}
 
-      - name: Read, pull, save current & new data
+      - name: Read, pull, and compare
         env:
          API_KEY: ${{ secrets.FREDAPI }}
       # reads in data from inst/extdata/fred
@@ -63,6 +63,7 @@ jobs:
           saveRDS(newFred,"data-raw/newfred.rds")
           oldFred <- readRDS(system.file("extdata/fred/fred.rds",package = "comlandr"))
           all.equal(newFred,oldFred)
+
 
         shell: Rscript {0}
 
