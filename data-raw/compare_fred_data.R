@@ -1,7 +1,7 @@
 #' Compare the new FRED dataset with the old
 #' determine wha changes
 
-compareData <- function(current,new) {
+compare_fred_data <- function(current,new) {
 
 
   #######################################################
