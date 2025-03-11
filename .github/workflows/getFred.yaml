@@ -9,7 +9,7 @@ on:
     branches:
       - main
       - master
-      - andy_deflator
+      - test_deflator_yml
   pull_request:
     branches:
       - main
@@ -59,6 +59,8 @@ jobs:
       # reads in data from inst/extdata/fred
         run: |
           source(here::here("data-raw/get_fred.R"))
+          formattedData <- get_fred()
+          print(formattedData)
         shell: Rscript {0}
 
 #       - name: Pull stocksmart data
