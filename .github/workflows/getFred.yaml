@@ -50,7 +50,7 @@ jobs:
       #          "usethis","gt","rmarkdown","rlang"))
 
         run: |
-          install.packages(c("pak","fredr", "here","dplyr"))
+          install.packages(c("pak","fredr", "here","dplyr","lubridate"))
         shell: Rscript {0}
 
       - name: Read, pull, and compare
@@ -67,24 +67,7 @@ jobs:
 
         shell: Rscript {0}
 
-#       - name: Pull stocksmart data
-#         run: |
-#           options(timeout = 60 * 60 * 6)
-#           source(here::here("data-raw/query_stocksmart_api.R"))
-#           query_stocksmart_api()
-#         shell: Rscript {0}
-#
-#       - name: Process stocksmart data
-#         run: |
-#           options(timeout = 60 * 60 * 6)
-#           source(here::here("data-raw/process_stocksmart_ts_data.R"))
-#           out <- process_stocksmart_ts_data(exportFile=TRUE,isRunLocal=F)
-#           saveRDS(out$summaryData,here::here("data-raw/newSummary.rds"))
-#           saveRDS(out$tsData,here::here("data-raw/newData.rds"))
-# #         incorporate difference check (below) prior to writing to repo or save as RDS and
-# #         and write to repo later
-#         shell: Rscript {0}
-#
+
 #       - name: Compare current pull with existing
 #       # creates an rmd to send as email
 #       # adds content to news.md
