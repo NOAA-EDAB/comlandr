@@ -13,6 +13,8 @@ To use this package you will need:
 3. Oracle's instant Client installed
 4. Oracle's R package `ROracle` installed
 
+"This product uses the [FRED® API](https://fred.stlouisfed.org/) but is not endorsed or certified by the Federal Reserve Bank of St. Louis."
+
 ## Usage
 
 ### Installation
