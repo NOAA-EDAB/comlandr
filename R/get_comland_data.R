@@ -110,7 +110,9 @@ get_comland_data <- function(channel,
                             userGears,
                             fleetDescription,
                             unkVar,
-                            knStrata
+                            knStrata,
+                            refYear,
+                            refMonth
                             )
 
 
