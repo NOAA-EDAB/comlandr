@@ -14,8 +14,6 @@
 #'@noRd
 
 
-
-
 adjust_inflation <- function(comland, refYear, refMonth){
 
   #Pulling data
@@ -25,7 +23,8 @@ adjust_inflation <- function(comland, refYear, refMonth){
   sql <- comland$sql
   comland <- comland$comland
 
-  #pull in economic data
+  # pull in economic data. This is quarterly data
+  # This gets updated by a cron job using github action getFred.yaml
   deflateData <- readRDS(system.file("extdata/fred/fred.rds",package = "comlandr"))
 
   # Pad missing months values. Use previous quarters value
