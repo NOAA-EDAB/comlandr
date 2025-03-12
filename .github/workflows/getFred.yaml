@@ -50,7 +50,7 @@ jobs:
       #          "usethis","gt",lang"))
 
         run: |
-          install.packages(c("pak","fredr", "here","dplyr","lubridate","rmarkdown"))
+          install.packages(c("pak","fredr", "here","dplyr","lubridate","rmarkdown","ggplot2"))
         shell: Rscript {0}
 
       - name: Read, pull, and compare
@@ -65,8 +65,9 @@ jobs:
           oldFred <- readRDS("inst/extdata/fred/fred.rds")
           all.equal(newFred,oldFred)
           comp <- compare_fred_data(oldFred,newFred)
-          print(comp)
-
+          if(!comp$isEqual) {
+            saveRDS(newFred,"inst/extdata/fred/fred.rds")
+          }
           rmarkdown::render(here::here("data-raw/sendAsEmail.Rmd"),
                         params = comp)
 
@@ -95,16 +96,11 @@ jobs:
           html_body: file://${{github.workspace}}/data-raw/sendAsEmail.html
 
 
-#       - name: commit data files
-#         run: |
-#           git config user.name github-actions
-#           git config user.email github-actions@github.com
-#           git add data/stockAssessmentData.rda
-#           git add data/stockAssessmentSummary.rda
-#           git add data-raw/datapull.txt
-#           git add README.md
-#           git add NEWS.md
-#           git add DESCRIPTION
-#           git commit -m "automated commit from api yml"
-#           git push
-#
+      - name: commit data files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add inst/extdata/fred/fred.rds
+          git commit -m "automated commit from getFred.yaml"
+          git push
+
