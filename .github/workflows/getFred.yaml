@@ -58,16 +58,14 @@ jobs:
          API_KEY: ${{ secrets.FREDAPI }}
       # reads in data from inst/extdata/fred
         run: |
+          oldFred <- readRDS("inst/extdata/fred/fred.rds")
           source(here::here("data-raw/get_fred.R"))
           source(here::here("data-raw/compare_fred_data.R"))
           newFred <- get_fred()
-          saveRDS(newFred,"data-raw/newfred.rds")
-          oldFred <- readRDS("inst/extdata/fred/fred.rds")
-          all.equal(newFred,oldFred)
+          saveRDS(newFred,"inst/extdata/fred/fred.rds")
+
           comp <- compare_fred_data(oldFred,newFred)
-          if(!comp$isEqual) {
-            saveRDS(newFred,"inst/extdata/fred/fred.rds")
-          }
+
           rmarkdown::render(here::here("data-raw/sendAsEmail.Rmd"),
                         params = comp)
 
