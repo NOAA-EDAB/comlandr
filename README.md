@@ -1,6 +1,7 @@
 # comlandr <img src="man/figures/logo.png" align="right" width="120" /> 
 
 [![pkgdown](https://github.com/NOAA-EDAB/comlandr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/pkgdown.yaml)
+[![FRED](https://github.com/NOAA-EDAB/comlandr/actions/workflows/getFred.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/getFred.yaml)
 [![R-CMD-check](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml)
 [![gitleaks](https://github.com/NOAA-EDAB/comlandr/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/gitleaks.yml)
 
