@@ -9,14 +9,13 @@ on:
     branches:
       - main
       - master
-      - test_deflator_yml
   pull_request:
     branches:
       - main
       - master
 #  schedule:
     # uses UTC/GMT time (+ 5 hrs)
- #   - cron: "0 0 1 * *" # Every Month (Day 1) at 0000 hrs = 0500 UTC
+    - cron: "0 0 1 * *" # Every Month (Day 1) at 0000 hrs = 0500 UTC
 
 jobs:
 
