@@ -82,8 +82,8 @@ jobs:
           server_address: smtp.gmail.com
           server_port: 465
 
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
+          username: ${{ secrets.AB_MAIL_USERNAME }}
+          password: ${{ secrets.AB_MAIL_PASSWORD }}
 
           subject: Github Actions job result
           to: andrew.beet@noaa.gov
