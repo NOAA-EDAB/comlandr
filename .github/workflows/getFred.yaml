@@ -1,0 +1,103 @@
+# pulls FRED data and saves to repo
+# https://fred.stlouisfed.org/series/GDPDEF
+# required deflator for species value
+
+name: FRED
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+#  schedule:
+    # uses UTC/GMT time (+ 5 hrs)
+    - cron: "0 0 1 * *" # Every Month (Day 1) at 0000 hrs = 0500 UTC
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GH_RELEASE }}
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: false
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: set up pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Install command line packages
+        run: |
+          sudo apt update
+          sudo apt-get install libcurl4-openssl-dev libgit2-dev
+        shell: bash
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.2.0'
+
+      - name: Install packages
+      #          "usethis","gt",lang"))
+
+        run: |
+          install.packages(c("pak","fredr", "here","dplyr","lubridate","rmarkdown","ggplot2"))
+        shell: Rscript {0}
+
+      - name: Read, pull, and compare
+        env:
+         API_KEY: ${{ secrets.FREDAPI }}
+      # reads in data from inst/extdata/fred
+        run: |
+          oldFred <- readRDS("inst/extdata/fred/fred.rds")
+          source(here::here("data-raw/get_fred.R"))
+          source(here::here("data-raw/compare_fred_data.R"))
+          newFred <- get_fred()
+          saveRDS(newFred,"inst/extdata/fred/fred.rds")
+
+          comp <- compare_fred_data(oldFred,newFred)
+
+          rmarkdown::render(here::here("data-raw/sendAsEmail.Rmd"),
+                        params = comp)
+
+
+        shell: Rscript {0}
+
+
+      # Send email indicating if anything has changed
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3
+
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+
+          username: ${{ secrets.AB_MAIL_USERNAME }}
+          password: ${{ secrets.AB_MAIL_PASSWORD }}
+
+          subject: Github Actions job result
+          to: andrew.beet@noaa.gov
+
+          from: comlandr FRED update
+
+          #body: file://${{github.workspace}}/data-raw/datapull.txt
+
+          html_body: file://${{github.workspace}}/data-raw/sendAsEmail.html
+
+
+      - name: commit data files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add inst/extdata/fred/fred.rds
+          git commit -m "automated commit from getFred.yaml"
+          git push
+

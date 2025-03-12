@@ -17,7 +17,9 @@ check_argument_validation <- function(aggArea,
                                       userGears,
                                       fleetDescription,
                                       unkVar,
-                                      knStrata) {
+                                      knStrata,
+                                      refYear,
+                                      refMonth) {
 
   ############## AggArea ###############
 
@@ -69,6 +71,26 @@ check_argument_validation <- function(aggArea,
          Please use 'applyProp = F'")
 
   }
+
+  # Reference year and month check
+  # Check user selected year/month is included in time series
+  # Check to make sure Fred data is up to date
+  #pull in economic data
+  deflateData <- readRDS(system.file("extdata/fred/fred.rds",package = "comlandr"))
+  last <- deflateData |>
+    dplyr::arrange(YEAR,MONTH) |>
+    tail(1)
+  minYr <- min(deflateData$YEAR)
+  if (!(refMonth %in% 1:12)) {
+    stop(paste0("refMonth must be an integer between 1-12. Currently: ",refMonth))
+  }
+  if ((refYear < minYr) || (refYear > last$YEAR)) {
+    stop(paste0("refYear must be within the range of the economic data: [",minYr,"-",last$YEAR,"]. Currently: ",refYear))
+  }
+  if (refMonth > last$MONTH & refYear >= last$YEAR)  {
+    stop(paste0("refYear and refMonth must be <= [",last$YEAR,"-",last$MONTH,"]. Currently: ",refYear,"-",refMonth))
+  }
+
 
   ################ UNKNOWNS #################
 

@@ -1,7 +1,8 @@
 #' Adjust species value for inflation
 #'
-#'Reads in data from Bureau of Labor statistics website and adjusts species value
-#'What data is fetched?
+#' Uses Economic data from the \href{Federal Reserve Bank of St Louis}{https://fred.stlouisfed.org/series/GDPDEF} to
+#' adjusts species value to a reference year/month. The economic data is reported quarterly (Jan, Apr, Jul, Oct).
+#' The value is held constant for months following the reported month
 #'
 #'
 #'@param comland Data frame. master data frame containing species landings
@@ -13,11 +14,7 @@
 #'@noRd
 
 
-
-
 adjust_inflation <- function(comland, refYear, refMonth){
-
-  call <- c(comland$call, dbutils::capture_function_call())
 
   #Pulling data
   message("Adjusting for inflation ...")
@@ -26,28 +23,61 @@ adjust_inflation <- function(comland, refYear, refMonth){
   sql <- comland$sql
   comland <- comland$comland
 
-  #This isn't working right now - using downloaded file
-  # temp <- tempfile()
-  # download.file("http://download.bls.gov/pub/time.series/wp/wp.data.3.ProcessedFoods", temp)
-  #inflate <- data.table::as.data.table(read.delim(comlandr::wp.data.3.ProcessedFoods))
-  #unlink(temp)
+  # pull in economic data. This is quarterly data
+  # This gets updated by a cron job using github action getFred.yaml
+  deflateData <- readRDS(system.file("extdata/fred/fred.rds",package = "comlandr"))
 
-  # inflate[, series_id := gsub(" ", "", inflate[, series_id])]
-  # deflate <- inflate[series_id == "WPU0223", ]
-  # deflate[, MONTH := as.numeric(substr(period, 2, 3))]
-  # data.table::setnames(deflate, c('year', 'value'), c('YEAR', 'PPI'))
-  # deflate <- deflate[, list(YEAR, MONTH, PPI)]
+  # Pad missing months values. Use previous quarters value
+  # A convoluted way of doing this ...
+  fullgrid <- expand.grid(YEAR = unique(deflateData$YEAR), MONTH = 1:12) |>
+    dplyr::left_join(deflateData, by = c("YEAR","MONTH")) |>
+    dplyr::arrange(YEAR,MONTH)
 
-  #Set yearly deflator to 0 instead of 13 to match unknown month designation
-  deflate <- comlandr::deflate
-  deflate[MONTH == 13, MONTH := 0]
-  deflate.base <- deflate[YEAR == refYear & MONTH == refMonth, PPI]
+  deflate <- NULL
+  for(irow in 1:nrow(fullgrid)) {
+    rowData <- fullgrid[irow,]
+    yr <- rowData$YEAR
+    mn <- rowData$MONTH
+    val <- rowData$value
+    if (mn <= 3) {
+      assign <- fullgrid |>
+        dplyr::filter(YEAR == yr, MONTH == 1) |>
+        dplyr::pull(value)
+    } else if (mn > 3 & mn <=6) {
+      assign <- fullgrid |>
+        dplyr::filter(YEAR == yr, MONTH == 4) |>
+        dplyr::pull(value)
+
+    } else if (mn > 6 & mn <=9) {
+      assign <- fullgrid |>
+        dplyr::filter(YEAR == yr, MONTH == 7) |>
+        dplyr::pull(value)
+
+    } else {
+      assign <- fullgrid |>
+        dplyr::filter(YEAR == yr, MONTH == 10) |>
+        dplyr::pull(value)
+    }
+    newRow <- rowData
+    newRow$newvalue <- assign
+    deflate <- rbind(deflate,newRow)
+  }
+
+  # cornform with existing format
+  deflate <- deflate |>
+    dplyr::select(-value) |>
+    dplyr::rename(value = newvalue) |>
+    data.table::as.data.table()
+
+
+  #deflate <- comlandr::deflate
+  deflate.base <- deflate[YEAR == refYear & MONTH == refMonth, value]
 
   comland <- merge(comland, deflate, by = c('YEAR', 'MONTH'), all.x = T)
-  comland[, SPPVALUE := round((SPPVALUE * deflate.base) / PPI)]
+  comland[, SPPVALUE := round((SPPVALUE * deflate.base) / value)]
 
   #Remove extra column
-  comland[, PPI := NULL]
+  comland[, value := NULL]
 
   return(list(comland      = comland[],
               sql          = sql,
