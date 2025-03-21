@@ -6,14 +6,10 @@ name: FRED
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [main]
   pull_request:
-    branches:
-      - main
-      - master
-#  schedule:
+    branches: [main]
+  schedule:
     # uses UTC/GMT time (+ 5 hrs)
     - cron: "0 0 1 * *" # Every Month (Day 1) at 0000 hrs = 0500 UTC
 
