@@ -1,0 +1,38 @@
+---
+title: "Database schemas"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Database schemas}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+To use comlandr, you will need permissions to access several databases. The following is a list of the databases and the tables that you will need to access. We recommend that you request read access to all tables in the schemas. However below is a list of the current tables that are used in the package.
+
+```{r table, echo = F, eval = T}
+sample_list <- list(
+  cfdbs = c("area", "gear", "loc", "port", "cfspp", "species_itis_ne", "mstrvess"),
+  svdbs = c("survan_conversion_factors", "svcruise_purpose", "length_weight_coefficients", "union_fscs_svbio", "union_fscs_svsta", "union_fscs_svcat", "union_fscs_svlen", "svdbs_cruises", "fscs_maturity_codes", "sex_codes","fscs_sex_codes", "svspecies_list", "svmstrata", "sv_vessel", "mstr_cruise"),
+  stockeff = c("mv_cf_landings"),
+  obdbs = c("obspp", "asmpp", "obinc", "obotgh", "obspecconv", "obspec"),
+  NEFSC_GARFO = c("maine_herring_catch"))
+
+max_len <- max(lengths(sample_list))
+
+df <- purrr::map_df(sample_list, ~ c(., rep('', max_len - length(.))))
+
+df |> 
+  flextable::flextable() |> 
+  flextable::autofit()
+
+```
+
+
