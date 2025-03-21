@@ -94,6 +94,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add inst/extdata/fred/fred.rds
+          git add data-raw/datapull.txt
           git commit -m "automated commit from getFred.yaml"
           git push
 

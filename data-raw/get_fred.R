@@ -15,6 +15,14 @@ get_fred <- function() {
                   MONTH = lubridate::month(date)) |>
     dplyr::select(YEAR,MONTH,value)
 
+
+  fn <- "datapull.txt"
+  file.create(here::here("data-raw",fn))
+  dateCreated <- Sys.time()
+  cat(paste0(dateCreated,"\n"),file=here::here("data-raw",fn))
+
+
+
   return(formatted)
 
 }
