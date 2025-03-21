@@ -79,4 +79,7 @@ navbar:
    - text: Supplemental
    - text: Fish part codes
      href: articles/fishPartsRemoved.html
+   - text: Database schemas
+     href: articles/schemas.html
+
 

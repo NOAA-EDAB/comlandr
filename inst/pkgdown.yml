@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   aggregateAreas: aggregateAreas.html
@@ -15,9 +15,9 @@ articles:
   landingsUs: landingsUs.html
   missingData: missingData.html
   Overview: Overview.html
+  schemas: schemas.html
   speciesValue: speciesValue.html
-last_built: 2025-02-21T21:54Z
+last_built: 2025-03-21T20:40Z
 urls:
   reference: https://noaa-edab.github.io/comlandr/reference
   article: https://noaa-edab.github.io/comlandr/articles
-
