@@ -14,7 +14,7 @@
 #'
 #'   \item{colNames}{a vector of the table's column names}
 #'
-#'If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.port}" is used
+#'If no \code{sqlStatement} is provided the default sql statement "\code{select * from NEFSC_GARFO.cfdbs_port}" is used
 #'
 #'@section Reference:
 #'Use the data dictionary for field name explanations
@@ -47,7 +47,7 @@
 get_ports <- function(channel,ports="all"){
 
   # creates the sql based on user input
-  sqlStatement <- dbutils::create_sql(ports,fieldName="port",fieldName2="portnm",dataType="%06d",defaultSqlStatement="select * from cfdbs.port")
+  sqlStatement <- dbutils::create_sql(ports,fieldName="port",fieldName2="portnm",dataType="%06d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_port")
 
   query <- DBI::dbGetQuery(channel,sqlStatement)
 

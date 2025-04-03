@@ -16,7 +16,7 @@
 #'
 #'   \item{colNames}{a vector of the table's column names}
 #'
-#'The default sql statement "\code{select * from cfdbs.cfspp}" is used
+#'The default sql statement "\code{select * from NEFSC_GARFO.cfdbs_cfspp}" is used
 #'
 #'@section Reference:
 #'Use the data dictionary for field name explanations.
@@ -53,7 +53,7 @@
 get_species <- function(channel,species="all"){
 
   # creates the sql based on user input
-  sqlStatement <- dbutils::create_sql(species,fieldName="nespp3",fieldName2="sppnm",dataType="%03d",defaultSqlStatement="select * from cfdbs.cfspp")
+  sqlStatement <- dbutils::create_sql(species,fieldName="nespp3",fieldName2="sppnm",dataType="%03d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_cfspp")
 
   query <- DBI::dbGetQuery(channel,sqlStatement)
 

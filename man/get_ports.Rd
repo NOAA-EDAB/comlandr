@@ -22,7 +22,7 @@ A list is returned:
 
 \item{colNames}{a vector of the table's column names}
 
-If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.port}" is used
+If no \code{sqlStatement} is provided the default sql statement "\code{select * from NEFSC_GARFO.cfdbs_port}" is used
 }
 \description{
 Extract a list of port names, and location info for vessel landings from the NEFSC "Port" supporting table

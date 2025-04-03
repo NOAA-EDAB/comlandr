@@ -17,7 +17,7 @@
 #'
 #'   \item{colNames}{a vector of the table's column names}
 #'
-#'The default sql statement "\code{select * from cfdbs.SPECIES_ITIS_NE}" is used
+#'The default sql statement "\code{select * from NEFSC_GARFO.cfdbs_SPECIES_ITIS_NE}" is used
 #'
 #'@section Reference:
 #'Use the data dictionary for field name explanations.
