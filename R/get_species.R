@@ -58,7 +58,7 @@ get_species <- function(channel,species="all"){
   query <- DBI::dbGetQuery(channel,sqlStatement)
 
   # get column names
-  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFSPP' and owner='CFDBS'"
+  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_CFSPP' and owner='NEFSC_GARFO'"
   colNames <- t(DBI::dbGetQuery(channel,sqlcolName))
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))

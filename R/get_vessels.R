@@ -42,7 +42,7 @@ get_vessels <- function(channel){
   query <- DBI::dbGetQuery(channel,sqlStatement)
 
   # get column names
-  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'MSTRVESS' and owner='CFDBS'"
+  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_MSTRVESS' and owner='NEFSC_GARFO'"
   colNames <- DBI::dbGetQuery(channel,sqlcolName)
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
