@@ -59,6 +59,10 @@ herring_pull <- get_herring_data2(channel = channel,
 herring_combined <- merge_herring_data(herring = herring_pull,
                                        comland = comland)
 
+herring_combined2 <- merge_herring_data(herring = herring_pull,
+                                       comland = comland,
+                                       method = "tidy")
+
 test <- herring_combined$data |>
   dplyr::filter(NESPP3 == 168) |>
   dplyr::rename(AREA = STOCK_AREA)

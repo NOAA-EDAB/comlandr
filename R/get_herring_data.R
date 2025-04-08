@@ -71,14 +71,15 @@ get_herring_data2 <- function(channel,
 #'
 #'@param comland Data frame. master data frame containing species landings
 #'@param herring Data frame. Data pull from `get_herring_data2`
+#'@param method If "tidy", will use tidyverse methods to impute UTILCD. Else will use a for loop.
 #'
 #'@return Processed Herring data added to comland
 #'
 #' @export
 
 merge_herring_data <- function(herring, 
-                               comland#, # filterByYear, filterByArea,
-                             #useForeign
+                               comland,
+                               method = "default"
                              ) {
   
   new_sql <- c(comland$sql, herring$sql)
@@ -94,6 +95,8 @@ merge_herring_data <- function(herring,
     dplyr::summarise(price = sum(SPPVALUE, na.rm = T) / sum(SPPLIVMT, na.rm = T))
   
   # this is 0 -- but keeping because it was in source code
+  # stockeff doesn't bring in price from before 1981
+  # could just fill with NA before 1981
   price_1964 <- herring.price |>
     dplyr::filter(YEAR == 1964) |>
     dplyr::summarise(price = mean(price, na.rm = TRUE)) |>
@@ -116,6 +119,7 @@ merge_herring_data <- function(herring,
   
   # create imputation key based on proportions
   message("Imputing UTILCD from comlandr...")
+  
   herring.util <- herring.comland |>
     dplyr::group_by(YEAR, MONTH, UTILCD) |>
     dplyr::summarise(SPPLIVMT = sum(SPPLIVMT)) |>
@@ -140,40 +144,76 @@ merge_herring_data <- function(herring,
   
   # merge and keep only the UTILCD associated with the lowest possible key_cum_prop
   message("Merging in imputed UTILCD...")
-  full_herring <- dplyr::left_join(herring, 
-                                   herring.util |>
-                                     dplyr::select(YEAR, MONTH, UTILCD, cum.prop) |>
-                                     dplyr::distinct() |>
-                                     dplyr::rename(key_cum_prop = cum.prop),
-                                   relationship = "many-to-many") 
-  # print(nrow(full_herring))
-  full_herring <- full_herring |>
-    # dplyr::arrange(YEAR, MONTH, cum.prop, key_cum_prop) |>
-    dplyr::mutate(cum.prop = ifelse(cum.prop > 0.99, 1, cum.prop),
-                  key_cum_prop = ifelse(key_cum_prop > 0.99, 1, key_cum_prop)) |>
-    # dplyr::mutate(cum.prop = round(cum.prop, digits = 5),
-    #               key_cum_prop = round(key_cum_prop, digits = 5)) |>
-    dplyr::filter(cum.prop <= key_cum_prop) |> 
-    # this filter isn't happening correctly
-    # not assessing the 1's properly
-    # issues with rounding?
-    tidyr::nest(data = c("UTILCD", "key_cum_prop"))
+  if(method == "tidy") {
+    full_herring <- dplyr::left_join(herring, 
+                                     herring.util |>
+                                       dplyr::select(YEAR, MONTH, UTILCD, cum.prop) |>
+                                       dplyr::distinct() |>
+                                       dplyr::rename(key_cum_prop = cum.prop),
+                                     relationship = "many-to-many") 
+    # print(nrow(full_herring))
+    full_herring <- full_herring |>
+      # dplyr::arrange(YEAR, MONTH, cum.prop, key_cum_prop) |>
+      dplyr::mutate(cum.prop = ifelse(cum.prop > 0.99, 1, cum.prop),
+                    key_cum_prop = ifelse(key_cum_prop > 0.99, 1, key_cum_prop)) |>
+      # dplyr::mutate(cum.prop = round(cum.prop, digits = 5),
+      #               key_cum_prop = round(key_cum_prop, digits = 5)) |>
+      dplyr::filter(cum.prop <= key_cum_prop) |> 
+      # this filter isn't happening correctly
+      # not assessing the 1's properly
+      # issues with rounding?
+      tidyr::nest(data = c("UTILCD", "key_cum_prop"))
+    
+    # this isn't working as intended yet (2025-04-02)
+    # it's because of the 0.00001 added in the previous step
+    # print(nrow(full_herring))
+    full_herring <- full_herring |>
+      dplyr::mutate(out = purrr::map(.x = data,
+                                     .f = function(.x){
+                                       (.x |> dplyr::arrange(key_cum_prop))[1,]
+                                     })) |>
+      dplyr::select(-data) |>
+      tidyr::unnest(cols = out) |>
+      dplyr::select(-key_cum_prop)
   
-  # this isn't working as intended yet (2025-04-02)
-  # it's because of the 0.00001 added in the previous step
-  # print(nrow(full_herring))
+    } else {
+      
+            full_herring <- herring |>
+        dplyr::mutate(UTILCD = NA) 
+      
+    for(iyear in unique(herring.util$YEAR)){
+      for(imonth in 1:12){
+        cum.prop.low <- 0
+        for(iutil in herring.util |>
+            dplyr::filter(YEAR == iyear,
+                          MONTH == imonth) |>
+            purrr::pluck("UTILCD") |>
+            unique() ) {
+         
+           cum.prop.high <- herring.util |>
+            dplyr::filter(YEAR == iyear,
+                          MONTH == imonth,
+                          UTILCD == iutil) |>
+            purrr::pluck("cum.prop")
+          
+          full_herring <- full_herring |>
+            dplyr::mutate(UTILCD = dplyr::case_when(YEAR == iyear & 
+                                                      MONTH == imonth &
+                                                      cum.prop <= cum.prop.high &
+                                                      cum.prop > cum.prop.low ~ iutil,
+                                                    TRUE ~ UTILCD))
+          cum.prop.low <- cum.prop.high
+        }
+      }
+    }
+  }
+  
   full_herring <- full_herring |>
-    dplyr::mutate(out = purrr::map(.x = data,
-                                   .f = function(.x){
-                                     (.x |> dplyr::arrange(key_cum_prop))[1,]
-                                   })) |>
-    dplyr::select(-data) |>
-    tidyr::unnest(cols = out) |>
     dplyr::mutate(NESPP3 = 168#,
                   # US = ifelse(CATEGORY == "NAFO", FALSE, TRUE) 
                   # nationality should already be assigned from the first function
     ) |>
-    dplyr::select(-c('Total', 'Prop', 'cum.prop', 'price', 'DISCMT', "CATEGORY", "key_cum_prop"))
+    dplyr::select(-c('Total', 'Prop', 'cum.prop', 'price', 'DISCMT', "CATEGORY"))
   
   check2 <- nrow(full_herring)
   if (check2 < check1) {
