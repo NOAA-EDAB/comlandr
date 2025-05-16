@@ -45,7 +45,7 @@ jobs:
       #          "usethis","gt",lang"))
 
         run: |
-          install.packages(c("pak","fredr", "here","dplyr","lubridate","rmarkdown","ggplot2"))
+          install.packages(c("pak","fredr", "tidyr", here","dplyr","lubridate","rmarkdown","ggplot2"))
         shell: Rscript {0}
 
       - name: Read, pull, and compare
