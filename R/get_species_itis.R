@@ -17,7 +17,7 @@
 #'
 #'   \item{colNames}{a vector of the table's column names}
 #'
-#'The default sql statement "\code{select * from cfdbs.SPECIES_ITIS_NE}" is used
+#'The default sql statement "\code{select * from NEFSC_GARFO.cfdbs_SPECIES_ITIS_NE}" is used
 #'
 #'@section Reference:
 #'Use the data dictionary for field name explanations.
@@ -85,7 +85,7 @@ get_species_itis <- function(channel,species="all",nameType="common_name"){
   query <- DBI::dbGetQuery(channel,sqlStatement)
 
   # get column names
-  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'SPECIES_ITIS_NE' and owner='CFDBS'"
+  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_SPECIES_ITIS_NE' and owner='NEFSC_GARFO'"
   colNames <- t(DBI::dbGetQuery(channel,sqlcolName))
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))

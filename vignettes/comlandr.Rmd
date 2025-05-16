@@ -22,7 +22,7 @@ library(comlandr)
 
 * You will need to have `ROracle` installed and configured on your machine.
 * While it is certainly possible to define your own connection to the database it is much easier using the package [`dbutils`](https://github.com/andybeet/dbutils).
-* Permissions to the `STOCKEFF` schema
+* Permissions to several schemas eg. `STOCKEFF`. See `vignette("schemas")` for more details.
 
 ## Connect to the database
 

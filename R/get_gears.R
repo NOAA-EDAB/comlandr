@@ -16,7 +16,7 @@
 #'
 #'   \item{colNames}{a vector of the table's column names}
 #'
-#'If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.gear}" is used
+#'If no \code{sqlStatement} is provided the default sql statement "\code{select * from NEFSC_GARFO.cfdbs_gear}" is used
 #'
 #'@section Reference:
 #'Use the data dictionary for field name explanations
@@ -47,18 +47,12 @@
 #
 get_gears <- function(channel,gears="all") {
 
-  #appends where
-#  if (!is.null(where)) {
-#    sqlStatement <- paste(sqlStatement,"where",where,";")
-#  }
-
-  sqlStatement <- dbutils::create_sql(gears,fieldName="negear2",fieldName2="gearnm",dataType="%02d",defaultSqlStatement="select * from cfdbs.gear")
-
+  sqlStatement <- dbutils::create_sql(gears,fieldName="negear2",fieldName2="gearnm",dataType="%02d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_gear")
 
   query <- DBI::dbGetQuery(channel,sqlStatement)
 
 # get column names
-  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'GEAR' and owner='CFDBS'"
+  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_GEAR' and owner='NEFSC_GARFO'"
   colNames <- DBI::dbGetQuery(channel,sqlcolName)
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))

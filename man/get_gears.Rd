@@ -22,7 +22,7 @@ A list is returned:
 
 \item{colNames}{a vector of the table's column names}
 
-If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.gear}" is used
+If no \code{sqlStatement} is provided the default sql statement "\code{select * from NEFSC_GARFO.cfdbs_gear}" is used
 }
 \description{
 Extract a list of gear types in the NEFSC "GEAR" supporting table

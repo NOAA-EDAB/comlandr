@@ -22,7 +22,7 @@ A list is returned:
 
 \item{colNames}{ a vector of the table's column names}
 
-The default sql statement "\code{select * from cfdbs.area}" is used
+The default sql statement "\code{select * from NEFSC_GARFO.cfdbs_area}" is used
 }
 \description{
 Extract a list of statistical areas, region, NAFO codes, etc from the NEFSC "Area" supporting table
