@@ -20,7 +20,7 @@ To use comlandr, you will need permissions to access several databases. The foll
 ```{r table, echo = F, eval = T}
 sample_list <- list(
   svdbs = c("survan_conversion_factors", "svcruise_purpose", "length_weight_coefficients", "union_fscs_svbio", "union_fscs_svsta", "union_fscs_svcat", "union_fscs_svlen", "svdbs_cruises", "fscs_maturity_codes", "sex_codes","fscs_sex_codes", "svspecies_list", "svmstrata", "sv_vessel", "mstr_cruise"),
-  stockeff = c("mv_cf_landings","V_CF_STOCK_RECENT_STAT_AREA_O"),
+  stockeff = c("mv_cf_landings","v_cf_stock_recent_stat_area_o"),
   obdbs = c("obspp", "asmpp", "obinc", "obotgh", "obspecconv", "obspec"),
   NEFSC_GARFO = c("maine_herring_catch","area", "gear", "loc", "port", "cfspp", "species_itis_ne", "mstrvess"))
 
