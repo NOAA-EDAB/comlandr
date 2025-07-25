@@ -13,8 +13,7 @@ to communicate with the database engine. (see \code{dbutils::connect_to_database
 \item{species}{A specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
 Numeric codes (SPECIES_ITIS) are converted to VARCHAR2 (6) when creating the sql statement.}
 
-\item{nameType}{Character string. Upper or lower case. Either "common_name" (default) or "itis".
-Determines which type of name to search under.}
+\item{stock_name}{Character string. Upper or lower case. The abbreviated name of the stock (default = NULL, pulls all stocks). For Example "GBK", "EGOM"}
 }
 \value{
 A list is returned:
