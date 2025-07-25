@@ -51,6 +51,7 @@ Other get functions:
 \code{\link{get_locations}()},
 \code{\link{get_ports}()},
 \code{\link{get_species}()},
-\code{\link{get_species_itis}()}
+\code{\link{get_species_itis}()},
+\code{\link{get_species_stock_area}()}
 }
 \concept{get functions}
