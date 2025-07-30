@@ -59,6 +59,7 @@ Other get functions:
 \code{\link{get_ports}()},
 \code{\link{get_species}()},
 \code{\link{get_species_itis}()},
+\code{\link{get_species_stock_area}()},
 \code{\link{get_vessels}()}
 }
 \concept{get functions}
