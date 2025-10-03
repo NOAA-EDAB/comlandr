@@ -42,10 +42,9 @@ jobs:
           r-version: '4.2.0'
 
       - name: Install packages
-      #          "usethis","gt",lang"))
-
         run: |
           install.packages(c("pak","fredr", "tidyr", "here","dplyr","lubridate","rmarkdown","ggplot2"))
+          pak::pak("NOAA-EDAB/comlandr")
         shell: Rscript {0}
 
       - name: Read, pull, and compare
