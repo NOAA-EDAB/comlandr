@@ -40,4 +40,4 @@ if (params$isEqual) {
 ## Links to repos:
 
 * [comlandr](https://github.com/NOAA-EDAB/comlandr)
-* [FRED](https://fred.stlouisfed.org/series/GDPDEF)
+* [FRED](https://fred.stlouisfed.org/series/WPU0223)
