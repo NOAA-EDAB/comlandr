@@ -15,6 +15,7 @@
 <url><loc>https://noaa-edab.github.io/comlandr/articles/landingsNafo.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/articles/landingsUs.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/articles/missingData.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/articles/schemas.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/articles/speciesValue.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/authors.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/index.html</loc></url>
@@ -34,6 +35,7 @@
 <url><loc>https://noaa-edab.github.io/comlandr/reference/get_ports.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/get_species.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/get_species_itis.html</loc></url>
+<url><loc>https://noaa-edab.github.io/comlandr/reference/get_species_stock_area.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/get_vessels.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/index.html</loc></url>
 <url><loc>https://noaa-edab.github.io/comlandr/reference/mskeyAreas.html</loc></url>
