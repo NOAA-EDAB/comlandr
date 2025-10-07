@@ -41,7 +41,6 @@ reference:
   - soeAreas
   - mskeyAreas
   - mskeyGears
-  - deflate
   - EPUs
 - title: "Helper Functions"
 - contents:
