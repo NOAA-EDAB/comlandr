@@ -11,7 +11,7 @@ To use this package you will need:
 
 1. To be behind the NEFSC firewall
 2. Permissions to access the required server/databases: a username and password.
-3. Permissions to access [schema/tables](articles/schemas.html)
+3. Permissions to access [schema/tables](https://noaa-edab.github.io/comlandr/articles/schemas.html)
 4. Oracle's instant Client installed
 5. Oracle's R package `ROracle` installed
 
@@ -21,7 +21,11 @@ To use this package you will need:
 
 ### Installation
 
-```pak::pak("NOAA-EDAB/comlandr")```
+`pak::pak("NOAA-EDAB/comlandr")`
+
+### Getting started
+
+Please see the [getting started guide](https://noaa-edab.github.io/comlandr/articles/comlandr.html)
 
 
 ## Developers (in alphabetical order)
