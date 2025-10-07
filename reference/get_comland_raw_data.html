@@ -96,10 +96,12 @@ to communicate with the database engine. (see <code>dbutils::connect_to_database
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>List of 2 objects:</p><ul><li><p>Data frame (data.table) (n x 12)</p></li>
-<li><p>comlandEach row of the data.table defines a group of trips fishing in the same YEAR, MONTH, AREA using the same NEGEAR and MESH, on the same sized vessel, TONCL2, catching species (NESPP3) with
-MARKET_CODE for the same purpose (UTILCD). The sum of the landings and value are returned for each 'group'</p></li>
-</ul><dl><dt>YEAR</dt>
+    <p>List of 2 objects:</p>
+<p>Data frame (data.table) (n x 12)</p>
+<dl><dt>comland</dt>
+<dd><p>Each row of the data.table defines a group of trips fishing in the same YEAR, MONTH, AREA using the same NEGEAR and MESH, on the same sized vessel, TONCL2, catching species (NESPP3) with MARKET_CODE for the same purpose (UTILCD). The sum of the landings and value are returned for each 'group'</p></dd>
+
+<dt>YEAR</dt>
 <dd><p>Year of trips</p></dd>
 
 <dt>MONTH</dt>
@@ -135,8 +137,9 @@ MARKET_CODE for the same purpose (UTILCD). The sum of the landings and value are
 <dt>US</dt>
 <dd><p>Landing from the USA vessels or foreign vessels</p></dd>
 
-</dl><ul><li><p>Character string:</p></li>
-</ul><dl><dt>sql</dt>
+
+</dl><p>Character string:</p>
+<dl><dt>sql</dt>
 <dd><p>Defines the SQL query used to pull the data</p></dd>
 
 </dl></div>
