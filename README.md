@@ -10,9 +10,10 @@
 To use this package you will need:
 
 1. To be behind the NEFSC firewall
-2. Permissions to access the required server/database : a username and password.
-3. Oracle's instant Client installed
-4. Oracle's R package `ROracle` installed
+2. Permissions to access the required server/databases: a username and password.
+3. Permissions to access [schema/tables](https://noaa-edab.github.io/comlandr/articles/schemas.html)
+4. Oracle's instant Client installed
+5. Oracle's R package `ROracle` installed
 
 "This product uses the [FRED® API](https://fred.stlouisfed.org/) but is not endorsed or certified by the Federal Reserve Bank of St. Louis."
 
@@ -20,14 +21,18 @@ To use this package you will need:
 
 ### Installation
 
-```remotes::install_github("NOAA-EDAB/comlandr")```
+`pak::pak("NOAA-EDAB/comlandr")`
+
+### Getting started
+
+Please see the [getting started guide](https://noaa-edab.github.io/comlandr/articles/comlandr.html)
 
 
 ## Developers (in alphabetical order)
 
 | [andybeet](https://github.com/andybeet)                                                         | [slucey](https://github.com/slucey)                                                                                                    |
 |-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| [![](https://avatars1.githubusercontent.com/u/22455149?s=100&v=4)](https://github.com/andybeet) | [![](https://avatars.githubusercontent.com/u/5578254?s=100&u=cd59cd654cab73ea583c697145bfe062222355cd&v=4)](https://github.com/slucey) |
+| [![andybeet avatar](https://avatars1.githubusercontent.com/u/22455149?s=100&v=4)](https://github.com/andybeet) | [![sean lucey avatar](https://avatars.githubusercontent.com/u/5578254?s=100&u=cd59cd654cab73ea583c697145bfe062222355cd&v=4)](https://github.com/slucey) |
 
 
 #### Legal disclaimer

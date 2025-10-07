@@ -1,10 +1,14 @@
 ^\.Rproj\.user$
-^data-raw$
 ^_pkgdown\.yml$
-^docs$
-^pkgdown$
 ^\.github$
-^other$
-^output$
 comlandr.Rproj
 ^.*\.Rproj$
+^dbcontacts.md
+
+# folders
+^figure
+^other$
+^output$
+^docs$
+^pkgdown$
+^data-raw$

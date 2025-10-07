@@ -74,70 +74,78 @@
 #'
 #'@export
 
-
-get_comland_data <- function(channel,
-                             filterByYear = NA,
-                             filterByArea = NA,
-                             useLanded = T,
-                             removeParts = T,
-                             useHerringMaine = T,
-                             useForeign = T,
-                             refYear = NA,
-                             refMonth = NA,
-                             disagSkatesHakes = T,
-                             aggArea = F,
-                             userAreas = comlandr::mskeyAreas,
-                             areaDescription = 'EPU',
-                             propDescription = 'MeanProp',
-                             applyProp = F,
-                             aggGear = F,
-                             userGears = comlandr::mskeyGears,
-                             fleetDescription = 'Fleet',
-                             unkVar = c('MONTH','NEGEAR','AREA'),
-                             knStrata = c('HY', 'QY','MONTH','NEGEAR', 'TONCL2', 'AREA')) {
-
-
+get_comland_data <- function(
+  channel,
+  filterByYear = NA,
+  filterByArea = NA,
+  useLanded = T,
+  removeParts = T,
+  useHerringMaine = T,
+  useForeign = T,
+  refYear = NA,
+  refMonth = NA,
+  disagSkatesHakes = T,
+  aggArea = F,
+  userAreas = comlandr::mskeyAreas,
+  areaDescription = 'EPU',
+  propDescription = 'MeanProp',
+  applyProp = F,
+  aggGear = F,
+  userGears = comlandr::mskeyGears,
+  fleetDescription = 'Fleet',
+  unkVar = c('MONTH', 'NEGEAR', 'AREA'),
+  knStrata = c('HY', 'QY', 'MONTH', 'NEGEAR', 'TONCL2', 'AREA')
+) {
   # saves initial the function call and returns it with the data pull
   call <- dbutils::capture_function_call()
 
   # checks to make sure argument values are aligned
-  check_argument_validation(aggArea,
-                            userAreas,
-                            areaDescription,
-                            propDescription,
-                            applyProp,
-                            aggGear,
-                            userGears,
-                            fleetDescription,
-                            unkVar,
-                            knStrata,
-                            refYear,
-                            refMonth
-                            )
-
+  check_argument_validation(
+    aggArea,
+    userAreas,
+    areaDescription,
+    propDescription,
+    applyProp,
+    aggGear,
+    userGears,
+    fleetDescription,
+    unkVar,
+    knStrata,
+    refYear,
+    refMonth
+  )
 
   #Pull raw data
-  comland <- comlandr::get_comland_raw_data(channel,
-                                            filterByYear, filterByArea,
-                                            useLanded, removeParts)
+  comland <- comlandr::get_comland_raw_data(
+    channel,
+    filterByYear,
+    filterByArea,
+    useLanded,
+    removeParts
+  )
 
   #Impute unknown catch variables
-  if(!is.null(unkVar)) comland <- assign_unknown(comland, unkVar, knStrata)
-
+  if (!is.null(unkVar)) {
+    comland <- assign_unknown(comland, unkVar, knStrata)
+  }
 
   #Pull herring data from the state of Maine
-  if(useHerringMaine){
-    comland <- comlandr::get_herring_data(channel, comland,
-                                          filterByYear, filterByArea,
-                                          useForeign)
+  if (useHerringMaine) {
+    comland <- comlandr::get_herring_data(
+      channel,
+      comland,
+      filterByYear,
+      filterByArea,
+      useForeign
+    )
   }
 
   #Pull foreign landings
-  if(useForeign){
+  if (useForeign) {
     #Look up NAFO divisions that contain Stat areas
     if (all(!is.na(filterByArea))) {
       NAFOAreas <- comlandr::get_areas(channel)$data %>%
-        dplyr::select(AREA,NAFDVCD) %>%
+        dplyr::select(AREA, NAFDVCD) %>%
         dplyr::filter(AREA %in% filterByArea) %>%
         dplyr::pull(NAFDVCD) %>%
         unique() %>%
@@ -147,40 +155,57 @@ get_comland_data <- function(channel,
 
     #Pull data and process to look like comland data
     comland.foreign <- comlandr::get_foreign_data(filterByYear, filterByArea)
-    comland.foreign <- comlandr::process_foreign_data(channel, comland.foreign,
-                                                      useLanded, useHerringMaine)
+    comland.foreign <- comlandr::process_foreign_data(
+      channel,
+      comland.foreign,
+      useLanded,
+      useHerringMaine
+    )
 
     #Combine foreign landings
-    comland$comland <- data.table::rbindlist(list(comland$comland, comland.foreign),
-                                             use.names = T)
+    comland$comland <- data.table::rbindlist(
+      list(comland$comland, comland.foreign),
+      use.names = T
+    )
   }
 
-
   #Apply correction for inflation
-  if(!is.na(refYear)) comland <- adjust_inflation(comland, refYear, refMonth)
+  if (!is.na(refYear)) {
+    comland <- adjust_inflation(comland, refYear, refMonth)
+  }
 
   #Disaggregate skates and hakes
-  if(disagSkatesHakes) comland <- disaggregate_skates_hakes(comland,
-                                                            channel,
-                                                            filterByYear,
-                                                            filterByArea)
+  if (disagSkatesHakes) {
+    comland <- disaggregate_skates_hakes(
+      comland,
+      channel,
+      filterByYear,
+      filterByArea
+    )
+  }
 
   #Aggregate areas
-  if(aggArea) comland <- aggregate_area(comland,
-                                        userAreas,
-                                        areaDescription,
-                                        propDescription,
-                                        useForeign,
-                                        channel,
-                                        applyProp)
+  if (aggArea) {
+    comland <- aggregate_area(
+      comland,
+      userAreas,
+      areaDescription,
+      propDescription,
+      useForeign,
+      channel,
+      applyProp
+    )
+  }
 
   #Aggregate gears
-  if(aggGear) comland <- aggregate_gear(comland, userGears, fleetDescription)
+  if (aggGear) {
+    comland <- aggregate_gear(comland, userGears, fleetDescription)
+  }
 
   comland$call <- call
 
-  message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")
+  message(
+    "Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement."
+  )
   return(comland)
-
 }
-

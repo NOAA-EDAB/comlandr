@@ -9,10 +9,6 @@ get_vessels(channel)
 \arguments{
 \item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
 to communicate with the database engine. (see \code{dbutils::connect_to_database})}
-
-\item{sqlStatement}{an sql statement (optional)}
-
-\item{where}{text string appending where clause to sql}
 }
 \value{
 A list is returned:

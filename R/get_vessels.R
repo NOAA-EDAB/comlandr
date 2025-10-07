@@ -4,8 +4,6 @@
 #'
 #'
 #' @inheritParams get_comland_data
-#' @param sqlStatement an sql statement (optional)
-#' @param where text string appending where clause to sql
 #'
 #' @return A list is returned:
 #'
@@ -35,19 +33,18 @@
 #' @export
 #'
 #
-get_vessels <- function(channel){
-
+get_vessels <- function(channel) {
   sqlStatement <- "select * from NEFSC_GARFO.cfdbs_mstrvess"
 
-  query <- DBI::dbGetQuery(channel,sqlStatement)
+  query <- DBI::dbGetQuery(channel, sqlStatement)
 
   # get column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_MSTRVESS' and owner='NEFSC_GARFO'"
-  colNames <- DBI::dbGetQuery(channel,sqlcolName)
+  colNames <- DBI::dbGetQuery(channel, sqlcolName)
 
-  return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
-
+  return(list(
+    data = dplyr::as_tibble(query),
+    sql = sqlStatement,
+    colNames = colNames
+  ))
 }
-
-
-
