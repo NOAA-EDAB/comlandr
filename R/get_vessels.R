@@ -15,7 +15,7 @@
 #'
 #'  \item{colNames}{a vector of the table's column names}
 #'
-#'If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.mstrvess}" is used
+#'If no \code{sqlStatement} is provided the default sql statement "\code{select * from NEFSC_GARFO.cfdbs_mstrvess}" is used
 #'
 #'@section Reference:
 #'Use the data dictionary for field name explanations
@@ -30,33 +30,19 @@
 #' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 #' get_vessels(channel)
 #'
-#' # extracts vessel ID, crew size, and home port on custom sql statement
-#' sqlStatement <- "select vessel, crew, homeport from cfdbs.mstrvess;"
-#' get_vessels(channel,sqlStatement)
-#'
-#' # extracts all vessel info for vessels lengths < 50ft based on custom sql statement
-#' sqlStatement <- "select * from cfdbs.mstrvess where vesslen <29;"
-#' get_vessels(channel,sqlStatement)
 #'}
 #'
 #' @export
 #'
 #
-get_vessels <- function(channel,sqlStatement="select * from cfdbs.mstrvess",where=NULL){
+get_vessels <- function(channel){
 
-  #appends where
-  if (!is.null(where)) {
-    sqlStatement <- paste(sqlStatement,"where",where)
-  }
+  sqlStatement <- "select * from NEFSC_GARFO.cfdbs_mstrvess"
 
   query <- DBI::dbGetQuery(channel,sqlStatement)
 
-  #data <- query[order(query$VESSEL),]
-
-  #save(species,file="data/speciesDefinitions.RData")
-
   # get column names
-  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'MSTRVESS' and owner='CFDBS'"
+  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_MSTRVESS' and owner='NEFSC_GARFO'"
   colNames <- DBI::dbGetQuery(channel,sqlcolName)
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))

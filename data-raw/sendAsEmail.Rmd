@@ -1,0 +1,43 @@
+---
+title: "Report from comlandr FRED data pull"
+output: html_document
+params: 
+  isEqual: NA
+  rowNum: NA
+  newRows: NA
+  ggplot: NA
+date: "`r Sys.time()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary
+
+```{r datapull,echo=F,eval=T}
+if (params$isEqual) {
+  message("FRED data is unchanged")
+} else {
+  message("FRED data has changed")
+  message(paste0("Number of rows in new pull = ",params$rowNum$new))
+  message(paste0("Number of rows in current data = ",params$rowNum$old))
+  
+  if (params$newRows == T) {
+    message("The difference is due to an ADDITION of NEW data")
+  } else {
+    # display plot
+    print(params$ggplot)
+  }
+  
+}
+
+```
+
+
+
+
+## Links to repos:
+
+* [comlandr](https://github.com/NOAA-EDAB/comlandr)
+* [FRED](https://fred.stlouisfed.org/series/WPU0223)

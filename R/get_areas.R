@@ -15,7 +15,7 @@
 #'
 #'    \item{colNames}{ a vector of the table's column names}
 #'
-#'The default sql statement "\code{select * from cfdbs.area}" is used
+#'The default sql statement "\code{select * from NEFSC_GARFO.cfdbs_area}" is used
 #'
 #'@section Reference:
 #'Use the data dictionary for field name explanations
@@ -48,12 +48,12 @@
 get_areas <- function(channel,areas="all"){
 
 
-  sqlStatement <- dbutils::create_sql(areas,fieldName="area",fieldName2="areanm",dataType="%03d",defaultSqlStatement="select * from cfdbs.area")
+  sqlStatement <- dbutils::create_sql(areas,fieldName="area",fieldName2="areanm",dataType="%03d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_area")
 
   query <- DBI::dbGetQuery(channel,sqlStatement)
 
   # get column names
-  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'AREA' and owner='CFDBS'"
+  sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_AREA' and owner='NEFSC_GARFO'"
   colNames <- t(DBI::dbGetQuery(channel,sqlcolName))
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))

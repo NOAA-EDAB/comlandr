@@ -25,7 +25,7 @@ A list is returned:
 
 \item{colNames}{a vector of the table's column names}
 
-The default sql statement "\code{select * from cfdbs.SPECIES_ITIS_NE}" is used
+The default sql statement "\code{select * from NEFSC_GARFO.cfdbs_SPECIES_ITIS_NE}" is used
 }
 \description{
 Extract a list of species names, code, market category, etc from the NEFSC_GARFO CFDBS_SPECIES_ITIS_NE table
@@ -74,6 +74,7 @@ Other get functions:
 \code{\link{get_locations}()},
 \code{\link{get_ports}()},
 \code{\link{get_species}()},
+\code{\link{get_species_stock_area}()},
 \code{\link{get_vessels}()}
 }
 \concept{get functions}

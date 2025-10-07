@@ -1,6 +1,7 @@
 # comlandr <img src="man/figures/logo.png" align="right" width="120" /> 
 
 [![pkgdown](https://github.com/NOAA-EDAB/comlandr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/pkgdown.yaml)
+[![FRED](https://github.com/NOAA-EDAB/comlandr/actions/workflows/getFred.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/getFred.yaml)
 [![R-CMD-check](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml)
 [![gitleaks](https://github.com/NOAA-EDAB/comlandr/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/gitleaks.yml)
 
@@ -12,6 +13,8 @@ To use this package you will need:
 2. Permissions to access the required server/database : a username and password.
 3. Oracle's instant Client installed
 4. Oracle's R package `ROracle` installed
+
+"This product uses the [FRED® API](https://fred.stlouisfed.org/) but is not endorsed or certified by the Federal Reserve Bank of St. Louis."
 
 ## Usage
 

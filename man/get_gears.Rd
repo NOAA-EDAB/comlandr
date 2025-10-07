@@ -22,7 +22,7 @@ A list is returned:
 
 \item{colNames}{a vector of the table's column names}
 
-If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.gear}" is used
+If no \code{sqlStatement} is provided the default sql statement "\code{select * from NEFSC_GARFO.cfdbs_gear}" is used
 }
 \description{
 Extract a list of gear types in the NEFSC "GEAR" supporting table
@@ -59,6 +59,7 @@ Other get functions:
 \code{\link{get_ports}()},
 \code{\link{get_species}()},
 \code{\link{get_species_itis}()},
+\code{\link{get_species_stock_area}()},
 \code{\link{get_vessels}()}
 }
 \concept{get functions}

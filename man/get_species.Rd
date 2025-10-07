@@ -23,7 +23,7 @@ A list is returned:
 
 \item{colNames}{a vector of the table's column names}
 
-The default sql statement "\code{select * from cfdbs.cfspp}" is used
+The default sql statement "\code{select * from NEFSC_GARFO.cfdbs_cfspp}" is used
 }
 \description{
 Extract a list of speices names, code, market category, etc from the NEFSC cfspp table
@@ -64,6 +64,7 @@ Other get functions:
 \code{\link{get_locations}()},
 \code{\link{get_ports}()},
 \code{\link{get_species_itis}()},
+\code{\link{get_species_stock_area}()},
 \code{\link{get_vessels}()}
 }
 \concept{get functions}

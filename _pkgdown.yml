@@ -1,4 +1,9 @@
 url: https://noaa-edab.github.io/comlandr/
+
+authors:
+  Andy Beet:
+    href: https://andybeet.com
+
 template:
   bootstrap: 5
 
@@ -24,6 +29,7 @@ reference:
 - contents:
   - get_species
   - get_species_itis
+  - get_species_stock_area
   - get_areas
   - get_gears
   - get_locations
@@ -79,4 +85,7 @@ navbar:
    - text: Supplemental
    - text: Fish part codes
      href: articles/fishPartsRemoved.html
+   - text: Database schemas
+     href: articles/schemas.html
+
 

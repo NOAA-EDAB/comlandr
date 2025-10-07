@@ -4,11 +4,7 @@
 \alias{get_vessels}
 \title{Extract VESSEL information from CFDBS}
 \usage{
-get_vessels(
-  channel,
-  sqlStatement = "select * from cfdbs.mstrvess",
-  where = NULL
-)
+get_vessels(channel)
 }
 \arguments{
 \item{channel}{an Object inherited from \code{ROracle::Oracle}. This object is used to connect
@@ -27,7 +23,7 @@ A list is returned:
 
 \item{colNames}{a vector of the table's column names}
 
-If no \code{sqlStatement} is provided the default sql statement "\code{select * from cfdbs.mstrvess}" is used
+If no \code{sqlStatement} is provided the default sql statement "\code{select * from NEFSC_GARFO.cfdbs_mstrvess}" is used
 }
 \description{
 Extract a list of vessell ID's, tonnage, crew size, home port, etc from the NEFSC "Mstrvess" supporting table
@@ -43,13 +39,6 @@ Use the data dictionary for field name explanations
 channel <- connect_to_database(server="name_of_server",uid="individuals_username")
 get_vessels(channel)
 
-# extracts vessel ID, crew size, and home port on custom sql statement
-sqlStatement <- "select vessel, crew, homeport from cfdbs.mstrvess;"
-get_vessels(channel,sqlStatement)
-
-# extracts all vessel info for vessels lengths < 50ft based on custom sql statement
-sqlStatement <- "select * from cfdbs.mstrvess where vesslen <29;"
-get_vessels(channel,sqlStatement)
 }
 
 }
@@ -62,6 +51,7 @@ Other get functions:
 \code{\link{get_locations}()},
 \code{\link{get_ports}()},
 \code{\link{get_species}()},
-\code{\link{get_species_itis}()}
+\code{\link{get_species_itis}()},
+\code{\link{get_species_stock_area}()}
 }
 \concept{get functions}
