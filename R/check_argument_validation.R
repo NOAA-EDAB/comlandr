@@ -93,6 +93,10 @@ check_argument_validation <- function(
     message(
       "SPPVALUE will not be adjusted for inflation as no reference year or month is provided."
     )
+  } else if (any(c(is.na(refYear), is.na(refMonth)))) {
+    # fmt: skip
+    stop(paste0("Either refMonth (", refMonth, ") or refYear (", refYear, ") is missing.
+                Please either set both to NA or both to valid values"))
   } else {
     deflateData <- readRDS(system.file(
       "extdata/fred/fred.rds",
