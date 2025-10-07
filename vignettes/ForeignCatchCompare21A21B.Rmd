@@ -56,7 +56,7 @@ Data stored on the [NAFO](https://www.nafo.int/Data/Catch-Statistics)'s site is 
 
 The NAFO spatial domain "covers a large portion of the Atlantic Ocean, including the 200-mile zones of Coastal States — Canada, Greenland, St. Pierre et Miquelon and USA.". The R package [`comlandr`](https://noaa-edab.github.io/comlandr) focuses on the Northeast United States (NEUS) shown by the fisheries statistcal areas as defined by the Greater Atlantic Regional Fisheries Office ([GARFO](https://www.fisheries.noaa.gov/about/greater-atlantic-regional-fisheries-office)). The NAFO divisions that map to the NEUS domain are shown in the second panel.
 
-```{r plotspatial, echo=F, eval=T, message=F}
+```{r plotspatial, echo=F, eval=T, message=F, fig.alt = "Spatial domain"}
 ################################################################################
 ########################## plot spatial domain ################################
 ################################################################################
@@ -164,7 +164,7 @@ db21b <- db21b %>%
 ### 21A
 
 
-```{r plot21adiv, echo = F, eval = T, message = F}
+```{r plot21adiv, echo = F, eval = T, message = F, fig.alt = "Catch by Division 21A"}
 
 matrixYrDiv <- expand.grid(Year = unique(db21a$Year),Division=unique(db21a$Division))
 
@@ -186,7 +186,7 @@ matrixYrDiv |>
 
 ### 21B
 
-```{r plot21bdiv, echo = F, eval = T, message = F}
+```{r plot21bdiv, echo = F, eval = T, message = F, fig.alt = "Catch by Division 21B"}
 ### 21B
 
 db <- db21b %>%
@@ -212,7 +212,7 @@ p
 Aggregated over species and division
 
 ### 21A
-```{r plot21acountry, echo = F, eval = T, message = F}
+```{r plot21acountry, echo = F, eval = T, message = F, fig.alt = "Catch by Country 21A"}
 ## By Division
 ## aggregate over Division
 
@@ -236,7 +236,7 @@ matrixYrCountry %>%
 
 ### 21B
 
-```{r plot21bcountry, echo = F, eval = T, message = F}
+```{r plot21bcountry, echo = F, eval = T, message = F, fig.alt = "Catch by Country 21B"}
 ### 21B
 
 db <- db21b %>%
@@ -276,7 +276,7 @@ sp %>%
     kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width=F)
 ```
 
-```{r plot21aspecies, echo = F, eval = T, message = F}
+```{r plot21aspecies, echo = F, eval = T, message = F, fig.alt = "Catch by Species 21A"}
 das <- db21a %>%
     tidyr::separate(.,col=Speciesname,into=c("spName","spCode"),sep=" - ") %>%
     dplyr::group_by(Year,spCode) %>%
@@ -313,7 +313,7 @@ sp %>%
     kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width=F)
 ```
 
-```{r plot21bspecies, echo = F, eval = T, message = F}
+```{r plot21bspecies, echo = F, eval = T, message = F, fig.alt = "Catch by Species 21B"}
 dbs <- db21b %>%
     tidyr::separate(.,col=Speciesname,into=c("spName","spCode"),sep=" - ") %>%
     dplyr::group_by(Year,spCode) %>%
@@ -350,7 +350,7 @@ Aggregated catch over division, country, and species
 
 Years with missing data: `r setdiff(min(db21a$Year):max(db21a$Year), unique(db21a$Year))`
 
-```{r plot21atime, echo = F, eval = T, message = F}
+```{r plot21atime, echo = F, eval = T, message = F, fig.alt = "Catch by Time 21A"}
 
 matrixYr <- expand.grid(Year = unique(db21a$Year))
 
@@ -373,7 +373,7 @@ matrixYr %>%
 Years with missing data: `r setdiff(min(db21b$Year):max(db21b$Year), unique(db21b$Year))`
 
 
-```{r plot21btime, echo = F, eval = T, message = F}
+```{r plot21btime, echo = F, eval = T, message = F, fig.alt = "Catch by Time 21B"}
 ### 21B
 
 matrixYr <- expand.grid(Year = unique(db21a$Year))
@@ -398,7 +398,7 @@ Displayed are the percentage of the total catch that are reported in unknown Div
 
 ### For 21A
 
-```{r unknown21a, echo = F, eval = T,message=F}
+```{r unknown21a, echo = F, eval = T,message = F, fig.alt = "Catch Unknowns 21A"}
 
 matrixYr <- expand.grid(Year = unique(db21a$Year))
 
@@ -435,7 +435,7 @@ matrixYr %>%
 
 ### For 21B
 
-```{r unknown21b, echo = F, eval = T,message=F}
+```{r unknown21b, echo = F, eval = T,message = F, fig.alt = "Catch Unknowns 21B"}
 # 21b data all divisions
 
 

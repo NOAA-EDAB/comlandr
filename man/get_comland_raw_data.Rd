@@ -26,12 +26,9 @@ to communicate with the database engine. (see \code{dbutils::connect_to_database
 }
 \value{
 List of 2 objects:
-\itemize{
-\item Data frame (data.table) (n x 12)
-\item{comland}{Each row of the data.table defines a group of trips fishing in the same YEAR, MONTH, AREA using the same NEGEAR and MESH, on the same sized vessel, TONCL2, catching species (NESPP3) with
-MARKET_CODE for the same purpose (UTILCD). The sum of the landings and value are returned for each 'group'}
-}
 
+Data frame (data.table) (n x 12)
+\item{comland}{Each row of the data.table defines a group of trips fishing in the same YEAR, MONTH, AREA using the same NEGEAR and MESH, on the same sized vessel, TONCL2, catching species (NESPP3) with MARKET_CODE for the same purpose (UTILCD). The sum of the landings and value are returned for each 'group'}
 \item{YEAR}{Year of trips}
 \item{MONTH}{Month of trips}
 \item{NEGEAR}{Three digit Fishing gear code used on trips}
@@ -44,9 +41,8 @@ MARKET_CODE for the same purpose (UTILCD). The sum of the landings and value are
 \item{MESHCAT}{Code to describe the mesh size for a trawl vessel (\code{SM},\code{LG},\code{NA}) }
 \item{SPPLIVMT}{Weight in metric tons.}
 \item{US}{Landing from the USA vessels or foreign vessels}
-\itemize{
-\item Character string:
-}
+
+Character string:
 
 \item{sql}{Defines the SQL query used to pull the data}
 }
