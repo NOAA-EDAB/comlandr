@@ -2,7 +2,7 @@
 title: "Landings by foreign vessels in US waters"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{landingsNafo}
+  %\VignetteIndexEntry{Landings by foreign vessels in US waters}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

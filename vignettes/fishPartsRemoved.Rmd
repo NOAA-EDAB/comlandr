@@ -2,7 +2,7 @@
 title: "Fish parts removed from the data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{fishPartsRemoved}
+  %\VignetteIndexEntry{Fish parts removed from the data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
