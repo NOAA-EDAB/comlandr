@@ -2,7 +2,7 @@
 title: "Tease apart unclassified groups of species"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{disaggregate}
+  %\VignetteIndexEntry{Tease apart unclassified groups of species}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

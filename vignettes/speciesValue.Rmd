@@ -2,7 +2,7 @@
 title: "Calculating present day value"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{speciesValue}
+  %\VignetteIndexEntry{Calculating present day value}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
