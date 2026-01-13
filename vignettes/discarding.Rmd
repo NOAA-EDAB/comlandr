@@ -2,7 +2,7 @@
 title: "Estimating discard"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{discarding}
+  %\VignetteIndexEntry{Estimating discard}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

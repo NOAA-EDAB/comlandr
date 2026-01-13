@@ -1,3 +1,10 @@
+# comlandr 1.1.1
+
+## Patch fixes
+
+* Change to `get_foreign_Data()` to include [NAFO](nafo.int) 21B data updates
+* Update to bundled 21A data
+
 # comlandr 1.1.0
 
 Previous version of package pulled from a deprecated time series. It was then hard coded in the package as a lazyloaded dataset, with a manual updating process.

@@ -1,8 +1,8 @@
 ---
-title: "Aggregate gears codes to fleets "
+title: "Aggregate gears codes to fleets"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{aggregateGears}
+  %\VignetteIndexEntry{Aggregate gears codes to fleets}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

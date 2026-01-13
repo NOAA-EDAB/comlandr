@@ -1,8 +1,8 @@
 ---
-title: "Aggregate landings to another footprint "
+title: "Aggregate landings to another footprint"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{aggregateAreas}
+  %\VignetteIndexEntry{Aggregate landings to another footprint}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
 ```
 
 ```{r setup}

@@ -2,7 +2,7 @@
 title: "Pull Herring data from State of Maine"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{landingsHerring}
+  %\VignetteIndexEntry{Pull Herring data from State of Maine}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

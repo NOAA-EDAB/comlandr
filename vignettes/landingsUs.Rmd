@@ -2,7 +2,7 @@
 title: "Pull US landings data from STOCKEFF"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{landingsUs}
+  %\VignetteIndexEntry{Pull US landings data from STOCKEFF}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
