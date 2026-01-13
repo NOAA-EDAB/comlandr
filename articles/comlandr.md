@@ -1,0 +1,74 @@
+# comlandr
+
+``` r
+library(comlandr)
+```
+
+## Prerequisite
+
+- You will need to have `ROracle` installed and configured on your
+  machine.
+- While it is certainly possible to define your own connection to the
+  database it is much easier using the package
+  [`dbutils`](https://github.com/andybeet/dbutils).
+- Permissions to several schemas eg. `STOCKEFF`. See
+  [`vignette("schemas")`](https://noaa-edab.github.io/comlandr/articles/schemas.md)
+  for more details.
+
+## Connect to the database
+
+You can make a connection as follows:
+
+`channel <- dbutils::connect_to_database(server="servername",uid="yourUsername")`
+
+`channel` is an object inherited from the `ROracle` package. This object
+is passed as an argument to functions in `comlandr`
+
+## Pull Raw Data
+
+Pulling the raw data takes up to 15 minutes to complete. see
+[`get_comland_raw_data`](https://noaa-edab.github.io/comlandr/reference/get_comland_raw_data.md)
+for details.
+
+To pull the raw (unprocessed) commercial data for from 1964 through 2023
+
+    data <- get_comland_raw_data(channel,filterByYear = 1964:2023)
+
+The resulting `data` object is a list containing several fields. See
+[`get_comland_raw_data`](https://noaa-edab.github.io/comlandr/reference/get_comland_raw_data.md)
+for details.
+
+- The removal of fish parts are optional but are removed by default.
+- Shellfish are represented as landed weight by default (as opposed to
+  live weight)
+- Footprint of returned data is by [Statistical
+  Area](https://www.fisheries.noaa.gov/resource/map/greater-atlantic-region-statistical-areas)
+
+Note: Herring and Menhaden data are underrepresented in this raw data
+pull. Herring data is pulled separately from another database. Menhaden
+are excluded due to confidentiality concerns
+
+## Processed Raw Data
+
+To pull the processed raw data, use
+[`get_comland_data`](https://noaa-edab.github.io/comlandr/reference/get_comland_data.md)
+
+    data <- get_comland_data(channel,filterByYear = 1964:2023)
+
+This will pull the raw data (above) then process it depending on the
+input arguments supplied.
+
+The options in the processing are:
+
+- Include Herring data
+- Remove fish parts
+- Include foreign landings from NAFO
+- Adjust species value based on a reference year
+- Separate skate and hake landings by species based on survey
+  proportions
+- Aggregate landings by user defined groupings of Statistical areas
+- Aggregate gear codes based on user supplied fleets
+- Attempt to assign values to missing data
+
+See the articles section for in depth explanation of the components of
+`comlandr`

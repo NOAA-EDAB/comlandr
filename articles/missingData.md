@@ -1,0 +1,20 @@
+# Imputing missing data
+
+``` r
+library(comlandr)
+```
+
+The commercial data isn’t perfect. There are trips where the AREA in
+which the catch was taken is missing. There are trips in which the gear
+type used (NEGEAR) is missing, and there are trips in which the MONTH of
+the trip is missing. It is important to know these, since ALL landings
+need to be accounted for, especially for Stock assessments. An R
+implementation of the Palmer (2008) algorithm is applied to the raw data
+pull to assign values to this missing data based on “similar” trips.
+
+- Missing fields (MONTH, NEGEAR, AREA) are imputed using HY, QY, MONTH,
+  NEGEAR, TONCL2, AREA from trips with known values
+
+- Future releases may integrate STOCKEFFs implementation of this
+  algorithm to further align `comlandr` with products used in stock
+  assessments

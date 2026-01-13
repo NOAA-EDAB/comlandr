@@ -1,0 +1,154 @@
+# comlandr
+
+[![pkgdown](https://github.com/NOAA-EDAB/comlandr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/pkgdown.yaml)
+[![FRED](https://github.com/NOAA-EDAB/comlandr/actions/workflows/getFred.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/getFred.yaml)
+[![R-CMD-check](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/R-CMD-check.yaml)
+[![gitleaks](https://github.com/NOAA-EDAB/comlandr/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/NOAA-EDAB/comlandr/actions/workflows/gitleaks.yml)
+
+`comlandr` allows users to pull and process commercial fishing data from
+the Northeast USA. Northwest Atlantic Fisheries Organization
+([NAFO](https://www.nafo.int/)) data is included to capture landings by
+non US fleets in US waters.
+
+To use this package you will need:
+
+1.  To be behind the NEFSC firewall
+2.  Permissions to access the required server/databases: a username and
+    password.
+3.  Permissions to access
+    [schema/tables](https://noaa-edab.github.io/comlandr/articles/schemas.html)
+4.  Oracle’s instant Client installed
+5.  Oracle’s R package `ROracle` installed
+
+“This product uses the [FRED® API](https://fred.stlouisfed.org/) but is
+not endorsed or certified by the Federal Reserve Bank of St. Louis.”
+
+## Usage
+
+### Installation
+
+`pak::pak("NOAA-EDAB/comlandr")`
+
+### Getting started
+
+Please see the [getting started
+guide](https://noaa-edab.github.io/comlandr/articles/comlandr.html)
+
+## Developers (in alphabetical order)
+
+| [andybeet](https://github.com/andybeet)                                                                        | [slucey](https://github.com/slucey)                                                                                                                     |
+|----------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![andybeet avatar](https://avatars1.githubusercontent.com/u/22455149?s=100&v=4)](https://github.com/andybeet) | [![sean lucey avatar](https://avatars.githubusercontent.com/u/5578254?s=100&u=cd59cd654cab73ea583c697145bfe062222355cd&v=4)](https://github.com/slucey) |
+
+#### Legal disclaimer
+
+*This repository is a scientific product and is not official
+communication of the National Oceanic and Atmospheric Administration, or
+the United States Department of Commerce. All NOAA GitHub project code
+is provided on an ‘as is’ basis and the user assumes responsibility for
+its use. Any claims against the Department of Commerce or Department of
+Commerce bureaus stemming from the use of this GitHub project will be
+governed by all applicable Federal law. Any reference to specific
+commercial products, processes, or services by service mark, trademark,
+manufacturer, or otherwise, does not constitute or imply their
+endorsement, recommendation or favoring by the Department of Commerce.
+The Department of Commerce seal and logo, or the seal and logo of a DOC
+bureau, shall not be used in any manner to imply endorsement of any
+commercial product or activity by DOC or the United States Government.*
+
+# Package index
+
+## Get Data
+
+Functions that pull data from the STOCKEFF/CAMS/CFDBS/NAFO databases
+
+- [`get_comland_data()`](https://noaa-edab.github.io/comlandr/reference/get_comland_data.md)
+  : Extracts and processes commercial data from Database
+- [`get_comland_raw_data()`](https://noaa-edab.github.io/comlandr/reference/get_comland_raw_data.md)
+  : Extracts raw commercial data from Database
+- [`get_foreign_data()`](https://noaa-edab.github.io/comlandr/reference/get_foreign_data.md)
+  : Downloads all NAFO data
+- [`get_comdisc_data()`](https://noaa-edab.github.io/comlandr/reference/get_comdisc_data.md)
+  : Extracts commercial discard data from Database
+- [`get_comdisc_raw_data()`](https://noaa-edab.github.io/comlandr/reference/get_comdisc_raw_data.md)
+  : Extracts observer data from Database
+- [`get_herring_data()`](https://noaa-edab.github.io/comlandr/reference/get_herring_data.md)
+  : Pull Herring data
+
+## Supporting Functions
+
+Functions that pull lookup tables from CFDBS
+
+- [`get_species()`](https://noaa-edab.github.io/comlandr/reference/get_species.md)
+  : Extract SPECIES information from CFDBS
+- [`get_species_itis()`](https://noaa-edab.github.io/comlandr/reference/get_species_itis.md)
+  : Extract SPECIES information from CFDBS (SPECIES_ITIS_NE, table)
+- [`get_species_stock_area()`](https://noaa-edab.github.io/comlandr/reference/get_species_stock_area.md)
+  : Extract Statistical Areas that comprise species stock definition
+- [`get_areas()`](https://noaa-edab.github.io/comlandr/reference/get_areas.md)
+  : Extract AREA information from CFDBS
+- [`get_gears()`](https://noaa-edab.github.io/comlandr/reference/get_gears.md)
+  : Extract fishing GEAR types from CFDBS
+- [`get_locations()`](https://noaa-edab.github.io/comlandr/reference/get_locations.md)
+  : Extract LOCATION information from CFDBS
+- [`get_ports()`](https://noaa-edab.github.io/comlandr/reference/get_ports.md)
+  : Extract PORT location information from CFDBS
+- [`get_vessels()`](https://noaa-edab.github.io/comlandr/reference/get_vessels.md)
+  : Extract VESSEL information from CFDBS
+
+## Data
+
+Lazy loaded data
+
+- [`soeAreas`](https://noaa-edab.github.io/comlandr/reference/soeAreas.md)
+  : soeAreas: Area Species,EPU designations
+- [`mskeyAreas`](https://noaa-edab.github.io/comlandr/reference/mskeyAreas.md)
+  : mskeyAreas: Area Species, EPU designations
+- [`mskeyGears`](https://noaa-edab.github.io/comlandr/reference/mskeyGears.md)
+  : mskeyGears: Gear Fleet mapping from mskeyrun project
+- [`EPUs`](https://noaa-edab.github.io/comlandr/reference/EPUs.md) :
+  EPUs: Properties of Ecological Production Units (EPUs)
+
+## Helper Functions
+
+- [`process_foreign_data()`](https://noaa-edab.github.io/comlandr/reference/process_foreign_data.md)
+  : Processes NAFO data for comlandr use
+
+## Package Overview
+
+- [`comlandr`](https://noaa-edab.github.io/comlandr/reference/comlandr-package.md)
+  [`comlandr-package`](https://noaa-edab.github.io/comlandr/reference/comlandr-package.md)
+  : comlandr: Pull and process commercial fisheries data
+
+# Articles
+
+### All vignettes
+
+- [Aggregate landings to another
+  footprint](https://noaa-edab.github.io/comlandr/articles/aggregateAreas.md):
+- [Aggregate gears codes to
+  fleets](https://noaa-edab.github.io/comlandr/articles/aggregateGears.md):
+- [comlandr](https://noaa-edab.github.io/comlandr/articles/comlandr.md):
+- [Tease apart unclassified groups of
+  species](https://noaa-edab.github.io/comlandr/articles/disaggregate.md):
+- [Estimating
+  discard](https://noaa-edab.github.io/comlandr/articles/discarding.md):
+- [Fish parts removed from the
+  data](https://noaa-edab.github.io/comlandr/articles/fishPartsRemoved.md):
+- [Foreign Catch Data
+  (NAFO)](https://noaa-edab.github.io/comlandr/articles/ForeignCatch.md):
+- [Compare NAFO 21A & 21B
+  databases](https://noaa-edab.github.io/comlandr/articles/ForeignCatchCompare21A21B.md):
+- [Pull Herring data from State of
+  Maine](https://noaa-edab.github.io/comlandr/articles/landingsHerring.md):
+- [Landings by foreign vessels in US
+  waters](https://noaa-edab.github.io/comlandr/articles/landingsNafo.md):
+- [Pull US landings data from
+  STOCKEFF](https://noaa-edab.github.io/comlandr/articles/landingsUs.md):
+- [Imputing missing
+  data](https://noaa-edab.github.io/comlandr/articles/missingData.md):
+- [Overview](https://noaa-edab.github.io/comlandr/articles/Overview.md):
+- [Database
+  schemas](https://noaa-edab.github.io/comlandr/articles/schemas.md):
+- [Calculating present day
+  value](https://noaa-edab.github.io/comlandr/articles/speciesValue.md):
