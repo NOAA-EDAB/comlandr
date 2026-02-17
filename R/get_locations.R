@@ -31,19 +31,18 @@
 #' @export
 #'
 #
-get_locations <- function(channel){
-
+get_locations <- function(channel) {
   sqlStatement <- "select * from NEFSC_GARFO.cfdbs_loc"
 
-  query <- DBI::dbGetQuery(channel,sqlStatement)
+  query <- DBI::dbGetQuery(channel, sqlStatement)
 
   # get column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_LOC' and owner='NEFSC_GARFO'"
-  colNames <- DBI::dbGetQuery(channel,sqlcolName)
+  colNames <- DBI::dbGetQuery(channel, sqlcolName)
 
-  return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
-
+  return(list(
+    data = dplyr::as_tibble(query),
+    sql = sqlStatement,
+    colNames = colNames
+  ))
 }
-
-
-

@@ -31,14 +31,16 @@
 #'
 #'@export
 
-get_comdisc_data <- function(channel, comland,
-                             aggArea = F,
-                             areaDescription = 'EPU', propDescription = 'MeanProp',
-                             aggGear = F,
-                             fleetDescription = 'Fleet',
-                             extendTS = T) {
-
-
+get_comdisc_data <- function(
+  channel,
+  comland,
+  aggArea = F,
+  areaDescription = 'EPU',
+  propDescription = 'MeanProp',
+  aggGear = F,
+  fleetDescription = 'Fleet',
+  extendTS = T
+) {
   call <- dbutils::capture_function_call()
 
   #Use data from comland object to determine time range in which to calculate discards
@@ -47,21 +49,25 @@ get_comdisc_data <- function(channel, comland,
   #filterByYear <- range(comland[[1]][, YEAR])[1]:range(comland[[1]][, YEAR])[2]
 
   #Pull raw data
-  comdisc.raw <- get_comdisc_raw_data(channel, filterByYear)#, filterByArea)
+  comdisc.raw <- get_comdisc_raw_data(channel, filterByYear) #, filterByArea)
 
   message("Observer data pulled ...")
 
-
   #Aggregate areas
-  if(aggArea){
+  if (aggArea) {
     userAreas <- comland$userAreas
-    comdisc.raw <- aggregate_area(comdisc.raw, userAreas, areaDescription,
-                                            propDescription, useForeign = F,
-                                            applyProp = F)
+    comdisc.raw <- aggregate_area(
+      comdisc.raw,
+      userAreas,
+      areaDescription,
+      propDescription,
+      useForeign = F,
+      applyProp = F
+    )
   }
 
   #Aggregate gears
-  if(aggGear){
+  if (aggGear) {
     userGears <- comland$userGears
     comdisc.raw <- aggregate_gear(comdisc.raw, userGears, fleetDescription)
   }
@@ -71,27 +77,45 @@ get_comdisc_data <- function(channel, comland,
   dk <- calc_DK(comdisc.raw, areaDescription, fleetDescription)
 
   #Extend dk ratios beyond observer data
-  if(extendTS){
+  if (extendTS) {
     message("Extend DK ratio back in time ...")
-    dk.mean <- dk[, .(meanDK = mean(DK, na.rm = T)),
-                  by = c('NESPP3', areaDescription, fleetDescription)]
+    dk.mean <- dk[,
+      .(meanDK = mean(DK, na.rm = T)),
+      by = c('NESPP3', areaDescription, fleetDescription)
+    ]
 
     #Create data table with unobserved periods
     areas <- unique(dk[, .SD, .SDcols = areaDescription])[[1]]
     fleets <- unique(dk[, .SD, .SDcols = fleetDescription])[[1]]
     spp <- unique(dk[, NESPP3])
 
-    blank <- data.table::CJ(YEAR = filterByYear, Area = areas, Fleet = fleets,
-                            NESPP3 = spp)
+    blank <- data.table::CJ(
+      YEAR = filterByYear,
+      Area = areas,
+      Fleet = fleets,
+      NESPP3 = spp
+    )
 
-    data.table::setnames(blank, c('Area', 'Fleet'), c(areaDescription, fleetDescription))
+    data.table::setnames(
+      blank,
+      c('Area', 'Fleet'),
+      c(areaDescription, fleetDescription)
+    )
 
-    dk.blank <- merge(blank, dk, by = c('YEAR', areaDescription, fleetDescription,
-                                        'NESPP3'), all.x = T)
+    dk.blank <- merge(
+      blank,
+      dk,
+      by = c('YEAR', areaDescription, fleetDescription, 'NESPP3'),
+      all.x = T
+    )
 
     #Replace NAs with Mean value
-    dk <- merge(dk.blank, dk.mean, by = c('NESPP3', areaDescription, fleetDescription),
-                      all.x = T)
+    dk <- merge(
+      dk.blank,
+      dk.mean,
+      by = c('NESPP3', areaDescription, fleetDescription),
+      all.x = T
+    )
     dk[is.na(DK), DK := meanDK]
     dk[, meanDK := NULL]
   }
@@ -100,13 +124,15 @@ get_comdisc_data <- function(channel, comland,
   #Apply the discard to kept ratio
   comdisc <- calc_discards(comland, dk, areaDescription, fleetDescription)
 
-  message("Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement.")
+  message(
+    "Some data may be CONFIDENTIAL ... DO NOT disseminate without proper Non-disclosure agreement."
+  )
 
-  return(list(comdisc = comdisc[],
-              sql     = comdisc.raw$sql,
-              call    = c(call, comdisc.raw$call),
-              userAreas = comdisc.raw$userAreas,
-              userGears = comdisc.raw$userGears))
-
+  return(list(
+    comdisc = comdisc[],
+    sql = comdisc.raw$sql,
+    call = c(call, comdisc.raw$call),
+    userAreas = comdisc.raw$userAreas,
+    userGears = comdisc.raw$userGears
+  ))
 }
-

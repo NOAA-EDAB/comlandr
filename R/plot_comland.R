@@ -5,13 +5,13 @@
 #'
 #'@noRd
 
-theme_comland <- function(...){
+theme_comland <- function(...) {
   ggplot2::theme(
     strip.background = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     panel.background = element_blank(),
-    panel.border = element_rect(colour = "black", fill=NA, size=0.75),
+    panel.border = element_rect(colour = "black", fill = NA, size = 0.75),
     panel.spacing.x = ggplot2::unit(10, "points"),
     panel.spacing.y = ggplot2::unit(10, "points"),
     legend.key = element_blank(),
@@ -37,36 +37,40 @@ theme_comland <- function(...){
 #'
 #'@noRd
 
-
 plot_comland <- function(data, by, type = 'landings', range = NA, free.y = T) {
-
   #Sum landings/value and assign "By" category
-  comland.sum <- data[, .(landings = sum(SPPLIVMT), value = sum(SPPVALUE)),
-                      by = c('YEAR', by, 'EPU')]
-  if(!is.na(range[1])) comland.sum <- comland.sum[YEAR %in% range, ]
+  comland.sum <- data[,
+    .(landings = sum(SPPLIVMT), value = sum(SPPVALUE)),
+    by = c('YEAR', by, 'EPU')
+  ]
+  if (!is.na(range[1])) {
+    comland.sum <- comland.sum[YEAR %in% range, ]
+  }
   data.table::setnames(comland.sum, c(by, type), c('By', 'yvar'))
 
   #Remove scientific notation from axis
   format.axis <- function(x) x / 10e3
 
   #Plot
-  if(type == 'landings') ylab <- expression('Landings, metric tons 10'^3)
-  if(type == 'value') ylab <- expression('Value, US dollars 10'^3)
+  if (type == 'landings') {
+    ylab <- expression('Landings, metric tons 10'^3)
+  }
+  if (type == 'value') {
+    ylab <- expression('Value, US dollars 10'^3)
+  }
 
-  if(free.y == T){
+  if (free.y == T) {
     g <- ggplot2::ggplot(comland.sum) +
-      ggplot2::geom_line(aes(x = YEAR,
-                             y = yvar)) +
+      ggplot2::geom_line(aes(x = YEAR, y = yvar)) +
       ggplot2::facet_grid(By ~ EPU, scale = 'free_y') +
       ggplot2::scale_y_continuous(labels = format.axis) +
       ggplot2::labs(y = ylab, x = 'Year') +
       theme_comland()
   }
 
-  if(free.y == F){
+  if (free.y == F) {
     g <- ggplot2::ggplot(comland.sum) +
-      ggplot2::geom_line(aes(x = YEAR,
-                             y = yvar)) +
+      ggplot2::geom_line(aes(x = YEAR, y = yvar)) +
       ggplot2::facet_grid(By ~ EPU) +
       ggplot2::scale_y_continuous(labels = format.axis) +
       ggplot2::labs(y = expression('Landings, metric tons 10'^3), x = 'Year') +
@@ -76,7 +80,3 @@ plot_comland <- function(data, by, type = 'landings', range = NA, free.y = T) {
   #plot figure
   plot(g)
 }
-
-
-
-

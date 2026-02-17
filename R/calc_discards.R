@@ -15,18 +15,22 @@
 #' Internal function
 #' @noRd
 
-
 calc_discards <- function(comland, dk, areaDescription, fleetDescription) {
-
   #Grab landings data
   comdata <- data.table::copy(comland[[1]])
 
   #calculate total landings
-  totland <- comdata[, .(SPPLIVMT = sum(SPPLIVMT, na.rm = T)),
-                     by = c('YEAR', areaDescription, fleetDescription)]
+  totland <- comdata[,
+    .(SPPLIVMT = sum(SPPLIVMT, na.rm = T)),
+    by = c('YEAR', areaDescription, fleetDescription)
+  ]
 
   #Merge DK
-  comdisc <- merge(totland, dk, by = c('YEAR', areaDescription, fleetDescription))
+  comdisc <- merge(
+    totland,
+    dk,
+    by = c('YEAR', areaDescription, fleetDescription)
+  )
 
   #expand dk ratio
   comdisc[, DISMT := SPPLIVMT * DK]
@@ -36,4 +40,3 @@ calc_discards <- function(comland, dk, areaDescription, fleetDescription) {
 
   return(comdisc[])
 }
-
