@@ -9,9 +9,15 @@
 #'
 #'@noRd
 
-aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
-                           useForeign, channel, applyProp){
-
+aggregate_area <- function(
+  comData,
+  userAreas,
+  areaDescription,
+  propDescription,
+  useForeign,
+  channel,
+  applyProp
+) {
   #Pulling data
   message("Aggregating Areas ...")
 
@@ -22,10 +28,14 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
 
   #Convert userAreas to data.table
   areas <- data.table::as.data.table(userAreas)
-  data.table::setnames(areas, c(areaDescription, propDescription), c('newarea', 'prop'))
+  data.table::setnames(
+    areas,
+    c(areaDescription, propDescription),
+    c('newarea', 'prop')
+  )
 
   #Figure out NAFO divisions/weightings
-  if(useForeign){
+  if (useForeign) {
     #Pull NAFO divisions
     NAFOAreas <- data.table::as.data.table(comlandr::get_areas(channel)$data)
     NAFOAreas <- unique(NAFOAreas[, c('AREA', 'NAFDVCD')])
@@ -34,17 +44,32 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     missing54 <- data.table::copy(missingNAFO)[, NAFDVCD := 54]
     missing56 <- data.table::copy(missingNAFO)[, NAFDVCD := 56]
     NAFOAreas <- data.table::rbindlist(list(NAFOAreas, missing54, missing56))
-    NAFOAreas <- NAFOAreas[, .(AREA = as.integer(AREA),
-                               NAFDVCD = as.integer(NAFDVCD))]
-    areasNAFO <- merge(unique(areas[, c('AREA')]), NAFOAreas, by = 'AREA', all.x = T)
+    NAFOAreas <- NAFOAreas[, .(
+      AREA = as.integer(AREA),
+      NAFDVCD = as.integer(NAFDVCD)
+    )]
+    areasNAFO <- merge(
+      unique(areas[, c('AREA')]),
+      NAFOAreas,
+      by = 'AREA',
+      all.x = T
+    )
 
     #Calc area weights
     #Pull area of stat areas
     sf::sf_use_s2(F) #Fixes an error with the stat area shapefile
-    statarea <- sf::read_sf(dsn = system.file("extdata", "Statistical_Areas_2010.shp",
-                                              package="comlandr"), quiet = T)
-    statarea.area <- data.table::data.table(AREA = statarea$Id,
-                                            area = sf::st_area(statarea))
+    statarea <- sf::read_sf(
+      dsn = system.file(
+        "extdata",
+        "Statistical_Areas_2010.shp",
+        package = "comlandr"
+      ),
+      quiet = T
+    )
+    statarea.area <- data.table::data.table(
+      AREA = statarea$Id,
+      area = sf::st_area(statarea)
+    )
     statarea.area[, area := as.numeric(area)]
     areasNAFO <- merge(areasNAFO, statarea.area, by = 'AREA', all.x = T)
 
@@ -58,27 +83,46 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
     areasNAFO[, c('area', 'divarea') := NULL]
 
     #Calculate weighted proportions from Stat areas
-    areas.weighted <- merge(areas, areasNAFO, by = 'AREA', all.x = T, allow.cartesian = T)
-    div.prop <- areas.weighted[, .(prop = sum(prop * weight, na.rm = T)),
-                               by = c('NESPP3', 'NAFDVCD', 'newarea')]
+    areas.weighted <- merge(
+      areas,
+      areasNAFO,
+      by = 'AREA',
+      all.x = T,
+      allow.cartesian = T
+    )
+    div.prop <- areas.weighted[,
+      .(prop = sum(prop * weight, na.rm = T)),
+      by = c('NESPP3', 'NAFDVCD', 'newarea')
+    ]
     #Fix zeros
     div.prop[prop == 0, prop := 1]
 
     #Get in the right format and merge
     data.table::setnames(div.prop, 'NAFDVCD', 'AREA')
     numberCols <- c('AREA', 'prop')
-    div.prop[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols]
+    div.prop[, (numberCols) := lapply(.SD, as.numeric), .SDcols = numberCols]
     areas <- data.table::rbindlist(list(areas, div.prop), use.names = T)
   }
 
   #Apply proportions to Landings
   #Merge new area descriptions to landings
-  if(applyProp){
-    new.area <- merge(comdata, areas, by = c('NESPP3', 'AREA'), all.x = T,
-                      allow.cartesian = T)
+  if (applyProp) {
+    new.area <- merge(
+      comdata,
+      areas,
+      by = c('NESPP3', 'AREA'),
+      all.x = T,
+      allow.cartesian = T
+    )
   } else {
     areas[, NESPP3 := NULL]
-    new.area <- merge(comdata, areas, by = 'AREA', all.x = T, allow.cartesian = T)
+    new.area <- merge(
+      comdata,
+      areas,
+      by = 'AREA',
+      all.x = T,
+      allow.cartesian = T
+    )
   }
 
   #If area is known but outside of aggregation set - set to "Other"
@@ -92,24 +136,33 @@ aggregate_area <- function(comData, userAreas, areaDescription, propDescription,
 
   # Apply proportions to Value
   #Drop extra columns and rename
-  if(applyProp){
+  if (applyProp) {
     new.area[, newsppvalue := SPPVALUE * prop]
     new.area[, c('AREA', 'SPPLIVMT', 'SPPVALUE', 'prop') := NULL]
-    data.table::setnames(new.area, c('newarea', 'newspplivmt', 'newsppvalue'),
-                         c(areaDescription, 'SPPLIVMT', 'SPPVALUE'))
+    data.table::setnames(
+      new.area,
+      c('newarea', 'newspplivmt', 'newsppvalue'),
+      c(areaDescription, 'SPPLIVMT', 'SPPVALUE')
+    )
   } else {
     new.area[, c('AREA', 'SPPLIVMT', 'prop') := NULL]
-    data.table::setnames(new.area, c('newarea', 'newspplivmt'),
-                         c(areaDescription, 'SPPLIVMT'))
+    data.table::setnames(
+      new.area,
+      c('newarea', 'newspplivmt'),
+      c(areaDescription, 'SPPLIVMT')
+    )
   }
 
   #Aggregate to new areas
-  catch.var <- names(new.area)[which(!names(new.area) %in% c('SPPLIVMT',
-                                                             'SPPVALUE'))]
+  catch.var <- names(new.area)[which(
+    !names(new.area) %in% c('SPPLIVMT', 'SPPVALUE')
+  )]
   #Discard data does not have value so need to ensure this runs on both
-  if(length(which(names(new.area) == 'SPPVALUE')) > 0){
-    new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
-                       by = catch.var]
+  if (length(which(names(new.area) == 'SPPVALUE')) > 0) {
+    new.area <- new.area[,
+      .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
+      by = catch.var
+    ]
   } else {
     new.area <- new.area[, .(SPPLIVMT = sum(SPPLIVMT)), by = catch.var]
   }

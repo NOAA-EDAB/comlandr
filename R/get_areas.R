@@ -45,20 +45,24 @@
 #' @export
 #'
 #
-get_areas <- function(channel,areas="all"){
+get_areas <- function(channel, areas = "all") {
+  sqlStatement <- dbutils::create_sql(
+    areas,
+    fieldName = "area",
+    fieldName2 = "areanm",
+    dataType = "%03d",
+    defaultSqlStatement = "select * from NEFSC_GARFO.cfdbs_area"
+  )
 
-
-  sqlStatement <- dbutils::create_sql(areas,fieldName="area",fieldName2="areanm",dataType="%03d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_area")
-
-  query <- DBI::dbGetQuery(channel,sqlStatement)
+  query <- DBI::dbGetQuery(channel, sqlStatement)
 
   # get column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_AREA' and owner='NEFSC_GARFO'"
-  colNames <- t(DBI::dbGetQuery(channel,sqlcolName))
+  colNames <- t(DBI::dbGetQuery(channel, sqlcolName))
 
-  return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
-
+  return(list(
+    data = dplyr::as_tibble(query),
+    sql = sqlStatement,
+    colNames = colNames
+  ))
 }
-
-
-
