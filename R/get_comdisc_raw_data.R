@@ -20,52 +20,61 @@
 #'
 #'@export
 
-get_comdisc_raw_data <- function(channel, filterByYear){
-
-  message("Pulling observer data from database. This could take a while (> 1 hour) ... ")
+get_comdisc_raw_data <- function(channel, filterByYear) {
+  message(
+    "Pulling observer data from database. This could take a while (> 1 hour) ... "
+  )
 
   #output objects
   comdisc <- c()
   sql <- c()
 
   #Create year vector
-  if(is.na(filterByYear[1])){
+  if (is.na(filterByYear[1])) {
     years <- ">= 1989"
-  }else{
+  } else {
     years <- paste0("in (", sqltext(filterByYear), ")")
   }
 
-  ob.qry <- paste0("select year, month, area, negear, nespp4, hailwt, catdisp, drflag,
+  ob.qry <- paste0(
+    "select year, month, area, negear, nespp4, hailwt, catdisp, drflag,
           tripid, haulnum, lathbeg, lonhbeg, link3
           from obdbs.OBSPP
           where obsrflag = 1
           and program not in ('127', '900', '250', '160')
-          and year ", years,
-                   "\n union
+          and year ",
+    years,
+    "\n union
           select year, month, area, negear, nespp4, hailwt, catdisp, drflag,
           tripid, haulnum, lathbeg, lonhbeg, link3
           from obdbs.ASMSPP
           where obsrflag = 1
           and program not in ('127', '900', '250', '160')
-          and year ", years)
+          and year ",
+    years
+  )
 
   ob <- data.table::as.data.table(DBI::dbGetQuery(channel, ob.qry))
   sql <- c(sql, ob.qry)
 
   #Add protected species here
-  mammal.qry <- paste0("select distinct a.year, a.month, b.area, b.negear, a.nespp4,
+  mammal.qry <- paste0(
+    "select distinct a.year, a.month, b.area, b.negear, a.nespp4,
                1 as hailwt, 0 as catdisp, 1 as drflag, a.tripid, a.haulnum,
                b.lathbeg, b.lonhbeg, a.link3
                from obdbs.obinc a, obdbs.obspp b
                where a.tripid = b.tripid
-               and a.year ", years,
-                       "\n union
+               and a.year ",
+    years,
+    "\n union
                select distinct a.year, a.month, b.area, b.negear, a.nespp4,
                1 as hailwt, 0 as catdisp, 1 as drflag, a.tripid, a.haulnum,
                b.lathbeg, b.lonhbeg, a.link3
                from obdbs.asminc a, obdbs.asmspp b
                where a.tripid = b.tripid
-               and a.year ", years)
+               and a.year ",
+    years
+  )
 
   mammal <- data.table::as.data.table(DBI::dbGetQuery(channel, mammal.qry))
   sql <- c(sql, mammal.qry)
@@ -73,16 +82,19 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   ob <- data.table::rbindlist(list(ob, mammal))
 
   #Grab otter trawl gear tables to get mesh size for small verses large mesh
-  mesh.qry <- paste0("select link3, codmsize
+  mesh.qry <- paste0(
+    "select link3, codmsize
              from obdbs.OBOTGH
-             where year ", years)
+             where year ",
+    years
+  )
   mesh <- data.table::as.data.table(DBI::dbGetQuery(channel, mesh.qry))
   sql <- c(sql, mesh.qry)
 
   #Convert mesh size from mm to inches
   mesh[, CODMSIZE := CODMSIZE * 0.0393701]
   mesh[CODMSIZE <= 3, MESHCAT := 'SM']
-  mesh[CODMSIZE >  3, MESHCAT := 'LG']
+  mesh[CODMSIZE > 3, MESHCAT := 'LG']
   mesh[, CODMSIZE := NULL]
 
   ob <- merge(ob, mesh, by = 'LINK3', all.x = T)
@@ -95,16 +107,23 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   ob <- ob[!is.na(HAILWT), ]
 
   #remove non-living items (clappers and stomach contents) and unknown living matter
-  ob <- ob[!(NESPP4 %in% c(0, 6800:6802, 6805, 6810, 6820, 6830, 6850:6857, 6882,
-                           6883, 6894:6897))]
+  ob <- ob[
+    !(NESPP4 %in%
+      c(0, 6800:6802, 6805, 6810, 6820, 6830, 6850:6857, 6882, 6883, 6894:6897))
+  ]
 
   #Convert lat/lon to decimal degrees
-  ob[, LAT := as.numeric(substr(LATHBEG, 1, 2)) + ((as.numeric(substr(LATHBEG, 3, 4))
-                                                  + as.numeric(substr(LATHBEG, 5, 6)))
-                                                  /60)]
-  ob[, LON := (as.numeric(substr(LONHBEG, 1, 2)) + ((as.numeric(substr(LONHBEG, 3, 4))
-                                                  + as.numeric(substr(LONHBEG, 5, 6)))
-                                                  /60)) * -1]
+  ob[,
+    LAT := as.numeric(substr(LATHBEG, 1, 2)) +
+      ((as.numeric(substr(LATHBEG, 3, 4)) + as.numeric(substr(LATHBEG, 5, 6))) /
+        60)
+  ]
+  ob[,
+    LON := (as.numeric(substr(LONHBEG, 1, 2)) +
+      ((as.numeric(substr(LONHBEG, 3, 4)) + as.numeric(substr(LONHBEG, 5, 6))) /
+        60)) *
+      -1
+  ]
   ob[, c('LATHBEG', 'LONHBEG') := NULL]
 
   #Convert weights
@@ -113,14 +132,13 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   convert <- data.table::as.data.table(DBI::dbGetQuery(channel, convert.qry))
   sql <- c(sql, convert.qry)
 
-  data.table::setnames(convert,
-           c('NESPP4_OBS', 'CATDISP_CODE', 'DRFLAG_CODE'),
-           c('NESPP4',     'CATDISP',      'DRFLAG'))
+  data.table::setnames(
+    convert,
+    c('NESPP4_OBS', 'CATDISP_CODE', 'DRFLAG_CODE'),
+    c('NESPP4', 'CATDISP', 'DRFLAG')
+  )
 
-  data.table::setkey(convert,
-         NESPP4,
-         CATDISP,
-         DRFLAG)
+  data.table::setkey(convert, NESPP4, CATDISP, DRFLAG)
 
   ob.code <- merge(ob, convert, by = key(convert), all.x = T)
 
@@ -156,14 +174,20 @@ get_comdisc_raw_data <- function(channel, filterByYear){
   comdisc[is.na(MKTCAT), MKTCAT := 0]
 
   #drop extra columns NESPP4
-  comdisc[, c('DRFLAG', 'CF_LNDLB_LIVLB', 'CF_RPTQTY_LNDLB', 'HAILWT', 'C.HAILWT',
-              'NESPP4') := NULL]
+  comdisc[,
+    c(
+      'DRFLAG',
+      'CF_LNDLB_LIVLB',
+      'CF_RPTQTY_LNDLB',
+      'HAILWT',
+      'C.HAILWT',
+      'NESPP4'
+    ) := NULL
+  ]
 
   #Convert number fields from chr to num
   numberCols <- c('YEAR', 'MONTH', 'NEGEAR', 'NESPP3', 'AREA', 'MKTCAT')
-  comdisc[, (numberCols):= lapply(.SD, as.numeric), .SDcols = numberCols][]
+  comdisc[, (numberCols) := lapply(.SD, as.numeric), .SDcols = numberCols][]
 
-  return(list(comdisc = comdisc[],
-              sql     = sql))
+  return(list(comdisc = comdisc[], sql = sql))
 }
-

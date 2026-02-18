@@ -16,19 +16,21 @@
 #' Internal function
 #' @noRd
 
-
-
-calc_DK <- function(comData, areaDescription, fleetDescription){
-
+calc_DK <- function(comData, areaDescription, fleetDescription) {
   comdata <- data.table::copy(comData[[1]])
 
   #Standardize column names
-  comdata <- data.table::setnames(comdata, c(areaDescription, fleetDescription),
-                                      c('area', 'fleet'))
+  comdata <- data.table::setnames(
+    comdata,
+    c(areaDescription, fleetDescription),
+    c('area', 'fleet')
+  )
 
   #sum catch by species/disposition/area/fleet
-  ob.sums <- comdata[, sum(SPPLIVMT), by = c('YEAR', 'area', 'fleet', 'NESPP3',
-                                                 'CATDISP')]
+  ob.sums <- comdata[,
+    sum(SPPLIVMT),
+    by = c('YEAR', 'area', 'fleet', 'NESPP3', 'CATDISP')
+  ]
   #identify discards
   ob.discard <- ob.sums[CATDISP == 0, ]
 
@@ -53,8 +55,11 @@ calc_DK <- function(comData, areaDescription, fleetDescription){
 
   #Replace standard column names
   #Standardize column names
-  data.table::setnames(dk, c('area', 'fleet'),
-                       c(areaDescription, fleetDescription))
+  data.table::setnames(
+    dk,
+    c('area', 'fleet'),
+    c(areaDescription, fleetDescription)
+  )
 
   return(dk[])
 }

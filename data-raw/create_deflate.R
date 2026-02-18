@@ -1,7 +1,12 @@
 #Area for all species
-library(data.table); library(usethis); library(here)
+library(data.table)
+library(usethis)
+library(here)
 
-inflate <- data.table::as.data.table(read.delim(here::here('data-raw', 'wp.data.3.ProcessedFoods')))
+inflate <- data.table::as.data.table(read.delim(here::here(
+  'data-raw',
+  'wp.data.3.ProcessedFoods'
+)))
 
 inflate[, series_id := gsub(" ", "", inflate[, series_id])]
 deflate <- inflate[series_id == "WPU0223", ]
