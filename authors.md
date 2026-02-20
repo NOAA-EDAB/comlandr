@@ -10,7 +10,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/NOAA-EDAB/comlandr/blob/v1.1.1/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/NOAA-EDAB/comlandr/blob/main/DESCRIPTION)
 
 Lucey S, Beet A (2026). *comlandr: Pulls and processes commercial
 fishing data from the Northeast US*. R package version 1.1.1,
