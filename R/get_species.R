@@ -50,20 +50,25 @@
 #'
 #
 
-get_species <- function(channel,species="all"){
-
+get_species <- function(channel, species = "all") {
   # creates the sql based on user input
-  sqlStatement <- dbutils::create_sql(species,fieldName="nespp3",fieldName2="sppnm",dataType="%03d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_cfspp")
+  sqlStatement <- dbutils::create_sql(
+    species,
+    fieldName = "nespp3",
+    fieldName2 = "sppnm",
+    dataType = "%03d",
+    defaultSqlStatement = "select * from NEFSC_GARFO.cfdbs_cfspp"
+  )
 
-  query <- DBI::dbGetQuery(channel,sqlStatement)
+  query <- DBI::dbGetQuery(channel, sqlStatement)
 
   # get column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_CFSPP' and owner='NEFSC_GARFO'"
-  colNames <- t(DBI::dbGetQuery(channel,sqlcolName))
+  colNames <- t(DBI::dbGetQuery(channel, sqlcolName))
 
-  return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
-
+  return(list(
+    data = dplyr::as_tibble(query),
+    sql = sqlStatement,
+    colNames = colNames
+  ))
 }
-
-
-

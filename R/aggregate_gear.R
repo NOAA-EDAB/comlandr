@@ -12,8 +12,7 @@
 #'
 #'@noRd
 
-aggregate_gear <- function(comData, userGears, fleetDescription){
-
+aggregate_gear <- function(comData, userGears, fleetDescription) {
   #Pulling data
   message("Aggregating Gears ...")
 
@@ -28,7 +27,7 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
 
   #Assign gears to fleets
   #Generate NEGEAR2 codes from NEGEAR
-  if(is.numeric(comdata$NEGEAR)){
+  if (is.numeric(comdata$NEGEAR)) {
     comdata[NEGEAR < 100, NEGEAR3 := paste0(0, NEGEAR)]
     comdata[NEGEAR >= 100, NEGEAR3 := NEGEAR]
     comdata[, NEGEAR2 := as.numeric(substr(NEGEAR3, 1, 2))]
@@ -39,14 +38,17 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
 
   fleets <- unique(gears$fleet)
 
-  for(ifleet in 1:length(fleets)){
+  for (ifleet in 1:length(fleets)) {
     fleet.gear <- gears[fleet == fleets[ifleet], NEGEAR2]
     fleet.mesh <- unique(gears[fleet == fleets[ifleet], MESHCAT])
     #Check if there is a mesh characteristic associated with this gear
-    if(is.na(fleet.mesh)){
+    if (is.na(fleet.mesh)) {
       comdata[NEGEAR2 %in% fleet.gear, fleet := fleets[ifleet]]
     } else {
-      comdata[NEGEAR2 %in% fleet.gear & MESHCAT == fleet.mesh, fleet := fleets[ifleet]]
+      comdata[
+        NEGEAR2 %in% fleet.gear & MESHCAT == fleet.mesh,
+        fleet := fleets[ifleet]
+      ]
     }
   }
 
@@ -58,16 +60,18 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
 
   #Aggregate over new gears
   #Aggregate to new fleets
-  catch.var <- names(comdata)[which(!names(comdata) %in% c('SPPLIVMT',
-                                                           'SPPVALUE'))]
+  catch.var <- names(comdata)[which(
+    !names(comdata) %in% c('SPPLIVMT', 'SPPVALUE')
+  )]
   #Discard data does not have value so need to ensure this runs on both
-  if(length(which(names(comdata) == 'SPPVALUE')) > 0){
-    comdata <- comdata[, .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
-                       by = catch.var]
+  if (length(which(names(comdata) == 'SPPVALUE')) > 0) {
+    comdata <- comdata[,
+      .(SPPLIVMT = sum(SPPLIVMT), SPPVALUE = sum(SPPVALUE)),
+      by = catch.var
+    ]
   } else {
     comdata <- comdata[, .(SPPLIVMT = sum(SPPLIVMT)), by = catch.var]
   }
-
 
   #Add changes back into comdata
   comData[[1]] <- comdata[]
@@ -76,4 +80,3 @@ aggregate_gear <- function(comData, userGears, fleetDescription){
 
   return(comData[])
 }
-

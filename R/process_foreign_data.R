@@ -20,8 +20,12 @@
 #'
 #'@export
 
-process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMaine = T){
-
+process_foreign_data <- function(
+  channel,
+  nafoland,
+  useLanded = T,
+  useHerringMaine = T
+) {
   ## All code copied directly from nafo_comland
   nafoland <- nafoland[Divcode %in% c(47, 51:56, 61:63) & Code > 3, ]
 
@@ -30,7 +34,7 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
 
   # nafoland <- nafoland[, Country :=NULL]
 
-  nafoland <- nafoland[SPPLIVMT != 0,]
+  nafoland <- nafoland[SPPLIVMT != 0, ]
 
   #This is moved to aggregate_area()
   # nafoland[, EPU := factor(NA, levels = c('GOM', 'GB', 'MAB', 'SS', 'OTHER'))]
@@ -43,10 +47,17 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
   # nafoland[, Divcode := NULL]
 
   ##Fix missing Scotian Shelf data from 21B
-  SS.nafo <- data.table::as.data.table(read.csv(system.file("extdata","SS_NAFO_21A.csv",package="comlandr"), skip = 8))
+  SS.nafo <- data.table::as.data.table(read.csv(
+    system.file("extdata", "SS_NAFO_21A.csv", package = "comlandr"),
+    skip = 8
+  ))
 
   #Add NAFOSPP code to SS.nafo
-  nafo.spp <- data.table::as.data.table(read.csv(system.file("extdata","species.txt",package="comlandr")))
+  nafo.spp <- data.table::as.data.table(read.csv(system.file(
+    "extdata",
+    "species.txt",
+    package = "comlandr"
+  )))
   data.table::setnames(nafo.spp, "Abbreviation", "Species_ASFIS")
   nafo.spp <- nafo.spp[, list(Code, Species_ASFIS)]
 
@@ -55,37 +66,44 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
   #Only grab missing data
   SS.nafo <- SS.nafo[Year %in% c(2003, 2008, 2009), ]
 
-  data.table::setkey(SS.nafo,
-                     Year,
-                     Code)
+  data.table::setkey(SS.nafo, Year, Code)
 
-  SS.land <- SS.nafo[, .(SPPLIVMT = sum(Catch...000.Kg.)), by = c('Year', 'Code')]
+  SS.land <- SS.nafo[,
+    .(SPPLIVMT = sum(Catch...000.Kg.)),
+    by = c('Year', 'Code')
+  ]
 
   #Add GearCode, Tonnage, Month, and EPU
   SS.land[, GearCode := 99]
-  SS.land[, Tonnage  := 0]
-  SS.land[, MONTH    := 0]
-  SS.land[, Divcode  := 47]
-  SS.land[, QY       := 1]
+  SS.land[, Tonnage := 0]
+  SS.land[, MONTH := 0]
+  SS.land[, Divcode := 47]
+  SS.land[, QY := 1]
 
   data.table::setcolorder(SS.land, names(nafoland))
 
   nafoland <- data.table::rbindlist(list(nafoland, SS.land))
 
-
   #Rectify NAFO codes with US codes
   #Species
-  data.table::setnames(nafoland,
-                       c('Year', 'GearCode', 'Tonnage', 'Code', 'Divcode'),
-                       c('YEAR', 'NAFOGEAR', 'TONCL1', 'NAFOSPP', 'AREA'))
+  data.table::setnames(
+    nafoland,
+    c('Year', 'GearCode', 'Tonnage', 'Code', 'Divcode'),
+    c('YEAR', 'NAFOGEAR', 'TONCL1', 'NAFOSPP', 'AREA')
+  )
 
-  spp <- data.table::as.data.table(DBI::dbGetQuery(channel, "select NAFOSPP, NESPP3 from NEFSC_GARFO.cfdbs_CFSPP"))
+  spp <- data.table::as.data.table(DBI::dbGetQuery(
+    channel,
+    "select NAFOSPP, NESPP3 from NEFSC_GARFO.cfdbs_CFSPP"
+  ))
   spp$NAFOSPP <- as.integer(spp$NAFOSPP)
   spp$NESPP3 <- as.integer(spp$NESPP3)
 
   #Fix missing NAFO codes
-  missing.spp <- data.table::data.table(NAFOSPP = c(110, 141, 189, 480, 484, 487, 488, 489),
-                                        NESPP3  = c(240, 509, 512, 366, 368, 367, 370, 369))
+  missing.spp <- data.table::data.table(
+    NAFOSPP = c(110, 141, 189, 480, 484, 487, 488, 489),
+    NESPP3 = c(240, 509, 512, 366, 368, 367, 370, 369)
+  )
   spp <- data.table::rbindlist(list(spp, missing.spp))
 
   spp <- unique(spp, by = 'NAFOSPP')
@@ -103,7 +121,6 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
 
   nafoland <- merge(nafoland, spp, by = 'NAFOSPP', all.x = T)
 
-
   #fix codes
   nafoland[NAFOSPP == 309, NESPP3 := 150L]
   nafoland[NAFOSPP == 462, NESPP3 := 481L]
@@ -115,14 +132,21 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
   nafoland <- nafoland[!is.na(NESPP3), ]
 
   #Convert scallops to meat weight
-  if(useLanded) nafoland[NESPP3 == 800, SPPLIVMT := SPPLIVMT / 8.33]
+  if (useLanded) {
+    nafoland[NESPP3 == 800, SPPLIVMT := SPPLIVMT / 8.33]
+  }
 
   #Remove herring catch - if pulling using comlandr::get_herring_data()
-  if(useHerringMaine) nafoland <- nafoland[NESPP3 != 168, ]
+  if (useHerringMaine) {
+    nafoland <- nafoland[NESPP3 != 168, ]
+  }
 
   #Gearcodes
 
-  gear <- data.table::as.data.table(DBI::dbGetQuery(channel, "select NEGEAR, NAFOGEAR from NEFSC_GARFO.cfdbs_Gear"))
+  gear <- data.table::as.data.table(DBI::dbGetQuery(
+    channel,
+    "select NEGEAR, NAFOGEAR from NEFSC_GARFO.cfdbs_Gear"
+  ))
   gear$NEGEAR <- as.integer(gear$NEGEAR)
   gear$NAFOGEAR <- as.integer(gear$NAFOGEAR)
 
@@ -131,8 +155,8 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
   nafoland <- merge(nafoland, gear, by = 'NAFOGEAR', all.x = T)
 
   #fix codes
-  nafoland[NAFOGEAR == 8,  NEGEAR := 50L]
-  nafoland[NAFOGEAR == 9,  NEGEAR := 370L]
+  nafoland[NAFOGEAR == 8, NEGEAR := 50L]
+  nafoland[NAFOGEAR == 9, NEGEAR := 370L]
   nafoland[NAFOGEAR == 11, NEGEAR := 50L]
   nafoland[NAFOGEAR == 12, NEGEAR := 50L]
   nafoland[NAFOGEAR == 14, NEGEAR := 370L]
@@ -149,7 +173,6 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
 
   #Drop NAFO codes
   nafoland[, c('NAFOGEAR', 'NAFOSPP') := NULL]
-
 
   #aggregate nafo landings
   #2 - aggregate by quarter year, half year, major gear, and small/large TC
@@ -180,11 +203,12 @@ process_foreign_data <- function(channel, nafoland, useLanded = T, useHerringMai
 
   # TONCL1 no longer used. TONCL2 used instead.
   # Make 2 digits, add a zero
-  nafoland[,TONCL2 := as.numeric(paste0(TONCL1,"0"))]
+  nafoland[, TONCL2 := as.numeric(paste0(TONCL1, "0"))]
 
-  nafoland.agg <- nafoland[, .(SPPLIVMT = sum(SPPLIVMT)),
-                           by = c('YEAR', 'MONTH', 'NEGEAR', 'TONCL2','NESPP3',
-                                  'AREA')]
+  nafoland.agg <- nafoland[,
+    .(SPPLIVMT = sum(SPPLIVMT)),
+    by = c('YEAR', 'MONTH', 'NEGEAR', 'TONCL2', 'NESPP3', 'AREA')
+  ]
 
   #Create dummy variable for some columns in US landings
   nafoland.agg[, SPPVALUE := 0]

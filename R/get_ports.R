@@ -44,23 +44,28 @@
 #' @export
 #'
 #
-get_ports <- function(channel,ports="all"){
-
+get_ports <- function(channel, ports = "all") {
   # creates the sql based on user input
-  sqlStatement <- dbutils::create_sql(ports,fieldName="port",fieldName2="portnm",dataType="%06d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_port")
+  sqlStatement <- dbutils::create_sql(
+    ports,
+    fieldName = "port",
+    fieldName2 = "portnm",
+    dataType = "%06d",
+    defaultSqlStatement = "select * from NEFSC_GARFO.cfdbs_port"
+  )
 
-  query <- DBI::dbGetQuery(channel,sqlStatement)
+  query <- DBI::dbGetQuery(channel, sqlStatement)
 
   #data <- query[order(query$PORTNM),]
 
   #save(species,file="data/speciesDefinitions.RData")
   # get column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_PORT' and owner='NEFSC_GARFO'"
-  colNames <- t(DBI::dbGetQuery(channel,sqlcolName))
+  colNames <- t(DBI::dbGetQuery(channel, sqlcolName))
 
-  return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
-
+  return(list(
+    data = dplyr::as_tibble(query),
+    sql = sqlStatement,
+    colNames = colNames
+  ))
 }
-
-
-

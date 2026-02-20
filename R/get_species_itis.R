@@ -59,38 +59,53 @@
 #'
 #
 
-get_species_itis <- function(channel,species="all",nameType="common_name"){
-
+get_species_itis <- function(
+  channel,
+  species = "all",
+  nameType = "common_name"
+) {
   # nameType = common_name or scientific_name, NESPP4
 
   # creates the sql based on user input
-  if (toupper(nameType) == "NESPP4"){
-    sqlStatement <- dbutils::create_sql(species,fieldName="NESPP4",fieldName2=nameType,dataType="%04d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_species_itis_ne")
+  if (toupper(nameType) == "NESPP4") {
+    sqlStatement <- dbutils::create_sql(
+      species,
+      fieldName = "NESPP4",
+      fieldName2 = nameType,
+      dataType = "%04d",
+      defaultSqlStatement = "select * from NEFSC_GARFO.cfdbs_species_itis_ne"
+    )
   } else {
-    sqlStatement <- dbutils::create_sql(species,fieldName="species_itis",fieldName2=nameType,dataType="%06d",defaultSqlStatement="select * from NEFSC_GARFO.cfdbs_species_itis_ne")
+    sqlStatement <- dbutils::create_sql(
+      species,
+      fieldName = "species_itis",
+      fieldName2 = nameType,
+      dataType = "%06d",
+      defaultSqlStatement = "select * from NEFSC_GARFO.cfdbs_species_itis_ne"
+    )
   }
 
   # strip ; and add additional content
-  sqlStatement <- sub(";","",sqlStatement)
+  sqlStatement <- sub(";", "", sqlStatement)
   if (length(species) == 1) {
     if (tolower(species) == "all") {
-      sqlStatement <- paste0(sqlStatement," where NESPP4_FLAG = 1")
+      sqlStatement <- paste0(sqlStatement, " where NESPP4_FLAG = 1")
     } else {
-      sqlStatement <- paste0(sqlStatement," and NESPP4_FLAG = 1")
+      sqlStatement <- paste0(sqlStatement, " and NESPP4_FLAG = 1")
     }
   } else {
-    sqlStatement <- paste0(sqlStatement," and NESPP4_FLAG = 1")
+    sqlStatement <- paste0(sqlStatement, " and NESPP4_FLAG = 1")
   }
 
-  query <- DBI::dbGetQuery(channel,sqlStatement)
+  query <- DBI::dbGetQuery(channel, sqlStatement)
 
   # get column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'CFDBS_SPECIES_ITIS_NE' and owner='NEFSC_GARFO'"
-  colNames <- t(DBI::dbGetQuery(channel,sqlcolName))
+  colNames <- t(DBI::dbGetQuery(channel, sqlcolName))
 
-  return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
-
+  return(list(
+    data = dplyr::as_tibble(query),
+    sql = sqlStatement,
+    colNames = colNames
+  ))
 }
-
-
-
