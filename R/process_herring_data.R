@@ -11,9 +11,14 @@
 process_herring_data <- function(herring_data, comland_data, useForeign) {
   comland <- comland_data$comland
   herring <- herring_data$data |>
-    dplyr::mutate(MARKET_CODE = "UN", TONCL2 = 30, UTILCD = 0, MESHCAT = "LG")
+    dplyr::mutate(
+      MARKET_CODE = "UN",
+      TONCL2 = 30,
+      UTILCD = 0,
+      MESHCAT = "LG"
+    ) |>
+    data.table::as.data.table()
 
-  browser()
   #Using averages from comland to fill in categories
   # herring[, MARKET_CODE := 'UN']
   #
