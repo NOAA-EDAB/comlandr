@@ -56,13 +56,13 @@ get_herring_data <- function(
     dplyr::mutate(
       YEAR = as.numeric(YEAR),
       MONTH = as.numeric(MONTH),
-      STOCK_AREA = as.numeric(STOCK_AREA),
+      AREA = as.numeric(STOCK_AREA),
       NEGEAR = as.numeric(NEGEAR)
     )
 
   # aggregate landings and discards
   herring_data <- herr_catch |>
-    dplyr::group_by(YEAR, MONTH, CATEGORY, STOCK_AREA, NEGEAR) |>
+    dplyr::group_by(YEAR, MONTH, CATEGORY, AREA, NEGEAR) |>
     dplyr::summarise(
       SPPLIVMT = sum(KEPTMT, na.rm = TRUE),
       DISCMT = sum(DISCMT, na.rm = TRUE),
