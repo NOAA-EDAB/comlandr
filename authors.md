@@ -13,13 +13,13 @@ Source:
 [`DESCRIPTION`](https://github.com/NOAA-EDAB/comlandr/blob/main/DESCRIPTION)
 
 Lucey S, Beet A (2026). *comlandr: Pulls and processes commercial
-fishing data from the Northeast US*. R package version 1.1.1,
+fishing data from the Northeast US*. R package version 1.1.2,
 <https://github.com/NOAA-EDAB/comlandr>.
 
     @Manual{,
       title = {comlandr: Pulls and processes commercial fishing data from the Northeast US},
       author = {Sean Lucey and Andy Beet},
       year = {2026},
-      note = {R package version 1.1.1},
+      note = {R package version 1.1.2},
       url = {https://github.com/NOAA-EDAB/comlandr},
     }

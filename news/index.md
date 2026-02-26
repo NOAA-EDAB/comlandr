@@ -1,5 +1,12 @@
 # Changelog
 
+## comlandr 1.1.2
+
+### Patch fixes
+
+- Suppress Warnings for “NAs introduced by coercion”
+- Introduced an air.toml to auto format all future code
+
 ## comlandr 1.1.1
 
 ### Patch fixes
