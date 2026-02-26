@@ -146,7 +146,11 @@ get_comland_raw_data <- function(
     'UTILCD',
     'AREA'
   )
-  comland[, (numberCols) := lapply(.SD, as.numeric), .SDcols = numberCols][]
+  # Note AREA has non numeric values "OFF" and "OFR" (State data). These will be converted to NA
+  comland[,
+    (numberCols) := lapply(.SD, function(x) suppressWarnings(as.numeric(x))),
+    .SDcols = numberCols
+  ][]
 
   #Adjust pounds to metric tons
   comland[, SPPLIVMT := SPPLIVLB * 0.00045359237]
