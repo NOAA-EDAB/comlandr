@@ -19,15 +19,6 @@ process_herring_data <- function(herring_data, comland_data, useForeign) {
     ) |>
     data.table::as.data.table()
 
-  #Using averages from comland to fill in categories
-  # herring[, MARKET_CODE := 'UN']
-  #
-  # herring[, TONCL2 := 30]
-  #
-  # herring[, UTILCD := 0]
-  #
-  # herring[, MESHCAT := 'LG']
-
   #compute price/utilization from CF tables
   herring.comland <- comland[NESPP3 == 168, ]
 
