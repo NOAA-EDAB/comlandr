@@ -51,7 +51,7 @@ get_herring_data <- function(
   herr_catch <- DBI::dbGetQuery(channel, herr_qry) |>
     dplyr::as_tibble()
 
-  # Convert number fields from characterr to numeric
+  # Convert number fields from character to numeric
   herr_catch <- herr_catch |>
     dplyr::mutate(
       YEAR = as.numeric(YEAR),
