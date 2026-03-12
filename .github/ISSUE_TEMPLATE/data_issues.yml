@@ -21,16 +21,6 @@ body:
 
   - type: textarea
     attributes:
-      label: Species, ITIS, Region
-      description: >
-        Please provide the name of the species, ITIS, and Region for which
-        there are data issues.
-      value: |
-        <!--- Add information here --->
-    validations:
-      required: false
-  - type: textarea
-    attributes:
       label: Sources for correcting the problem
       description: >
         Please provide the source (if applicable) containing the correct data
