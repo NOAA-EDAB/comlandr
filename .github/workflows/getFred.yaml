@@ -81,7 +81,7 @@ jobs:
           subject: Github Actions job result
           to: andrew.beet@noaa.gov
 
-          from: comlandr FRED update
+          from: 'comlandr FRED update'
 
           #body: file://${{github.workspace}}/data-raw/datapull.txt
 
