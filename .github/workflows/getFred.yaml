@@ -12,6 +12,7 @@ on:
   schedule:
     # uses UTC/GMT time (+ 5 hrs)
     - cron: "0 0 20 * *" # Every Month (Day 20) at 0000 hrs = 0500 UTC. WPU0223 updates on 16th
+  workflow_dispatch:
 
 jobs:
 
@@ -69,7 +70,7 @@ jobs:
 
       # Send email indicating if anything has changed
       - name: Send email
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@v14
 
         with:
           server_address: smtp.gmail.com
@@ -81,7 +82,8 @@ jobs:
           subject: Github Actions job result
           to: andrew.beet@noaa.gov
 
-          from: comlandr FRED update
+          from: 'comlandr FRED update <noreply@gmail.com>'
+          envelope_from: ${{ secrets.AB_MAIL_USERNAME }}
 
           #body: file://${{github.workspace}}/data-raw/datapull.txt
 
