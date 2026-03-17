@@ -82,7 +82,7 @@ jobs:
           subject: Github Actions job result
           to: andrew.beet@noaa.gov
 
-          from: 'comlandr FRED update <noreply@gmail.com>'
+          from: "comlandr FRED update <noreply@gmail.com>"
           envelope_from: ${{ secrets.AB_MAIL_USERNAME }}
 
           #body: file://${{github.workspace}}/data-raw/datapull.txt
