@@ -56,6 +56,7 @@ get_ports(channel,ports = "Fair")
 
 Other get functions: 
 \code{\link{get_areas}()},
+\code{\link{get_dealers}()},
 \code{\link{get_gears}()},
 \code{\link{get_locations}()},
 \code{\link{get_species}()},

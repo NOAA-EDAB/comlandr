@@ -54,6 +54,7 @@ get_areas(channel,"GG")
 \code{\link[dbutils]{connect_to_database}}
 
 Other get functions: 
+\code{\link{get_dealers}()},
 \code{\link{get_gears}()},
 \code{\link{get_locations}()},
 \code{\link{get_ports}()},

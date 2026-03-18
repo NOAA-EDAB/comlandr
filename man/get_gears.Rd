@@ -55,6 +55,7 @@ get_gears(channel,"seines")
 
 Other get functions: 
 \code{\link{get_areas}()},
+\code{\link{get_dealers}()},
 \code{\link{get_locations}()},
 \code{\link{get_ports}()},
 \code{\link{get_species}()},
