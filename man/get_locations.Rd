@@ -40,6 +40,7 @@ get_locations(channel)
 
 Other get functions: 
 \code{\link{get_areas}()},
+\code{\link{get_dealers}()},
 \code{\link{get_gears}()},
 \code{\link{get_ports}()},
 \code{\link{get_species}()},

@@ -35,6 +35,7 @@ reference:
   - get_locations
   - get_ports
   - get_vessels
+  - get_dealers
 - title: "Data"
   desc: "Lazy loaded data"
 - contents:

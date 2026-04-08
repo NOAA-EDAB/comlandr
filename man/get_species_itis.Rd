@@ -70,6 +70,7 @@ get_species_itis(channel,species= c("164712","168559"))
 
 Other get functions: 
 \code{\link{get_areas}()},
+\code{\link{get_dealers}()},
 \code{\link{get_gears}()},
 \code{\link{get_locations}()},
 \code{\link{get_ports}()},
