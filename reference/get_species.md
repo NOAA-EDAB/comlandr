@@ -55,6 +55,7 @@ Use the data dictionary for field name explanations. Note: species codes
 
 Other get functions:
 [`get_areas()`](https://noaa-edab.github.io/comlandr/reference/get_areas.md),
+[`get_dealers()`](https://noaa-edab.github.io/comlandr/reference/get_dealers.md),
 [`get_gears()`](https://noaa-edab.github.io/comlandr/reference/get_gears.md),
 [`get_locations()`](https://noaa-edab.github.io/comlandr/reference/get_locations.md),
 [`get_ports()`](https://noaa-edab.github.io/comlandr/reference/get_ports.md),

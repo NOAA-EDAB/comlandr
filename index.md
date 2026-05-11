@@ -36,8 +36,8 @@ guide](https://noaa-edab.github.io/comlandr/articles/comlandr.html)
 
 ## Developers (in alphabetical order)
 
-| [andybeet](https://github.com/andybeet)                                                                        | [slucey](https://github.com/slucey)                                                                                                                     |
-|----------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [andybeet](https://github.com/andybeet) | [slucey](https://github.com/slucey) |
+|----|----|
 | [![andybeet avatar](https://avatars1.githubusercontent.com/u/22455149?s=100&v=4)](https://github.com/andybeet) | [![sean lucey avatar](https://avatars.githubusercontent.com/u/5578254?s=100&u=cd59cd654cab73ea583c697145bfe062222355cd&v=4)](https://github.com/slucey) |
 
 #### Legal disclaimer

@@ -1,6 +1,7 @@
 # Aggregate landings to another footprint
 
 ``` r
+
 library(comlandr)
 ```
 

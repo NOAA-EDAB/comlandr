@@ -1,6 +1,7 @@
 # Calculating present day value
 
 ``` r
+
 library(comlandr)
 ```
 

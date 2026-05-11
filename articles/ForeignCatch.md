@@ -22,18 +22,18 @@ fishing gear data.
 
 Example data:
 
-| Year | Country          | Division | Species           | Species_ASFIS | Catch (’000 Kg) |
-|-----:|:-----------------|:---------|:------------------|:--------------|----------------:|
-| 2011 | Canada Maritimes | 4X       | Soft Clam         | CLS           |            1050 |
-| 2011 | Canada Maritimes | 4X       | American Eel      | ELA           |               1 |
-| 2011 | Canada Maritimes | 4X       | Atlantic Hagefish | MYG           |             488 |
-| 2011 | Canada Maritimes | 4X       | American Shad     | SHA           |               4 |
-| 2011 | Canada Maritimes | 4X       | Mullets (ns)      | MUL           |               0 |
-| 2011 | Canada Maritimes | 4X       | Rainbow Smelt     | SMR           |               1 |
-| 2011 | Canada Maritimes | 4X       | Striped Bass      | STB           |              12 |
-| 2011 | Canada Maritimes | 4X       | Sturgeons (ns)    | STU           |               0 |
-| 2011 | Canada Maritimes | 4X       | Dogfishes (ns)    | DGX           |             124 |
-| 2011 | Canada Maritimes | 4X       | Porbeagle         | POR           |              17 |
+| Year | Country | Division | Species | Species_ASFIS | Catch (’000 Kg) |
+|---:|:---|:---|:---|:---|---:|
+| 2011 | Canada Maritimes | 4X | Soft Clam | CLS | 1050 |
+| 2011 | Canada Maritimes | 4X | American Eel | ELA | 1 |
+| 2011 | Canada Maritimes | 4X | Atlantic Hagefish | MYG | 488 |
+| 2011 | Canada Maritimes | 4X | American Shad | SHA | 4 |
+| 2011 | Canada Maritimes | 4X | Mullets (ns) | MUL | 0 |
+| 2011 | Canada Maritimes | 4X | Rainbow Smelt | SMR | 1 |
+| 2011 | Canada Maritimes | 4X | Striped Bass | STB | 12 |
+| 2011 | Canada Maritimes | 4X | Sturgeons (ns) | STU | 0 |
+| 2011 | Canada Maritimes | 4X | Dogfishes (ns) | DGX | 124 |
+| 2011 | Canada Maritimes | 4X | Porbeagle | POR | 17 |
 
 ### [21B](https://www.nafo.int/Data/Catch-Statistics) Database
 
@@ -47,18 +47,18 @@ comma-delimited text files containing ONE decade each.
 
 Example data (Decade 1960-1969):
 
-| Year | Country | GearCode | Tonnage | MainSpecies | Divcode | Code | Effort | Catches | Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec | DateCreated       |
-|-----:|--------:|---------:|--------:|------------:|--------:|-----:|-------:|--------:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|:------------------|
-| 1961 |       2 |       10 |       4 |           3 |      23 |    1 |      0 |       0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |  15 |   0 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       4 |           3 |      23 |    2 |      0 |       0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       4 |           3 |      23 |  101 |      0 |       0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       4 |           3 |      23 |  103 |      0 |       0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   2 |   0 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       3 |          10 |      32 |    1 |      0 |       0 |   0 |   0 |   0 |   0 |   0 |  74 |   0 |   0 |   0 |   0 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       3 |          10 |      32 |    2 |      0 |       0 |   0 |   0 |   0 |   0 |   0 |  10 |   0 |   0 |   0 |   0 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       3 |          10 |      32 |  101 |      0 |       0 |   0 |   0 |   0 |   0 |   0 |  38 |   0 |   0 |   0 |   0 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       3 |          10 |      32 |  112 |      0 |       0 |   0 |   0 |   0 |   0 |   0 | 114 |   0 |   0 |   0 |   0 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       4 |           1 |      32 |    1 |      0 |       0 |   0 |   0 |   0 |   0 |   0 | 102 | 129 |   0 | 583 | 427 |   0 |   0 | 30/7/1996 0:00:00 |
-| 1961 |       2 |       10 |       4 |           1 |      32 |    2 |      0 |       0 |   0 |   0 |   0 |   0 |   0 |  13 |   9 |   0 |  48 |  27 |   0 |   0 | 30/7/1996 0:00:00 |
+| Year | Country | GearCode | Tonnage | MainSpecies | Divcode | Code | Effort | Catches | Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec | DateCreated |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---|
+| 1961 | 2 | 10 | 4 | 3 | 23 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 15 | 0 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 4 | 3 | 23 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 4 | 3 | 23 | 101 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 4 | 3 | 23 | 103 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 3 | 10 | 32 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 74 | 0 | 0 | 0 | 0 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 3 | 10 | 32 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 10 | 0 | 0 | 0 | 0 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 3 | 10 | 32 | 101 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 38 | 0 | 0 | 0 | 0 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 3 | 10 | 32 | 112 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 114 | 0 | 0 | 0 | 0 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 4 | 1 | 32 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 102 | 129 | 0 | 583 | 427 | 0 | 0 | 30/7/1996 0:00:00 |
+| 1961 | 2 | 10 | 4 | 1 | 32 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 13 | 9 | 0 | 48 | 27 | 0 | 0 | 30/7/1996 0:00:00 |
 
 The `mainSpecies` field is the reported target species, however the
 actual species caught are specified in the `speciesEffort` or `Code`

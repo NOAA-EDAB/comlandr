@@ -1,6 +1,7 @@
 # Estimating discard
 
 ``` r
+
 library(comlandr)
 ```
 

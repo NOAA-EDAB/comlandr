@@ -1,5 +1,7 @@
 # Changelog
 
+## comlandr 1.2.0
+
 ## comlandr 1.1.2
 
 ### Patch fixes
@@ -39,7 +41,7 @@ available
   - sends email report (`sendAsEmail.rmd`)
 - Add rmd to document schemas used
 
-### Bug fixes
+### Patch fixes
 
 - Many of the data tables used in the supporting functions have been
   moved from NEFSC to GARFO (Schema changes). Changes to reflect this

@@ -1,6 +1,7 @@
 # Imputing missing data
 
 ``` r
+
 library(comlandr)
 ```
 

@@ -52,6 +52,7 @@ Use the data dictionary for field name explanations
 `connect_to_database`
 
 Other get functions:
+[`get_dealers()`](https://noaa-edab.github.io/comlandr/reference/get_dealers.md),
 [`get_gears()`](https://noaa-edab.github.io/comlandr/reference/get_gears.md),
 [`get_locations()`](https://noaa-edab.github.io/comlandr/reference/get_locations.md),
 [`get_ports()`](https://noaa-edab.github.io/comlandr/reference/get_ports.md),
