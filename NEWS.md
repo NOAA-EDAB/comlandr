@@ -1,6 +1,6 @@
 # comlandr 1.2.0
 
-# Minor changes
+## Minor changes
 
 * added `get_dealers` function. Pulls dealer lookup table
 
