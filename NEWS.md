@@ -1,3 +1,9 @@
+# comlandr 1.2.0
+
+# Minor changes
+
+* added `get_dealers` function. Pulls dealer lookup table
+
 # comlandr 1.1.2
 
 ## Patch fixes
@@ -27,7 +33,7 @@ This has been replaced with a workflow to pull the data stream via API. To ensur
   * sends email report (`sendAsEmail.rmd`)
 * Add rmd to document schemas used
 
-## Bug fixes
+## Patch fixes
 
 * Many of the data tables used in the supporting functions have been moved from NEFSC to GARFO (Schema changes).
 Changes to reflect this have been made in several of the `get` functions 
