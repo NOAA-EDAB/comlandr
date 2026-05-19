@@ -40,7 +40,7 @@ channel <- connect_to_database(server="name_of_server",uid="individuals_username
 get_dealers(channel)
 
 # extracts dealer details for states, Massachusetts and Maine
-get_dealers(channel,state = c("MA","ME"))
+get_dealers(channel, state = c("MA","ME"))
 
 # extracts dealer details for years 2010 to 2020
 get_dealers(channel, year = 2010:2020)
