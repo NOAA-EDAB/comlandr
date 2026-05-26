@@ -5,9 +5,6 @@
 name: FRED
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -30,7 +27,7 @@ jobs:
         id: get_workflow_token
         uses: actions/create-github-app-token@v3.2.0
         with:
-          app-id: ${{ secrets.APP_ID }}
+          client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Checkout repo
