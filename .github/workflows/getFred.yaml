@@ -5,12 +5,6 @@
 name: FRED
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   schedule:
     # uses UTC/GMT time (+ 5 hrs)
     - cron: "0 0 20 * *" # Every Month (Day 20) at 0000 hrs = 0500 UTC. WPU0223 updates on 16th
@@ -25,10 +19,20 @@ jobs:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: false
 
     steps:
+      #  Generate a short-lived token using GitHub App credentials
+      - name: Generate GitHub App Token
+        id: get_workflow_token
+        uses: actions/create-github-app-token@v3.2.0
+        with:
+          client-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          persist-credentials: true
 
       - name: set up pandoc
         uses: r-lib/actions/setup-pandoc@v2
