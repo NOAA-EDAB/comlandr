@@ -198,3 +198,33 @@ for (i in seq(1, length(species_list), by = chunk_size)) {
 
 dev.off()
 message(sprintf("Plots saved to %s", pdf_path))
+
+# 7. Generate Tabular Output ----------------------------------------------
+message("Generating comparison table...")
+
+comparison_table <- hypothesis_df |>
+  mutate(
+    # The gap between Stock SMART and total commercial catch
+    Difference_mt = SS_Total_Catch_mt - Com_Total_Catch_mt,
+    # Percentage difference relative to the Stock SMART baseline
+    Percent_Diff = if_else(SS_Total_Catch_mt > 0, 
+                           (Difference_mt / SS_Total_Catch_mt) * 100, 
+                           NA_real_)
+  ) |>
+  select(
+    Species,
+    Year,
+    `Stock_SMART_Total_Catch_mt` = SS_Total_Catch_mt,
+    `Comlandr_Landings_mt`       = Com_Landings_mt,
+    `Comlandr_Discards_mt`       = Com_Discards_mt,
+    `Comlandr_Total_Com_mt`      = Com_Total_Catch_mt,
+    Difference_mt,
+    Percent_Diff
+  ) |>
+  # Round to 1 decimal place for clean viewing in Excel/CSV
+  mutate(across(where(is.numeric), ~round(., 1))) |>
+  arrange(Species, Year)
+
+csv_path <- "data-raw/issue43_catch_comparison_table.csv"
+write_csv(comparison_table, csv_path)
+message(sprintf("Comparison table saved to %s", csv_path))
