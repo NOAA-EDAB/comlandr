@@ -3,8 +3,8 @@
 # 
 # Purpose: Investigate discrepancies between comlandr landings and stock 
 #          assessment data across ALL overlapping species (Issue #43).
-# Hypothesis: Differences are driven by discards and recreational landings
-#             not included in the raw comlandr commercial landings.
+# Hypothesis: Differences are driven by discards, recreational landings, 
+#             and geographic area mismatches.
 # =========================================================================
 
 # 1. Setup & Load Libraries -----------------------------------------------
@@ -28,22 +28,17 @@ if (!dir.exists("data-raw")) {
 # 2. Pull Data from NEFSC Database ----------------------------------------
 channel <- dbutils::connect_to_database("NEFSC_pw_oraprod", "MGREZLIK")
 
-# EPU area mapping table
-gom <- data.table(AREA = c(500, 510, 512:515),                         EPU = "GOM")
-gb  <- data.table(AREA = c(521:526, 551, 552, 561, 562),               EPU = "GB")
-mab <- data.table(AREA = c(537, 539, 600, 612:616,
-                           621, 622, 625, 626, 631, 632),              EPU = "MAB")
-ss  <- data.table(AREA = c(463:467, 511),                              EPU = "SS")
+# Create a master area map covering all possible US statistical areas (1 to 999)
+# This captures the South Atlantic and prevents memory-crashing alphanumeric NAFO areas
+coastwide <- data.table(AREA = 1:999, EPU = "Coastwide")
+coastwide[, NESPP3 := 1]
+coastwide[, MeanProp := 1]
 
-epu_areas            <- rbindlist(list(gom, gb, mab, ss))
-epu_areas[, NESPP3   := 1]
-epu_areas[, MeanProp := 1]
-
-message("Pulling regional landings from comlandr...")
+message("Pulling Coastwide landings from comlandr...")
 landings <- comlandr::get_comland_data(
   channel,
   filterByYear = start_year:end_year,
-  userAreas    = epu_areas,
+  userAreas    = coastwide,  # Restoring the filter to save memory
   aggGear      = TRUE,
   aggArea      = TRUE
 )
@@ -59,7 +54,7 @@ discards <- comlandr::get_comdisc_data(
 message("Pulling species name lookup table via comlandr...")
 spp_lookup_raw <- comlandr::get_species_itis(channel, species = "all")
 
-# Close the database connection
+# Cleanly close the database connection
 DBI::dbDisconnect(channel)
 
 # Extract the first 3 characters of NESPP4 to create the NESPP3 joining key
@@ -131,11 +126,10 @@ comdisc_clean <- discards$comdisc |>
 
 # 4. Pull stocksmart Data for ALL species ---------------------------------
 message("Aggregating stocksmart Total Catch data...")
-
 ss_clean <- stocksmart::stockAssessmentData |>
   filter(Metric == "Catch", grepl("mt|metric ton", tolower(Units))) |>
   filter(AssessmentType == "Operational") |>
-  # FIX: Drop sub-stocks that are already accounted for in broader stock assessments
+  # Drop sub-stocks that are already accounted for in broader stock assessments
   filter(!grepl("Eastern Georges Bank", StockName)) |> 
   group_by(StockName) |>
   filter(AssessmentYear == max(AssessmentYear)) |>
@@ -144,7 +138,7 @@ ss_clean <- stocksmart::stockAssessmentData |>
   summarise(SS_Total_Catch_mt = sum(Value, na.rm = TRUE), .groups = "drop") |>
   mutate(JoinName = tolower(CommonName))
 
-# 5. Join Datasets -----------------------------------
+# 5. Join Datasets (The Data Staircase) -----------------------------------
 message("Merging landings, discards, and Stock SMART data...")
 
 # First, combine comlandr landings and discards
@@ -152,17 +146,21 @@ comlandr_total <- full_join(comlandr_clean, comdisc_clean, by = c("Year", "COMMO
   mutate(
     Com_Landings_mt = replace_na(Com_Landings_mt, 0),
     Com_Discards_mt = replace_na(Com_Discards_mt, 0),
-    # Create the middle tier: Total Commercial Catch
     Com_Total_Catch_mt = Com_Landings_mt + Com_Discards_mt
   )
 
-# Next, inner join with Stock SMART
-hypothesis_df <- inner_join(comlandr_total, ss_clean, by = c("Year", "JoinName")) |>
+# Next, FULL JOIN with Stock SMART so we don't drop unmatched years
+hypothesis_df <- full_join(comlandr_total, ss_clean, by = c("Year", "JoinName")) |>
   mutate(Species = str_to_title(JoinName)) |>
-  filter(Year >= start_year)
+  filter(Year >= start_year) |>
+  # Filter to only keep species that exist in BOTH databases at some point
+  group_by(Species) |>
+  filter(any(!is.na(SS_Total_Catch_mt)) & any(!is.na(Com_Total_Catch_mt))) |>
+  ungroup() |>
+  # Ensure NAs in plotting columns don't break the lines
+  arrange(Species, Year)
 
 message(sprintf("Successfully matched %d species between datasets.", n_distinct(hypothesis_df$Species)))
-
 # 6. Visualizations (Testing the Hypothesis) ------------------------------
 message("Generating hypothesis-testing plots...")
 
