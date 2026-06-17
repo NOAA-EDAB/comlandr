@@ -5,6 +5,8 @@
 #          assessment data across ALL overlapping species (Issue #43).
 # Hypothesis: Differences are driven by discards, recreational landings, 
 #             and geographic area mismatches.
+# Updates: Grouped skate complex, removed foreign landings, isolated overages,
+#          and strictly verified metric ton unit matching.
 # =========================================================================
 
 # 1. Setup & Load Libraries -----------------------------------------------
@@ -29,18 +31,18 @@ if (!dir.exists("data-raw")) {
 channel <- dbutils::connect_to_database("NEFSC_pw_oraprod", "MGREZLIK")
 
 # Create a master area map covering all possible US statistical areas (1 to 999)
-# This captures the South Atlantic and prevents memory-crashing alphanumeric NAFO areas
 coastwide <- data.table(AREA = 1:999, EPU = "Coastwide")
 coastwide[, NESPP3 := 1]
 coastwide[, MeanProp := 1]
 
-message("Pulling Coastwide landings from comlandr...")
+message("Pulling Coastwide landings from comlandr (excluding foreign landings)...")
 landings <- comlandr::get_comland_data(
   channel,
   filterByYear = start_year:end_year,
-  userAreas    = coastwide,  # Restoring the filter to save memory
+  userAreas    = coastwide,  
   aggGear      = TRUE,
-  aggArea      = TRUE
+  aggArea      = TRUE,
+  useForeign      = FALSE # Explicitly exclude foreign landings
 )
 
 message("Pulling commercial discards from comlandr...")
@@ -67,9 +69,9 @@ spp_lookup <- spp_lookup_raw$data |>
   ungroup()
 
 # 3. Standardize comlandr Species Names (Landings & Discards) -------------
-message("Standardizing comlandr species names...")
+message("Standardizing comlandr species names & grouping Skate Complex...")
 
-# Helper function to avoid repeating the exact same name cleaning logic
+# Helper function to clean names and group all skates into "skate complex"
 clean_cfdbs_names <- function(df) {
   df |>
     mutate(
@@ -77,91 +79,105 @@ clean_cfdbs_names <- function(df) {
       JoinName = str_replace_all(JoinName, "[,\\.]", " "),
       JoinName = str_squish(JoinName),
       JoinName = case_when(
-        JoinName == "sea bass black"      ~ "black sea bass",
-        JoinName == "flounder summer fluke" ~ "summer flounder",
-        JoinName == "flounder summer"     ~ "summer flounder",
-        JoinName == "flounder winter"     ~ "winter flounder",
-        JoinName == "flounder yellowtail" ~ "yellowtail flounder",
-        JoinName == "flounder windowpane" ~ "windowpane",
-        JoinName == "hake silver whiting" ~ "silver hake",
-        JoinName == "hake silver"         ~ "silver hake",
-        JoinName == "hake atlantic red"   ~ "red hake",
-        JoinName == "hake atlantic white" ~ "white hake",
-        JoinName == "cod atlantic"        ~ "atlantic cod",
-        JoinName == "pollock atlantic"    ~ "pollock",
-        JoinName == "goosefish monkfish"  ~ "monkfish",
-        JoinName == "scallop sea"         ~ "sea scallop",
-        JoinName == "skate little"        ~ "little skate",
-        JoinName == "skate winter"        ~ "winter skate",
-        JoinName == "skate barndoor"      ~ "barndoor skate",
-        JoinName == "skate thorny"        ~ "thorny skate",
-        JoinName == "skate smooth"        ~ "smooth skate",
-        JoinName == "skate clearnose"     ~ "clearnose skate",
-        JoinName == "skate rosette"       ~ "rosette skate",
+        str_detect(JoinName, "skate")         ~ "skate complex", # Group all skates
+        JoinName == "sea bass black"          ~ "black sea bass",
+        JoinName == "flounder summer fluke"   ~ "summer flounder",
+        JoinName == "flounder summer"         ~ "summer flounder",
+        JoinName == "flounder winter"         ~ "winter flounder",
+        JoinName == "flounder yellowtail"     ~ "yellowtail flounder",
+        JoinName == "flounder windowpane"     ~ "windowpane",
+        JoinName == "hake silver whiting"     ~ "silver hake",
+        JoinName == "hake silver"             ~ "silver hake",
+        JoinName == "hake atlantic red"       ~ "red hake",
+        JoinName == "hake atlantic white"     ~ "white hake",
+        JoinName == "cod atlantic"            ~ "atlantic cod",
+        JoinName == "pollock atlantic"        ~ "pollock",
+        JoinName == "goosefish monkfish"      ~ "monkfish",
+        JoinName == "scallop sea"             ~ "sea scallop",
         TRUE ~ JoinName
       )
     ) |>
     rename(Year = YEAR)
 }
 
-# Clean Landings
+# Clean Landings (Native comlandr units are SPPLIVMT: Metric Tons)
 comlandr_clean <- landings$comland |>
   as_tibble() |>
   mutate(NESPP3 = as.numeric(NESPP3)) |> 
   left_join(spp_lookup, by = "NESPP3") |>
   filter(!is.na(COMMON_NAME)) |>
-  group_by(YEAR, COMMON_NAME) |>
-  summarise(Com_Landings_mt = sum(SPPLIVMT, na.rm = TRUE), .groups = "drop") |>
-  clean_cfdbs_names()
+  clean_cfdbs_names() |>
+  # Grouping by JoinName now handles the skate complex aggregation
+  group_by(Year, JoinName) |>
+  summarise(Com_Landings_mt = sum(SPPLIVMT, na.rm = TRUE), .groups = "drop") 
 
-# Clean Discards
+# Clean Discards (Native comlandr units are DISMT: Metric Tons)
 comdisc_clean <- discards$comdisc |>
   as_tibble() |>
   mutate(NESPP3 = as.numeric(NESPP3)) |> 
   left_join(spp_lookup, by = "NESPP3") |>
   filter(!is.na(COMMON_NAME)) |>
-  group_by(YEAR, COMMON_NAME) |>
-  summarise(Com_Discards_mt = sum(DISMT, na.rm = TRUE), .groups = "drop") |>
-  clean_cfdbs_names()
+  clean_cfdbs_names() |>
+  group_by(Year, JoinName) |>
+  summarise(Com_Discards_mt = sum(DISMT, na.rm = TRUE), .groups = "drop") 
 
 # 4. Pull stocksmart Data for ALL species ---------------------------------
-message("Aggregating stocksmart Total Catch data...")
-ss_clean <- stocksmart::stockAssessmentData |>
-  filter(Metric == "Catch", grepl("mt|metric ton", tolower(Units))) |>
-  filter(AssessmentType == "Operational") |>
-  # Drop sub-stocks that are already accounted for in broader stock assessments
+message("Aggregating stocksmart Total Catch data via get_latest_metrics()...")
+
+# Fetch latest catch metrics (this returns a list)
+ss_raw_list <- stocksmart::get_latest_metrics(metric = "Catch")
+
+# Extract the data frame
+ss_raw <- if ("data" %in% names(ss_raw_list)) {
+  ss_raw_list$data 
+} else {
+  ss_raw_list[[1]] 
+}
+
+# Validate units
+unique_units <- unique(ss_raw$Units)
+message("--> StockSMART units detected: ", paste(unique_units, collapse = ", "))
+message("--> Filtering exclusively for Metric Tons to match comlandr (SPPLIVMT/DISMT).")
+
+ss_clean <- ss_raw |>
+  as_tibble() |> 
+  filter(grepl("mt|metric ton", tolower(Units))) |>
+  # Broaden to ensure we don't drop historical data trapped in older benchmarks
+  filter(AssessmentType %in% c("Operational", "Benchmark", "Update")) |>
   filter(!grepl("Eastern Georges Bank", StockName)) |> 
-  group_by(StockName) |>
+  # Group by Stock AND Year so we evaluate the latest data year-by-year
+  group_by(StockName, Year, CommonName) |>
+  # For each specific year of catch, grab the estimate from the most recent assessment
   filter(AssessmentYear == max(AssessmentYear)) |>
   ungroup() |>
+  # Aggregate stocks (e.g., summing multiple sub-stocks if they exist)
   group_by(Year, CommonName) |>
   summarise(SS_Total_Catch_mt = sum(Value, na.rm = TRUE), .groups = "drop") |>
   mutate(JoinName = tolower(CommonName))
 
-# 5. Join Datasets (The Data Staircase) -----------------------------------
+# 5. Join Datasets -----------------------------------
 message("Merging landings, discards, and Stock SMART data...")
 
-# First, combine comlandr landings and discards
-comlandr_total <- full_join(comlandr_clean, comdisc_clean, by = c("Year", "COMMON_NAME", "JoinName")) |>
+# Combine comlandr landings and discards
+comlandr_total <- full_join(comlandr_clean, comdisc_clean, by = c("Year", "JoinName")) |>
   mutate(
     Com_Landings_mt = replace_na(Com_Landings_mt, 0),
     Com_Discards_mt = replace_na(Com_Discards_mt, 0),
     Com_Total_Catch_mt = Com_Landings_mt + Com_Discards_mt
   )
 
-# Next, FULL JOIN with Stock SMART so we don't drop unmatched years
+# FULL JOIN with Stock SMART
 hypothesis_df <- full_join(comlandr_total, ss_clean, by = c("Year", "JoinName")) |>
   mutate(Species = str_to_title(JoinName)) |>
   filter(Year >= start_year) |>
-  # Filter to only keep species that exist in BOTH databases at some point
   group_by(Species) |>
   filter(any(!is.na(SS_Total_Catch_mt)) & any(!is.na(Com_Total_Catch_mt))) |>
   ungroup() |>
-  # Ensure NAs in plotting columns don't break the lines
   arrange(Species, Year)
 
-message(sprintf("Successfully matched %d species between datasets.", n_distinct(hypothesis_df$Species)))
-# 6. Visualizations (Testing the Hypothesis) ------------------------------
+message(sprintf("Successfully matched %d species/complexes between datasets.", n_distinct(hypothesis_df$Species)))
+
+# 6. Visualizations -------------------------------------------------------
 message("Generating hypothesis-testing plots...")
 
 pdf_path <- "data-raw/issue43_hypothesis_test.pdf"
@@ -197,14 +213,12 @@ for (i in seq(1, length(species_list), by = chunk_size)) {
 dev.off()
 message(sprintf("Plots saved to %s", pdf_path))
 
-# 7. Generate Tabular Output ----------------------------------------------
-message("Generating comparison table...")
+# 7. Generate Tabular Outputs & Isolate Overages --------------------------
+message("Generating comparison tables and isolating comlandr overages...")
 
 comparison_table <- hypothesis_df |>
   mutate(
-    # The gap between Stock SMART and total commercial catch
     Difference_mt = SS_Total_Catch_mt - Com_Total_Catch_mt,
-    # Percentage difference relative to the Stock SMART baseline
     Percent_Diff = if_else(SS_Total_Catch_mt > 0, 
                            (Difference_mt / SS_Total_Catch_mt) * 100, 
                            NA_real_)
@@ -219,10 +233,20 @@ comparison_table <- hypothesis_df |>
     Difference_mt,
     Percent_Diff
   ) |>
-  # Round to 1 decimal place for clean viewing in Excel/CSV
   mutate(across(where(is.numeric), ~round(., 1))) |>
   arrange(Species, Year)
 
+# Master Table
 csv_path <- "data-raw/issue43_catch_comparison_table.csv"
 write_csv(comparison_table, csv_path)
-message(sprintf("Comparison table saved to %s", csv_path))
+
+# Isolate anomalies where comlandr > StockSMART
+comlandr_overages <- comparison_table |>
+  filter(Comlandr_Total_Com_mt > Stock_SMART_Total_Catch_mt) |>
+  arrange(Species, desc(Difference_mt)) # Sort to show the worst offenders first
+
+overage_path <- "data-raw/issue43_comlandr_overages.csv"
+write_csv(comlandr_overages, overage_path)
+
+message(sprintf("Master comparison table saved to %s", csv_path))
+message(sprintf("Found %d instances where comlandr catch exceeds StockSMART. Saved to %s", nrow(comlandr_overages), overage_path))
