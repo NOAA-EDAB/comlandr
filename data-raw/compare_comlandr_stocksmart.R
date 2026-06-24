@@ -5,8 +5,8 @@
 #          assessment data across ALL overlapping species (Issue #43).
 # Hypothesis: Differences are driven by discards, recreational landings, 
 #             and geographic area mismatches.
-# Updates: Grouped skate complex, removed foreign landings, isolated overages,
-#          and strictly verified metric ton unit matching.
+# Updates: Grouped skate complex (both sources), removed foreign landings, 
+#          isolated overages, verified units, and capped visual outliers.
 # =========================================================================
 
 # 1. Setup & Load Libraries -----------------------------------------------
@@ -42,7 +42,7 @@ landings <- comlandr::get_comland_data(
   userAreas    = coastwide,  
   aggGear      = TRUE,
   aggArea      = TRUE,
-  useForeign      = FALSE # Explicitly exclude foreign landings
+  useForeign   = FALSE # Explicitly exclude foreign landings
 )
 
 message("Pulling commercial discards from comlandr...")
@@ -145,17 +145,21 @@ ss_clean <- ss_raw |>
   # Broaden to ensure we don't drop historical data trapped in older benchmarks
   filter(AssessmentType %in% c("Operational", "Benchmark", "Update")) |>
   filter(!grepl("Eastern Georges Bank", StockName)) |> 
+  mutate(
+    # Apply the same skate complex grouping to StockSMART data
+    JoinName = tolower(CommonName),
+    JoinName = if_else(str_detect(JoinName, "skate"), "skate complex", JoinName)
+  ) |>
   # Group by Stock AND Year so we evaluate the latest data year-by-year
-  group_by(StockName, Year, CommonName) |>
+  group_by(StockName, Year, JoinName) |>
   # For each specific year of catch, grab the estimate from the most recent assessment
   filter(AssessmentYear == max(AssessmentYear)) |>
   ungroup() |>
-  # Aggregate stocks (e.g., summing multiple sub-stocks if they exist)
-  group_by(Year, CommonName) |>
-  summarise(SS_Total_Catch_mt = sum(Value, na.rm = TRUE), .groups = "drop") |>
-  mutate(JoinName = tolower(CommonName))
+  # Aggregate stocks using the standardized JoinName
+  group_by(Year, JoinName) |>
+  summarise(SS_Total_Catch_mt = sum(Value, na.rm = TRUE), .groups = "drop")
 
-# 5. Join Datasets -----------------------------------
+# 5. Join Datasets --------------------------------------------------------
 message("Merging landings, discards, and Stock SMART data...")
 
 # Combine comlandr landings and discards
@@ -178,7 +182,7 @@ hypothesis_df <- full_join(comlandr_total, ss_clean, by = c("Year", "JoinName"))
 message(sprintf("Successfully matched %d species/complexes between datasets.", n_distinct(hypothesis_df$Species)))
 
 # 6. Visualizations -------------------------------------------------------
-message("Generating hypothesis-testing plots...")
+message("Generating hypothesis-testing plots (with capped y-axes for readability)...")
 
 pdf_path <- "data-raw/issue43_hypothesis_test.pdf"
 pdf(pdf_path, width = 10, height = 8)
@@ -191,19 +195,25 @@ for (i in seq(1, length(species_list), by = chunk_size)) {
   
   p <- hypothesis_df |>
     filter(Species %in% target_spp) |>
-    select(Year, Species, 
+    # Calculate the maximum Stock SMART catch to define our y-axis cap
+    group_by(Species) |>
+    mutate(Max_SS = max(SS_Total_Catch_mt, na.rm = TRUE)) |>
+    ungroup() |>
+    select(Year, Species, Max_SS,
            `1. comlandr Landings Only` = Com_Landings_mt, 
            `2. comlandr (Landings + Discards)` = Com_Total_Catch_mt, 
            `3. Stock SMART Total Catch` = SS_Total_Catch_mt) |>
     pivot_longer(cols = starts_with(c("1", "2", "3")), 
                  names_to = "Data_Tier", values_to = "Catch_mt") |>
+    # CAP OUTLIERS: If a data point exceeds 1.5x the max StockSMART catch, cap it.
+    mutate(Catch_mt = if_else(Catch_mt > (Max_SS * 1.5), Max_SS * 1.5, Catch_mt)) |>
     ggplot(aes(x = Year, y = Catch_mt, color = Data_Tier)) +
     geom_line(linewidth = 1) +
     scale_color_brewer(palette = "Set1") +
     facet_wrap(~Species, scales = "free_y", ncol = 2) +
     theme_minimal() +
     labs(title = "Hypothesis Test: Do Discards & Recreational Catch Explain the Gap?",
-         subtitle = "The gap between Line 2 and Line 3 represents missing Recreational/State Catch",
+         subtitle = "Extreme outliers are visually capped at 1.5x the maximum Stock SMART catch to preserve the y-axis.",
          x = "Year", y = "Metric Tons", color = "Data Source") +
     theme(legend.position = "bottom")
   
