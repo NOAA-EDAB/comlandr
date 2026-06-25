@@ -5,8 +5,9 @@
 #          assessment data across ALL overlapping species (Issue #43).
 # Hypothesis: Differences are driven by discards, recreational landings, 
 #             and geographic area mismatches.
-# Updates: Grouped skate complex (both sources), removed foreign landings, 
-#          isolated overages, verified units, and capped visual outliers.
+# Updates: Grouped skate complex, removed foreign landings, isolated overages, 
+#          dynamically converted complex units (e.g., 'Thousand lbs'), 
+#          and capped visual outliers.
 # =========================================================================
 
 # 1. Setup & Load Libraries -----------------------------------------------
@@ -107,7 +108,6 @@ comlandr_clean <- landings$comland |>
   left_join(spp_lookup, by = "NESPP3") |>
   filter(!is.na(COMMON_NAME)) |>
   clean_cfdbs_names() |>
-  # Grouping by JoinName now handles the skate complex aggregation
   group_by(Year, JoinName) |>
   summarise(Com_Landings_mt = sum(SPPLIVMT, na.rm = TRUE), .groups = "drop") 
 
@@ -134,30 +134,38 @@ ss_raw <- if ("data" %in% names(ss_raw_list)) {
   ss_raw_list[[1]] 
 }
 
-# Validate units
+# Validate and mathematically convert units to ensure equivalence
 unique_units <- unique(ss_raw$Units)
 message("--> StockSMART units detected: ", paste(unique_units, collapse = ", "))
-message("--> Filtering exclusively for Metric Tons to match comlandr (SPPLIVMT/DISMT).")
+message("--> Standardizing StockSMART units to Metric Tons...")
 
 ss_clean <- ss_raw |>
   as_tibble() |> 
-  filter(grepl("mt|metric ton", tolower(Units))) |>
-  # Broaden to ensure we don't drop historical data trapped in older benchmarks
-  filter(AssessmentType %in% c("Operational", "Benchmark", "Update")) |>
+  mutate(
+    Units_Lower = tolower(Units),
+    Value_mt = case_when(
+      grepl("thousand lbs|thousand pounds", Units_Lower) ~ (Value * 1000) / 2204.62,
+      grepl("thousand mt|thousand metric tons", Units_Lower) ~ Value * 1000,
+      grepl("lbs|pound", Units_Lower)                    ~ Value / 2204.62,
+      grepl("mt|metric ton", Units_Lower)                ~ Value,
+      grepl("kg|kilogram", Units_Lower)                  ~ Value / 1000,
+      TRUE ~ NA_real_ 
+    )
+  ) |>
+  # Drop anything that couldn't be converted
+  filter(!is.na(Value_mt)) |>
   filter(!grepl("Eastern Georges Bank", StockName)) |> 
   mutate(
-    # Apply the same skate complex grouping to StockSMART data
     JoinName = tolower(CommonName),
     JoinName = if_else(str_detect(JoinName, "skate"), "skate complex", JoinName)
   ) |>
   # Group by Stock AND Year so we evaluate the latest data year-by-year
   group_by(StockName, Year, JoinName) |>
-  # For each specific year of catch, grab the estimate from the most recent assessment
   filter(AssessmentYear == max(AssessmentYear)) |>
   ungroup() |>
   # Aggregate stocks using the standardized JoinName
   group_by(Year, JoinName) |>
-  summarise(SS_Total_Catch_mt = sum(Value, na.rm = TRUE), .groups = "drop")
+  summarise(SS_Total_Catch_mt = sum(Value_mt, na.rm = TRUE), .groups = "drop")
 
 # 5. Join Datasets --------------------------------------------------------
 message("Merging landings, discards, and Stock SMART data...")
@@ -195,7 +203,6 @@ for (i in seq(1, length(species_list), by = chunk_size)) {
   
   p <- hypothesis_df |>
     filter(Species %in% target_spp) |>
-    # Calculate the maximum Stock SMART catch to define our y-axis cap
     group_by(Species) |>
     mutate(Max_SS = max(SS_Total_Catch_mt, na.rm = TRUE)) |>
     ungroup() |>
@@ -253,7 +260,7 @@ write_csv(comparison_table, csv_path)
 # Isolate anomalies where comlandr > StockSMART
 comlandr_overages <- comparison_table |>
   filter(Comlandr_Total_Com_mt > Stock_SMART_Total_Catch_mt) |>
-  arrange(Species, desc(Difference_mt)) # Sort to show the worst offenders first
+  arrange(Species, desc(Difference_mt)) 
 
 overage_path <- "data-raw/issue43_comlandr_overages.csv"
 write_csv(comlandr_overages, overage_path)
