@@ -7,7 +7,7 @@
 #             and geographic area mismatches.
 # Updates: Grouped skate complex, removed foreign landings, isolated overages, 
 #          dynamically converted complex units (e.g., 'Thousand lbs'), 
-#          and capped visual outliers.
+#          capped visual outliers, and hardcoded BSB stock exception.
 # =========================================================================
 
 # 1. Setup & Load Libraries -----------------------------------------------
@@ -135,37 +135,41 @@ ss_raw <- if ("data" %in% names(ss_raw_list)) {
 }
 
 # Validate and mathematically convert units to ensure equivalence
-unique_units <- unique(ss_raw$Units)
+# NOTE: v1.1.11 uses lowercase column names (units, value, stock_name, etc.)
+unique_units <- unique(ss_raw$units)
 message("--> StockSMART units detected: ", paste(unique_units, collapse = ", "))
 message("--> Standardizing StockSMART units to Metric Tons...")
 
 ss_clean <- ss_raw |>
   as_tibble() |> 
   mutate(
-    Units_Lower = tolower(Units),
+    Units_Lower = tolower(units),
+    # Dynamically convert complex units into Metric Tons
     Value_mt = case_when(
-      grepl("thousand lbs|thousand pounds", Units_Lower) ~ (Value * 1000) / 2204.62,
-      grepl("thousand mt|thousand metric tons", Units_Lower) ~ Value * 1000,
-      grepl("lbs|pound", Units_Lower)                    ~ Value / 2204.62,
-      grepl("mt|metric ton", Units_Lower)                ~ Value,
-      grepl("kg|kilogram", Units_Lower)                  ~ Value / 1000,
+      grepl("thousand lbs|thousand pounds", Units_Lower) ~ (value * 1000) / 2204.62,
+      grepl("thousand mt|thousand metric tons", Units_Lower) ~ value * 1000,
+      grepl("lbs|pound", Units_Lower)                    ~ value / 2204.62,
+      grepl("mt|metric ton", Units_Lower)                ~ value,
+      grepl("kg|kilogram", Units_Lower)                  ~ value / 1000,
       TRUE ~ NA_real_ 
     )
   ) |>
   # Drop anything that couldn't be converted
   filter(!is.na(Value_mt)) |>
-  filter(!grepl("Eastern Georges Bank", StockName)) |> 
+  filter(!grepl("Eastern Georges Bank", stock_name)) |> 
   mutate(
-    JoinName = tolower(CommonName),
+    JoinName = tolower(common_name),
     JoinName = if_else(str_detect(JoinName, "skate"), "skate complex", JoinName)
   ) |>
   # Group by Stock AND Year so we evaluate the latest data year-by-year
-  group_by(StockName, Year, JoinName) |>
-  filter(AssessmentYear == max(AssessmentYear)) |>
+  group_by(stock_name, year, JoinName) |>
+  filter(assessment_year == max(assessment_year)) |>
   ungroup() |>
   # Aggregate stocks using the standardized JoinName
-  group_by(Year, JoinName) |>
-  summarise(SS_Total_Catch_mt = sum(Value_mt, na.rm = TRUE), .groups = "drop")
+  group_by(year, JoinName) |>
+  summarise(SS_Total_Catch_mt = sum(Value_mt, na.rm = TRUE), .groups = "drop") |>
+  # Rename lowercase 'year' back to 'Year' to match comlandr for the join step
+  rename(Year = year)
 
 # 5. Join Datasets --------------------------------------------------------
 message("Merging landings, discards, and Stock SMART data...")
