@@ -239,9 +239,10 @@ message("Generating comparison tables and isolating comlandr overages...")
 
 comparison_table <- hypothesis_df |>
   mutate(
-    Difference_mt = SS_Total_Catch_mt - Com_Total_Catch_mt,
+    Total_Difference_mt    = SS_Total_Catch_mt - Com_Total_Catch_mt,
+    Landings_Difference_mt = SS_Total_Catch_mt - Com_Landings_mt,
     Percent_Diff = if_else(SS_Total_Catch_mt > 0, 
-                           (Difference_mt / SS_Total_Catch_mt) * 100, 
+                           (Total_Difference_mt / SS_Total_Catch_mt) * 100, 
                            NA_real_)
   ) |>
   select(
@@ -251,7 +252,8 @@ comparison_table <- hypothesis_df |>
     `Comlandr_Landings_mt`       = Com_Landings_mt,
     `Comlandr_Discards_mt`       = Com_Discards_mt,
     `Comlandr_Total_Com_mt`      = Com_Total_Catch_mt,
-    Difference_mt,
+    Landings_Difference_mt,
+    Total_Difference_mt,
     Percent_Diff
   ) |>
   mutate(across(where(is.numeric), ~round(., 1))) |>
@@ -261,13 +263,13 @@ comparison_table <- hypothesis_df |>
 csv_path <- "data-raw/issue43_catch_comparison_table.csv"
 write_csv(comparison_table, csv_path)
 
-# Isolate anomalies where comlandr > StockSMART
+# Isolate anomalies where comlandr landings > StockSMART
 comlandr_overages <- comparison_table |>
-  filter(Comlandr_Total_Com_mt > Stock_SMART_Total_Catch_mt) |>
-  arrange(Species, desc(Difference_mt)) 
+  filter(Comlandr_Landings_mt > Stock_SMART_Total_Catch_mt) |>
+  arrange(Species, Landings_Difference_mt) # Sort ascending so largest overages (most negative) are at the top
 
 overage_path <- "data-raw/issue43_comlandr_overages.csv"
 write_csv(comlandr_overages, overage_path)
 
 message(sprintf("Master comparison table saved to %s", csv_path))
-message(sprintf("Found %d instances where comlandr catch exceeds StockSMART. Saved to %s", nrow(comlandr_overages), overage_path))
+message(sprintf("Found %d instances where comlandr landings exceed StockSMART catch. Saved to %s", nrow(comlandr_overages), overage_path))
