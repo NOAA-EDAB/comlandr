@@ -7,7 +7,8 @@
 #             and geographic area mismatches.
 # Updates: Grouped skate complex, removed foreign landings, isolated overages,
 #          dynamically converted complex units (e.g., 'Thousand lbs'),
-#          capped visual outliers, and hardcoded BSB stock exception.
+#          capped visual outliers, hardcoded BSB stock exception,
+#          and added dynamic username prompt.
 # =========================================================================
 
 # 1. Setup & Load Libraries -----------------------------------------------
@@ -17,6 +18,14 @@ library(tidyverse)
 library(data.table)
 library(dbutils)
 library(DBI)
+
+# Prompt for database username
+if (interactive()) {
+  db_username <- readline(prompt = "Enter your NEFSC database username: ")
+  if (trimws(db_username) == "") stop("Username cannot be blank.")
+} else {
+  stop("This script must be run interactively to enter a database username.")
+}
 
 start_year <- 1985
 end_year <- as.integer(format(Sys.Date(), "%Y")) - 1
@@ -33,7 +42,7 @@ if (!dir.exists("data-raw")) {
 }
 
 # 2. Pull Data from NEFSC Database ----------------------------------------
-channel <- dbutils::connect_to_database("NEFSC_pw_oraprod", "MGREZLIK")
+channel <- dbutils::connect_to_database("NEFSC_pw_oraprod", db_username)
 
 # Create a master area map covering all possible US statistical areas (1 to 999)
 coastwide <- data.table(AREA = 1:999, EPU = "Coastwide")
@@ -227,7 +236,7 @@ chunk_size <- 6
 
 for (i in seq(1, length(species_list), by = chunk_size)) {
   target_spp <- species_list[i:min((i + chunk_size - 1), length(species_list))]
-
+  
   p <- hypothesis_df |>
     filter(Species %in% target_spp) |>
     group_by(Species) |>
@@ -263,7 +272,7 @@ for (i in seq(1, length(species_list), by = chunk_size)) {
       color = "Data Source"
     ) +
     theme(legend.position = "bottom")
-
+  
   print(p)
 }
 
