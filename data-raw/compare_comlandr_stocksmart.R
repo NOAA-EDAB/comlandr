@@ -236,7 +236,7 @@ chunk_size <- 6
 
 for (i in seq(1, length(species_list), by = chunk_size)) {
   target_spp <- species_list[i:min((i + chunk_size - 1), length(species_list))]
-  
+
   p <- hypothesis_df |>
     filter(Species %in% target_spp) |>
     group_by(Species) |>
@@ -272,7 +272,7 @@ for (i in seq(1, length(species_list), by = chunk_size)) {
       color = "Data Source"
     ) +
     theme(legend.position = "bottom")
-  
+
   print(p)
 }
 
