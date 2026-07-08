@@ -1,6 +1,6 @@
-# comlandr 1.3.0
+# comlandr 1.2.1
 
-# Minor changes
+# Patch fixes
 
 * The table that the `get_vessels` function was using has been deprecated. This function now pulls from an actively maintained table.
 

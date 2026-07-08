@@ -1,6 +1,6 @@
 Package: comlandr
 Title: Pulls and processes commercial fishing data from the Northeast US
-Version: 1.3.0
+Version: 1.2.1
 Authors@R: c(person(given = "Sean",
                     family = "Lucey", 
                     role = c("aut")),
