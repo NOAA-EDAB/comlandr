@@ -44,7 +44,7 @@
 #
 get_dealers <- function(channel, state = NA, year = NA) {
   # creates the sql based on user input
-  defaultSqlStatement = "select * from NEFSC_GARFO.PERMIT_DEALER"
+  defaultSqlStatement <- "select * from NEFSC_GARFO.PERMIT_DEALER"
   if (all(any(is.na(state)) & any(is.na(year)))) {
     # both are NA
     sqlStatement <- defaultSqlStatement
