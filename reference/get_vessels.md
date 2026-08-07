@@ -1,7 +1,7 @@
-# Extract VESSEL information from CFDBS
+# Extract VESSEL information
 
-Extract a list of vessell ID's, tonnage, crew size, home port, etc from
-the NEFSC "Mstrvess" supporting table
+Extract a list of vessel ID's, tonnage, crew size, home port, etc from
+the NEFSC_GARFO "PERMIT_VPS_VESSEL" supporting table
 
 ## Usage
 
@@ -32,9 +32,6 @@ A list is returned:
 - colNames:
 
   a vector of the table's column names
-
-If no `sqlStatement` is provided the default sql statement
-"`select * from NEFSC_GARFO.cfdbs_mstrvess`" is used
 
 ## Reference
 

@@ -1,5 +1,7 @@
 # Changelog
 
+## comlandr 1.2.1
+
 ## comlandr 1.2.0
 
 ### Minor changes

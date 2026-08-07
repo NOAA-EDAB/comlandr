@@ -36,7 +36,7 @@ Functions that pull lookup tables from CFDBS
 - [`get_ports()`](https://noaa-edab.github.io/comlandr/reference/get_ports.md)
   : Extract PORT location information from CFDBS
 - [`get_vessels()`](https://noaa-edab.github.io/comlandr/reference/get_vessels.md)
-  : Extract VESSEL information from CFDBS
+  : Extract VESSEL information
 - [`get_dealers()`](https://noaa-edab.github.io/comlandr/reference/get_dealers.md)
   : Extract Dealers location details
 
