@@ -1,3 +1,10 @@
+# comlandr 1.2.1
+
+# Patch fixes
+
+* The table that the `get_vessels` function was using has been deprecated. This function now pulls from an actively maintained table.
+* `get_herring_data` "NAs introduced by coercion" fixed. Filtered out NAs
+
 # comlandr 1.2.0
 
 ## Minor changes

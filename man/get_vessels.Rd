@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_vessels.R
 \name{get_vessels}
 \alias{get_vessels}
-\title{Extract VESSEL information from CFDBS}
+\title{Extract VESSEL information}
 \usage{
 get_vessels(channel)
 }
@@ -18,11 +18,9 @@ A list is returned:
 \item{sql}{containing the \code{sqlStatement} itself}
 
 \item{colNames}{a vector of the table's column names}
-
-If no \code{sqlStatement} is provided the default sql statement "\code{select * from NEFSC_GARFO.cfdbs_mstrvess}" is used
 }
 \description{
-Extract a list of vessell ID's, tonnage, crew size, home port, etc from the NEFSC "Mstrvess" supporting table
+Extract a list of vessel ID's, tonnage, crew size, home port, etc from the NEFSC_GARFO "PERMIT_VPS_VESSEL" supporting table
 }
 \section{Reference}{
 

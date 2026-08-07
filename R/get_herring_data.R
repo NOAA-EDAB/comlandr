@@ -53,6 +53,9 @@ get_herring_data <- function(
 
   # Convert number fields from character to numeric
   herr_catch <- herr_catch |>
+    dplyr::filter(
+      !is.na(suppressWarnings(as.numeric(STOCK_AREA))) & !is.na(STOCK_AREA)
+    ) |>
     dplyr::mutate(
       YEAR = as.numeric(YEAR),
       MONTH = as.numeric(MONTH),
