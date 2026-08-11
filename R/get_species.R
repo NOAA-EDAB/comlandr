@@ -51,6 +51,7 @@
 #
 
 get_species <- function(channel, species = "all") {
+  print("Inside get species")
   # creates the sql based on user input
   sqlStatement <- dbutils::create_sql(
     species,
