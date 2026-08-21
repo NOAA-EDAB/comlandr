@@ -165,7 +165,6 @@ get_comland_data <- function(
       comland.foreign <- dplyr::filter(comland.foreign, YEAR %in% filterByYear)
     }
 
-
     #Combine foreign landings
     comland$comland <- data.table::rbindlist(
       list(comland$comland, comland.foreign),
