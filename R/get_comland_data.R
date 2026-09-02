@@ -161,6 +161,9 @@ get_comland_data <- function(
       useLanded,
       useHerringMaine
     )
+    if (is.numeric(filterByYear)) {
+      comland.foreign <- dplyr::filter(comland.foreign, YEAR %in% filterByYear)
+    }
 
     #Combine foreign landings
     comland$comland <- data.table::rbindlist(
