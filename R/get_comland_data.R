@@ -161,7 +161,7 @@ get_comland_data <- function(
       useLanded,
       useHerringMaine
     )
-    if (!is.na(filterByYear)) {
+    if (is.numeric(filterByYear)) {
       comland.foreign <- dplyr::filter(comland.foreign, YEAR %in% filterByYear)
     }
 
