@@ -18,33 +18,35 @@ LazyData: true
 Depends: 
     R (>= 3.5.0)
 Suggests: 
+    flextable,
+    ggforce,
+    kableExtra,
     knitr,
-    rmarkdown,
-    testthat (>= 3.0.0),
     markdown,
     patchwork,
+    purrr,
     readr,
-    kableExtra,
-    tidyr,
-    ggforce,
-    flextable,
-    purrr
+    rmarkdown,
+    testthat (>= 3.0.0),
+    tidyr
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 Imports: 
     data.table,
-    sf,
     DBI,
-    magrittr,
     dplyr,
-    stringr,
-    tibble,
     ggplot2,
     gtools,
+    httr2,
+    jsonlite,
+    magrittr,
+    NEFSCspatial,
+    sf,
+    stringr,
     survdat,
-    NEFSCspatial
+    tibble
 Remotes:
     NOAA-EDAB/survdat,
     NEFSCspatial=NEFSC/NEFSC-Spatial
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.1.0
