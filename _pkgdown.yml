@@ -24,6 +24,7 @@ reference:
   - get_comdisc_data
   - get_comdisc_raw_data
   - get_herring_data
+  - get_menhaden_data
 - title: "Supporting Functions"
   desc: "Functions that pull lookup tables from CFDBS"
 - contents:
