@@ -56,6 +56,8 @@ compare_fred_data <- function(old, new) {
       }
     }
   }
+  output$old <- old
+  output$new <- new
 
   return(output)
 }
