@@ -5,6 +5,8 @@ params:
   isEqual: NA
   rowNum: NA
   newRows: NA
+  old: NA
+  new: NA
   ggplot: NA
 date: "`r Sys.time()`"
 ---
@@ -23,18 +25,29 @@ if (params$isEqual) {
   message(paste0("Number of rows in new pull = ",params$rowNum$new))
   message(paste0("Number of rows in current data = ",params$rowNum$old))
   
-  if (params$newRows == T) {
+  if (params$newRows) {
     message("The difference is due to an ADDITION of NEW data")
   } else {
-    # display plot
-    print(params$ggplot)
+    message("The difference is unknown")
   }
-  
 }
+# Plots
+oldFred <- params$old |> 
+  dplyr::mutate(source = "old")
+newFred <- params$new |> 
+  dplyr::mutate(source = "new")
+  dataF <- rbind(oldFred,newFred) |> 
+    dplyr::mutate(date_var = lubridate::make_date(YEAR, MONTH))
+
+p <- ggplot2::ggplot(dataF) +
+  ggplot2::geom_line(ggplot2::aes(x=date_var,y = value, color = source)) 
+
+p
+
+p
+
 
 ```
-
-
 
 
 ## Links to repos:
