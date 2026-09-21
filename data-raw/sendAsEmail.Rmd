@@ -42,9 +42,7 @@ newFred <- params$new |>
 p <- ggplot2::ggplot(dataF) +
   ggplot2::geom_line(ggplot2::aes(x=date_var,y = value, color = source)) 
 
-p
-
-p
+print(p)
 
 
 ```
