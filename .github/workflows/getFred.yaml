@@ -50,7 +50,7 @@ jobs:
 
       - name: Install packages
         run: |
-          install.packages(c("pak","fredr", "tidyr", "here","dplyr","lubridate","rmarkdown","ggplot2"))
+          install.packages(c("pak","fredr", "tidyr", "here","dplyr","lubridate","rmarkdown","ggplot2","plotly"))
           pak::pak("NOAA-EDAB/comlandr")
         shell: Rscript {0}
 
