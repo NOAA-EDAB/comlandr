@@ -30,21 +30,22 @@ if (params$isEqual) {
   } else {
     message("The difference is unknown")
   }
-  
-  # Plots
-  oldFred <- old |> 
-    dplyr::mutate(source = "old")
-  newFred <- new |> 
-    dplyr::mutate(source = "new")
-    dataF <- rbind(oldFred,newFred) |> 
-      dplyr::mutate(date_var = lubridate::make_date(YEAR, MONTH))
-
-  p <- ggplot2::ggplot(dataF) +
-    ggplot2::geom_line(ggplot2::aes(x=date_var,y = value, color = source)) + 
-    ggplot2::geom_point()
-  
-  p
 }
+# Plots
+oldFred <- params$old |> 
+  dplyr::mutate(source = "old")
+newFred <- params$new |> 
+  dplyr::mutate(source = "new")
+  dataF <- rbind(oldFred,newFred) |> 
+    dplyr::mutate(date_var = lubridate::make_date(YEAR, MONTH))
+
+p <- ggplot2::ggplot(dataF) +
+  ggplot2::geom_line(ggplot2::aes(x=date_var,y = value, color = source)) 
+
+p <- plotly::ggplotly(p)
+
+p
+
 
 ```
 
