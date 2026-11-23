@@ -30,7 +30,6 @@ Suggests:
     flextable,
     purrr
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 Imports: 
     data.table,
@@ -48,3 +47,4 @@ Remotes:
     NOAA-EDAB/survdat,
     NEFSCspatial=NEFSC/NEFSC-Spatial
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.1.1
