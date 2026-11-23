@@ -47,7 +47,7 @@ get_foreign_data <- function(
       "https://www.nafo.int/Portals/0/Stats/nafo-21b-90-99.zip",
       "https://www.nafo.int/Portals/0/Stats/nafo-21b-2000-09.zip",
       "https://www.nafo.int/Portals/0/Stats/nafo-21b-2010-19.zip",
-      "https://www.nafo.int/Portals/0/Stats/nafo-21b-2020-24.zip"
+      "https://www.nafo.int/Portals/0/Stats/nafo-21b-2020-25.zip"
     ),
     filename = c(
       "NAFO21B-60-69.txt",
@@ -56,10 +56,10 @@ get_foreign_data <- function(
       "NAFO21B-90-99.txt",
       "NAFO21B-2000-09.txt",
       "NAFO-21B-2010-2019.txt",
-      "NAFO-21B-2020-24.txt"
+      "NAFO-21B-2020-25.txt"
     ),
     startyr = c(1960, 1970, 1980, 1990, 2000, 2010, 2020),
-    endyr = c(1969, 1979, 1989, 1999, 2009, 2019, 2024),
+    endyr = c(1969, 1979, 1989, 1999, 2009, 2019, 2025),
     stringsAsFactors = FALSE
   )
 
